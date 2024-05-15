@@ -1,0 +1,99 @@
+.headerProfile {
+  background: #1f1f1f;
+  width: 100%;
+  height: 60px;
+  border-radius: 60px;
+}
+
+.headerProfileContainer {
+  display: flex;
+  padding: 7px 12px;
+  justify-content: space-between;
+}
+
+.headerProfileUser {
+  display: flex;
+}
+
+.headerProfileRating {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.headerProfileUserAvatar {
+  width: 47px;
+  height: 47px;
+  margin-right: 7px;
+}
+
+.headerProfileUserAvatarIMG {
+  /* Замените путь к изображению на нужный вам */
+  background-image: url("../../assets/ava1.png");
+  background-size: cover; /* Или другое свойство для масштабирования изображения */
+  width: 100%;
+  height: 100%;
+}
+
+.headerProfileUserInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.headerProfileUserName {
+  font-weight: 500;
+}
+
+.headerProfileUserCoins {
+  display: flex;
+}
+
+.headerProfileUserCoins p {
+  margin: 0;
+  padding: 0;
+  font-family: SF Pro Display;
+  font-size: 16px;
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.headerProfileUserCoinsSVG {
+  background: url("../../assets/goldMiniCoin.svg");
+  width: 17px;
+  height: 17px;
+}
+
+.headerProfileUserInfoRating {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-evenly;
+}
+
+.headerProfileRatingAvatar {
+  width: 47px;
+  height: 47px;
+  border-radius: 50%;
+  margin-left: 6px;
+  background: #292929;
+}
+
+.headerProfileRatingAvatarIMG {
+  margin: 20% 28%;
+  background-image: url("../../assets/kubok.svg");
+  background-repeat: no-repeat;
+  width: 25px;
+  height: 27px;
+}
+
+.headerProfileRatingName {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.headerProfileUserRating {
+  background-image: linear-gradient(to bottom right, #ffb800, #af6900);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+}

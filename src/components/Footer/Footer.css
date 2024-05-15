@@ -1,0 +1,51 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  background: #1f1f1f;
+  width: calc(100vw - 30px);
+  height: 76px;
+  border-radius: 20px;
+  margin-bottom: 34px;
+  display: flex;
+  align-items: center;
+}
+
+.navButton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  height: auto;
+  width: 33%;
+}
+
+.navButton:not(:last-child) {
+  border-right: 1px solid #262626;
+}
+
+#players {
+  background: url(../../assets/user.svg);
+  width: 31px;
+  height: 31px;
+}
+
+#boost {
+  background: url(../../assets/boost.svg);
+  width: 31px;
+  height: 31px;
+}
+
+#trade {
+  background: url(../../assets/trade.svg);
+  width: 31px;
+  height: 31px;
+}
+
+.navButtonText {
+  font-family: SF Pro Display;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 7px;
+  letter-spacing: 0.7px;
+}
