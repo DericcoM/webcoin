@@ -1,13 +1,14 @@
 .footer {
   position: fixed;
-  bottom: 0;
   background: #1f1f1f;
+  bottom: 1px;
   width: calc(100vw - 30px);
   height: 76px;
   border-radius: 20px;
-  margin-bottom: 34px;
+  margin-bottom: 21px;
   display: flex;
   align-items: center;
+  border: 0.4px solid #262626;
 }
 
 .navButton {
@@ -24,23 +25,34 @@
   border-right: 1px solid #262626;
 }
 
-#players {
-  background: url(../../assets/user.svg);
+.navButtonImg {
+  width: 31px;
+  height: 31px;
+}
+
+.navButtonImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* #players {
+  background: url("../../assets/user.png");
   width: 31px;
   height: 31px;
 }
 
 #boost {
-  background: url(../../assets/boost.svg);
+  background: url("../../assets/boost.png");
   width: 31px;
   height: 31px;
 }
 
 #trade {
-  background: url(../../assets/trade.svg);
+  background: url("../../assets/trade.png");
   width: 31px;
   height: 31px;
-}
+} */
 
 .navButtonText {
   font-family: SF Pro Display;

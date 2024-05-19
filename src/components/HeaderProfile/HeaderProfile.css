@@ -46,6 +46,7 @@
 
 .headerProfileUserCoins {
   display: flex;
+  align-items: center;
 }
 
 .headerProfileUserCoins p {
@@ -58,9 +59,14 @@
 }
 
 .headerProfileUserCoinsSVG {
-  background: url("../../assets/goldMiniCoin.svg");
   width: 17px;
   height: 17px;
+}
+
+.headerProfileUserCoinsSVG img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .headerProfileUserInfoRating {
@@ -80,10 +86,15 @@
 
 .headerProfileRatingAvatarIMG {
   margin: 20% 28%;
-  background-image: url("../../assets/kubok.svg");
   background-repeat: no-repeat;
   width: 25px;
   height: 27px;
+}
+
+.headerProfileRatingAvatarIMG img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .headerProfileRatingName {

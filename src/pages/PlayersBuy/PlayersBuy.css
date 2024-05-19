@@ -1,0 +1,32 @@
+.playersBuyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.playersBuyTitle {
+  font-family: SF Pro Display;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.buyScrollContainer {
+  width: 100%;
+  max-height: calc(
+    100vh - 180px
+  ); /* 100px от низа + высота заголовка и отступы */
+  overflow-y: auto;
+  -ms-overflow-style: none; /* Убираем полосу прокрутки для Internet Explorer и Edge */
+  scrollbar-width: none; /* Убираем полосу прокрутки для Firefox */
+}
+
+.buyScrollContainer::-webkit-scrollbar {
+  display: none; /* Убираем полосу прокрутки для Chrome, Safari и Opera */
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+}

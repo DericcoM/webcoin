@@ -1,5 +1,24 @@
+body {
+  overflow: hidden; /* Отключаем прокрутку */
+}
+
+/* Для WebKit (Chrome, Safari, Opera) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Для Firefox */
+html {
+  scrollbar-width: none;
+}
+
+/* Для IE/Edge */
+body {
+  -ms-overflow-style: none;
+}
+
 .container {
-  padding: 40px 15px 0 15px;
+  padding: 20px 15px 0 15px;
 }
 
 .bigBalanceContainer {
@@ -16,11 +35,15 @@
 }
 
 .mainContainerCoinSVG {
-  background: url("../../assets/bigCoin.svg");
-  object-fit: contain;
   width: 36px;
   height: 37px;
   background-repeat: no-repeat;
+}
+
+.mainContainerCoinSVG img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .bigBalanceValue {
@@ -94,4 +117,78 @@
 .refButtons {
   display: flex;
   margin-right: 10px;
+}
+
+.worker {
+  margin-top: 16px;
+}
+
+.workerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.workerTitle {
+  font-family: SF Pro Display;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0.7px;
+  align-items: center;
+  display: flex;
+}
+
+.workerCount {
+  color: #000;
+  background: #fff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: SF Pro Display;
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.workerMin {
+  color: #000;
+  background: #fff;
+  font-family: SF Pro Display;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 25px;
+  padding: 3px 14px;
+}
+
+/* Стили для блока mainScroll */
+.mainScroll {
+  overflow-y: auto;
+  max-height: calc(82vh - 77px);
+}
+
+/* Скрыть полосу прокрутки в Chrome, Safari и Edge */
+.mainScroll::-webkit-scrollbar {
+  width: 0; /* Ширина полосы прокрутки */
+  height: 0; /* Высота полосы прокрутки */
+}
+
+/* BACK */
+
+.back-button {
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-family: SF Pro Display;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.back-button svg {
+  margin-right: 8px;
 }

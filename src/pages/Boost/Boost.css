@@ -1,0 +1,213 @@
+.containerBoost {
+  padding: 20px 27px 0 27px;
+}
+
+.boost {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.boostTitle {
+  text-align: center;
+  margin: 0 auto;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 21px;
+}
+
+.boostTaskTitle {
+  font-size: 16px;
+  font-weight: 400;
+  background: #1f1f1f;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0 27px;
+  width: fit-content;
+  height: 38px;
+  margin-bottom: 16px;
+}
+
+.boostTaskTitleImg {
+  width: 17px;
+  height: 17px;
+  margin-left: 4px;
+}
+
+.boostTaskTitleImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.socials {
+  width: 100%;
+}
+
+.boostSocials {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 9px;
+  justify-content: space-between;
+}
+
+.boostSocialsButton {
+  border-radius: 15px;
+  background: #1f1f1f;
+  height: 45px;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  width: 49%;
+  justify-content: center;
+  margin-right: 9px;
+}
+
+.boostSocialsEarn {
+  height: 45px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 15px;
+  background: #1f1f1f;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  width: -moz-fit-content;
+  width: 25%;
+  justify-content: center;
+}
+
+@media (max-width: 405px) {
+  .boostSocialsButton {
+    font-size: 13px;
+  }
+
+  .boostSocialsEarn {
+    font-size: 13px;
+  }
+}
+
+.boostTaskTitleImg.soc {
+  margin-left: 0;
+  margin-right: 5px;
+}
+
+.boostSocialsLink {
+  margin-left: 9px;
+  width: 46px;
+  height: 46px;
+}
+
+.boostSocialsLink img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.dottedLine.soc {
+  margin-top: 7px;
+  width: 100%;
+}
+
+.boostPremium {
+  margin-top: 15px;
+  background: #1f1f1f;
+  min-height: 159px;
+  border: 1px #313131 solid;
+  border-radius: 20px;
+  width: 99%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.boostPremiumTitle {
+  font-size: 24px;
+  font-weight: 500;
+  margin-top: 21px;
+  margin-bottom: 14px;
+}
+
+.premium {
+  background-image: linear-gradient(to bottom right, #eba900, #ffd15a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.boostPremiumDesc {
+  text-align: center;
+  color: #585858;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.boostPremiumButton {
+  height: 45px;
+  font-size: 16px;
+  background: #292929;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 40px;
+  margin-top: 13px;
+  margin-bottom: 21px;
+}
+
+.footer.boosted {
+  left: 15px;
+}
+
+.boostPremiumTitleImg {
+  width: 18px;
+  height: 18px;
+  margin-left: 6px;
+}
+
+.boostPremiumTitleImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.boostPremiumTitle.fast {
+  display: flex;
+}
+
+.boostPremiumHour {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.boostPremiumX {
+  background: #292929;
+  border-radius: 20px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  margin-right: 10px;
+  min-width: 32px;
+}
+
+.boostPremiumBuyX {
+  background: #292929;
+  border-radius: 20px;
+  height: 42px;
+  padding: 0 33px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.boostPremiumHourBlock {
+  margin-bottom: 21px;
+}

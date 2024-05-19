@@ -1,0 +1,134 @@
+.workerPage {
+  height: fit-content;
+}
+
+.workerPageTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.workerPageAvatarContainer {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.workerPageAvatar {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.workerPageName {
+  margin-top: 5px;
+  font-family: SF Pro Display;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.workerPageStatus {
+  color: #ffcd82;
+  font-size: 15px;
+}
+
+.workerPageStatusBar {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 7px 9px 7px;
+}
+
+.workerPageShield {
+  background: #1f1f1f;
+  border-radius: 20px;
+  font-family: SF Pro Display;
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+  padding: 10px;
+}
+
+.workerPagePayment {
+  background: #1f1f1f;
+  border-radius: 20px;
+  font-family: SF Pro Display;
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.dottedLine {
+  display: flex;
+  text-align: center;
+  border-top: 2px dashed #212121;
+  width: 97%;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.workerUp {
+  display: flex;
+  height: 60px;
+  width: 100%;
+  background: #1f1f1f;
+  border-radius: 20px;
+  margin-top: 9px;
+  align-items: center;
+  justify-content: center;
+}
+
+.workerUpTitle {
+  font-family: SF Pro Display;
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.workerUpCoin {
+  width: 24px;
+  height: 24px;
+  margin: 0 5px;
+}
+
+.workerUpCoin img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.workerPlayers {
+  margin-top: 15px;
+}
+
+.workerPlayersUnit {
+  background: #1c1c1c;
+  height: 55px;
+  width: 100%;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.workerPlayersUnitGroup {
+  display: flex;
+  align-items: center;
+  margin: 20px 17px;
+}
+
+.workerPlayersUnitPoint {
+  width: 22px;
+  margin-right: 24px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.workerPlayersUnitCount {
+  font-size: 20px;
+  color: #4f4f4f;
+  font-weight: 600;
+}
