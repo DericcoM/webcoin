@@ -1,54 +1,93 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./BuyWorker.css";
+import useFetchUserData from "../../Hooks/useFetchUserData";
+import { buyWorker } from "../../api/api";
 
-function BuyWorker({ buyWorkerID, setCurrentPage, setPreviusPage }) {
-  const balance = buyWorkerID.price.toLocaleString("en-US");
-  const shield = "1ч 27мин";
-  const payment = (
-    Math.floor(Math.random() * (50000 - 500 + 1)) + 500
-  ).toLocaleString("en-US");
-  const star = (
-    Math.floor(Math.random() * (1000 - 100 + 1)) + 100
-  ).toLocaleString("en-US");
+function BuyWorker({
+  buyWorkerID,
+  setCurrentPage,
+  setPreviousPage,
+  ownerID,
+  refetchUserData,
+  updateUserData,
+}) {
+  const { userData, loading, error } = useFetchUserData(buyWorkerID);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  if (buyWorkerID.ownerID === 1) {
-    setCurrentPage("worker");
-    setPreviusPage("main");
+  useEffect(() => {
+    if (!loading && !error) {
+      setModalOpen(false); // Закрыть модальное окно при обновлении данных
+    }
+  }, [loading, error]);
+
+  if (loading) {
+    return;
   }
+
+  if (error) {
+    return <div>Error loading user data: {error.message}</div>;
+  }
+
+  const handleBuy = async () => {
+    try {
+      await buyWorker(ownerID, buyWorkerID);
+      await refetchUserData(); // Обновить данные пользователя
+      await updateUserData(); // Обновить данные работников
+      setCurrentPage("main");
+      setPreviousPage("main");
+    } catch (error) {
+      handleModalError(error);
+    }
+  };
+
+  const handleBuyNo = () => {};
+
+  const handleModalError = (error) => {
+    let errorMessageToShow = "Произошла ошибка";
+    if (error.response && error.response.data && error.response.data.error) {
+      if (error.response.status === 400) {
+        errorMessageToShow = "Недостаточно средств";
+      } else {
+        errorMessageToShow = error.response.data.error;
+      }
+    } else if (error.message) {
+      errorMessageToShow = error.message;
+    }
+    setErrorMessage(errorMessageToShow);
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
 
   return (
     <>
       <div className="buyWorkerPage">
         <div className="workerPageTitle">
           <div className="workerPageAvatarContainer">
-            <img className="workerPageAvatar" src={buyWorkerID.avatar} alt="" />
+            <img className="workerPageAvatar" src={userData.img} alt="" />
           </div>
-          <div className="workerPageName">{buyWorkerID.name}</div>
-          <div
-            className={
-              buyWorkerID.status === "free"
-                ? "buyWorkerFree"
-                : "buyWorkerWorked"
-            }
-          >
-            {buyWorkerID.status === "free" ? "Свободен" : `Занят на работе`}
-          </div>
+          <div className="workerPageName">{userData.user_fullname}</div>
+          <div className="buyWorkerWorked">Занят на работе</div>
           <div className="buyWorkerPageBalanceContainer">
-            <div className="buyWorkerPageBalance">{balance}</div>
+            <div className="buyWorkerPageBalance">{userData.price}</div>
             <div className="buyWorkerPageBalanceSVG">
               <img src="assets/goldMiniCoin.png" alt="" />
             </div>
           </div>
           <div
             className={
-              buyWorkerID.status === "free"
+              userData.is_safe === "no"
                 ? "workerUp buy free"
                 : "workerUp buy worked"
             }
+            onClick={userData.is_safe === "no" ? handleBuy : handleBuyNo}
           >
             <p
               className={
-                buyWorkerID.status === "free"
+                userData.is_safe === "no"
                   ? "workerUpTitle free"
                   : "workerUpTitle worked"
               }
@@ -63,9 +102,7 @@ function BuyWorker({ buyWorkerID, setCurrentPage, setPreviusPage }) {
             <div className="buyWorkerPropertyCardTitle">
               <div className="buyWorkerPropertyCardName">Доступность:</div>
               <div className="buyWorkerPropertyCardDesc">
-                {buyWorkerID.status === "free"
-                  ? "Свободен"
-                  : `Защита ${shield}`}
+                {userData.is_safe === "no" ? "Свободен" : `Защищен`}
               </div>
             </div>
             <div className="buyWorkerPropertyIMG">
@@ -77,7 +114,7 @@ function BuyWorker({ buyWorkerID, setCurrentPage, setPreviusPage }) {
           <div className="buyWorkerPropertyCard">
             <div className="buyWorkerPropertyCardTitle">
               <div className="buyWorkerPropertyCardName">Заработано звезд:</div>
-              <div className="buyWorkerPropertyCardDesc">{star}</div>
+              <div className="buyWorkerPropertyCardDesc">{userData.stars}</div>
             </div>
             <div className="buyWorkerPropertyIMG">
               <div className="buyWorkerPropertyIMGContainer">
@@ -88,7 +125,9 @@ function BuyWorker({ buyWorkerID, setCurrentPage, setPreviusPage }) {
           <div className="buyWorkerPropertyCard">
             <div className="buyWorkerPropertyCardTitle">
               <div className="buyWorkerPropertyCardName">Зарабатывает:</div>
-              <div className="buyWorkerPropertyCardDesc">{payment}</div>
+              <div className="buyWorkerPropertyCardDesc">
+                {userData.sum_income}/min
+              </div>
             </div>
             <div className="buyWorkerPropertyIMG">
               <div className="buyWorkerPropertyIMGContainer">
@@ -98,6 +137,12 @@ function BuyWorker({ buyWorkerID, setCurrentPage, setPreviusPage }) {
           </div>
         </div>
       </div>
+      {modalOpen && (
+        <div className="modal">
+          <div className="backdrop" onClick={handleModalClose}></div>
+          <div className="error-message">{errorMessage}</div>
+        </div>
+      )}
     </>
   );
 }

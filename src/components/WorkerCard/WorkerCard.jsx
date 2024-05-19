@@ -5,86 +5,11 @@ function WorkerCard({ userData, setCurrentPage, setWorkerID }) {
   const [players, setPlayers] = useState([]);
 
   useEffect(() => {
-    // Simulating an API call to fetch player data
-    fetchPlayerData().then((data) => {
-      setPlayers(data);
-    });
-  }, []);
-
-  const fetchPlayerData = async () => {
-    return [
-      {
-        id: 1,
-        name: "Илья Коломин",
-        price: 5000,
-        avatar: "../../assets/worker1.png",
-        status: "Работает на Fierro",
-      },
-      {
-        id: 2,
-        name: "Sunny day",
-        price: 1000,
-        avatar: "../../assets/worker2.png",
-        status: "Работает на Nikita",
-      },
-      {
-        id: 3,
-        name: "Sunny day",
-        price: 3000,
-        avatar: "../../assets/worker3.png",
-        status: "Работает на Nikita",
-      },
-      {
-        id: 4,
-        name: "Ford",
-        price: 11200,
-        avatar: "../../assets/worker2.png",
-        status: "Работает на Nikita",
-      },
-      {
-        id: 5,
-        name: "Alice",
-        price: 1240,
-        avatar: "../../assets/worker3.png",
-        status: "Работает на Nikita",
-      },
-      {
-        id: 1,
-        name: "Илья Коломин",
-        price: 5000,
-        avatar: "../../assets/worker1.png",
-        status: "Работает на Fierro",
-      },
-      {
-        id: 2,
-        name: "Sunny day",
-        price: 1000,
-        avatar: "../../assets/worker2.png",
-        status: "Работает на Nikita",
-      },
-      {
-        id: 3,
-        name: "Sunny day",
-        price: 3000,
-        avatar: "../../assets/worker3.png",
-        status: "Работает на Nikita",
-      },
-      {
-        id: 4,
-        name: "Ford",
-        price: 11200,
-        avatar: "../../assets/worker2.png",
-        status: "Работает на Nikita",
-      },
-      {
-        id: 5,
-        name: "Alice",
-        price: 1240,
-        avatar: "../../assets/worker3.png",
-        status: "Работает на Nikita",
-      },
-    ];
-  };
+    if (userData && userData.length > 0) {
+      const sortedWorkers = userData.flat().sort((a, b) => a.price - b.price);
+      setPlayers(sortedWorkers);
+    }
+  }, [userData]);
 
   const chunkedPlayers = players.reduce((resultArray, item, index) => {
     const chunkIndex = Math.floor(index / 3);
@@ -136,20 +61,21 @@ function WorkerCard({ userData, setCurrentPage, setWorkerID }) {
     <div className="workers">
       {chunkedPlayers.map((chunk, index) => (
         <div key={index} className="workerRow">
-          {chunk.map((player) => (
+          {chunk.map((worker, idx) => (
             <div
-              key={player.id}
+              key={`${worker.id}_${idx}`}
               className="workerCard"
               onClick={() => {
                 setCurrentPage("worker");
-                setWorkerID(player.id);
+                console.log(worker.user_id);
+                setWorkerID(worker.user_id);
               }}
             >
               <div className="workerAvatar">
-                <img className="workerAvatarIMG" src={player.avatar} alt="" />
+                <img className="workerAvatarIMG" src={worker.img} alt="" />
               </div>
-              <div className="workerName">{player.name}</div>
-              <div className="workerPrice">{player.price}/min</div>
+              <div className="workerName">{worker.user_fullname}</div>
+              <div className="workerPrice">{worker.income}/min</div>
             </div>
           ))}
         </div>

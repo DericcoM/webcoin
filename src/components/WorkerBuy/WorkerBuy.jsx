@@ -1,6 +1,6 @@
 import React from "react";
 import "./WorkerBuy.css";
-
+import useFetchUserData from "../../Hooks/useFetchUserData";
 function WorkerBuy({
   id,
   name,
@@ -12,8 +12,18 @@ function WorkerBuy({
   setCurrentPage,
   setBuyWorkerID,
   player,
-  setPreviusPage
+  setPreviousPage,
 }) {
+  const { userData, loading, error } = useFetchUserData(ownerID);
+
+  if (loading) {
+    return;
+  }
+
+  if (error) {
+    return <div>Error loading user data: {error.message}</div>;
+  }
+
   const statusBar = () => {
     if (status === "worked") {
       return (
@@ -41,24 +51,25 @@ function WorkerBuy({
   };
 
   const formattedPrice = formatPrice(price);
-
+  console.log(id);
   return (
     <div
       className="workerBuyCard"
       onClick={() => {
         setCurrentPage("buyWorker");
-        setPreviusPage("buy")
-        setBuyWorkerID(player);
-        console.log(player)
+        setPreviousPage("buy");
+        setBuyWorkerID(id);
       }}
     >
       <div className="workerBuyCardTitle">
         <div className="workerBuyCardImg">
-          <img src={avatar} alt={name} className="workerBuyAvatar" />
+          <img src={avatar} alt="" className="workerBuyAvatar" />
         </div>
         <div className="workerBuyCardInfo">
           <div className="workerBuyName">{name}</div>
-          {statusBar()}
+          <div className="workerBuyStatusWorked">
+            Работает на {userData.user_fullname}
+          </div>
         </div>
       </div>
       <div className="workerBuyDetailsContainer">

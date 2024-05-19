@@ -9,82 +9,105 @@ import BuyWorker from "../BuyWorker/BuyWorker";
 import Rating from "../Rating/Rating";
 import Boost from "../Boost/Boost";
 import Trade from "../Trade/Trade";
+import useFetchUserData from "../../Hooks/useFetchUserData";
+import useFetchUserWorker from "../../Hooks/useFetchUserWorker";
+import useTelegramUser from "../../Hooks/useTelegramUser";
 
 function Main() {
   const [currentPage, setCurrentPage] = useState("main");
   const [workerID, setWorkerID] = useState();
-  const mainScrollRef = useRef(null); // Ссылка на блок mainScroll
+  const mainScrollRef = useRef(null);
   const [buyWorkerID, setBuyWorkerID] = useState([]);
-  const [previusPage, setPreviusPage] = useState("main");
-  const userData = {
-    name: "Thomas Vien",
-    coins: "56,501",
-    rating: "10,220 th",
-    count_slaves: 0,
-    workerCount: 6,
-    workerMin: 123,
-  };
+  const [previousPage, setPreviousPage] = useState("main");
+  const userId = 467597194; // Example user ID
+  const { userData, loading, error, refetchUserData } =
+    useFetchUserData(userId);
+  const { userWorker, loadingWorker, errorWorker, updateUserData } =
+    useFetchUserWorker(userId);
+  const [summWorker, setSummWorker] = useState(0);
+  const [summWorkerPrice, setSummWorkerPrice] = useState(0);
 
   useEffect(() => {
-    // Прокрутить страницу к самому верху при монтировании компонента
     window.scrollTo(0, 0);
   }, [currentPage]);
 
   useEffect(() => {
-    console.log(currentPage);
-    adjustMainScrollHeight(); // Вызываем функцию для корректировки высоты mainScroll при загрузке страницы
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (userWorker) {
+      handleWorker();
+    }
+  }, [userWorker]);
+
+  const handleWorker = () => {
+    if (userWorker && Array.isArray(userWorker)) {
+      // "Развернуть" вложенные массивы в один плоский массив
+      const flatWorkerArray = userWorker.flat();
+      const totalWorkers = flatWorkerArray.length;
+      setSummWorker(totalWorkers);
+
+      const totalIncome = flatWorkerArray.reduce((sum, worker) => {
+        if (worker && typeof worker.income === "number") {
+          return sum + worker.income;
+        }
+        return sum;
+      }, 0);
+      setSummWorkerPrice(totalIncome);
+    }
+  };
 
   useEffect(() => {
-    // Обработка изменения currentPage
     if (
       currentPage !== "main" &&
       currentPage !== "buy" &&
       currentPage !== "rating"
     ) {
-      document.body.style.overflow = "visible"; // Включить прокрутку для всех страниц, кроме main и buyWorker
+      document.body.style.overflow = "visible";
     } else {
-      document.body.style.overflow = "hidden"; // Отключить прокрутку для страниц main и buyWorker
+      document.body.style.overflow = "hidden";
       if (mainScrollRef.current) {
         const windowHeight = window.innerHeight;
-        const headerHeight = 120; // Предположим, что высота заголовка равна 60px
-        const footerHeight = 80; // Предположим, что высота подвала равна 80px
+        const headerHeight = 120;
+        const footerHeight = 80;
         const mainScrollHeight = windowHeight - headerHeight - footerHeight;
         mainScrollRef.current.style.maxHeight = `${mainScrollHeight + 20}px`;
       }
     }
-  }, [currentPage, previusPage]);
+  }, [currentPage, previousPage]);
 
-  // Функция для корректировки высоты mainScroll
   const adjustMainScrollHeight = () => {
     if (mainScrollRef.current) {
       const windowHeight = window.innerHeight;
-      const headerHeight = 120; // Предположим, что высота заголовка равна 60px
-      const footerHeight = 80; // Предположим, что высота подвала равна 76px
+      const headerHeight = 120;
+      const footerHeight = 80;
       const mainScrollHeight = windowHeight - headerHeight - footerHeight;
       mainScrollRef.current.style.maxHeight = `${mainScrollHeight + 20}px`;
     }
   };
 
-  // Вызываем adjustMainScrollHeight при изменении размеров окна
   useEffect(() => {
     window.addEventListener("resize", adjustMainScrollHeight);
     return () => {
       window.removeEventListener("resize", adjustMainScrollHeight);
     };
-  }, [currentPage, previusPage]);
+  }, [currentPage, previousPage]);
 
   useEffect(() => {
     if (currentPage === "buy") {
-      setPreviusPage("main");
+      setPreviousPage("main");
     }
     if (currentPage === "worker") {
-      setPreviusPage("buy");
+      setPreviousPage("buy");
     }
-  }, [currentPage, previusPage]);
+  }, [currentPage]);
 
   const renderContent = () => {
+    if (loading) {
+      return;
+    }
+
+    if (error) {
+      return <div>Error loading user data: {error.message}</div>;
+    }
+
     switch (currentPage) {
       case "main":
         return (
@@ -92,11 +115,13 @@ function Main() {
             <HeaderProfile
               userData={userData}
               setCurrentPage={setCurrentPage}
-              setPreviusPage={setPreviusPage}
+              setPreviousPage={setPreviousPage}
             />
             <div ref={mainScrollRef} className="mainScroll">
               <div className="bigBalanceContainer">
-                <div className="bigBalanceValue">{userData.coins}</div>
+                <div className="bigBalanceValue">
+                  {userData.balance.toLocaleString("en-US")}
+                </div>
                 <div className="mainCoinContainer">
                   <div className="mainContainerCoinSVG">
                     <img src="assets/bigCoin.png" alt="" />
@@ -125,15 +150,15 @@ function Main() {
                 <div className="workerHeader">
                   <div className="workerTitle">
                     Мои работники:
-                    <div className="workerCount">{userData.workerCount}</div>
+                    <div className="workerCount">{summWorker}</div>
                   </div>
-                  <div className="workerMin">{userData.workerMin}/min</div>
+                  <div className="workerMin">{summWorkerPrice}/min</div>
                 </div>
                 <WorkerCard
-                  userData={userData}
+                  userData={userWorker}
                   setCurrentPage={setCurrentPage}
                   setWorkerID={setWorkerID}
-                  setPreviusPage={setPreviusPage}
+                  setPreviousPage={"main"}
                 />
               </div>
             </div>
@@ -142,17 +167,19 @@ function Main() {
       case "worker":
         return (
           <WorkerPage
+            userID={userId}
             workerID={workerID}
             setCurrentPage={setCurrentPage}
-            setPreviusPage={setPreviusPage}
+            setPreviousPage={setPreviousPage}
           />
         );
       case "buy":
         return (
           <PlayersBuy
+            userID={userId}
             setCurrentPage={setCurrentPage}
             setBuyWorkerID={setBuyWorkerID}
-            setPreviusPage={setPreviusPage}
+            setPreviousPage={setPreviousPage}
           />
         );
       case "buyWorker":
@@ -160,28 +187,34 @@ function Main() {
           <BuyWorker
             buyWorkerID={buyWorkerID}
             setCurrentPage={setCurrentPage}
-            setPreviusPage={setPreviusPage}
+            setPreviousPage={setPreviousPage}
+            ownerID={userId}
+            refetchUserData={refetchUserData}
+            updateUserData={updateUserData}
           />
         );
       case "rating":
         return (
           <Rating
+            mainID={userId}
+            mainData={userData}
             setCurrentPage={setCurrentPage}
-            setPreviusPage={setPreviusPage}
+            setPreviousPage={setPreviousPage}
           />
         );
       case "boost":
         return (
           <Boost
             setCurrentPage={setCurrentPage}
-            setPreviusPage={setPreviusPage}
+            setPreviousPage={setPreviousPage}
           />
         );
       case "trade":
         return (
           <Trade
             setCurrentPage={setCurrentPage}
-            setPreviusPage={setPreviusPage}
+            setPreviousPage={setPreviousPage}
+            stars={userData.stars}
           />
         );
       default:
@@ -195,17 +228,17 @@ function Main() {
       let BackButton = tg.BackButton;
       BackButton.show();
       const scrollToTop = () => {
-        window.scrollTo(0, 0); // Прокрутить страницу к верху
+        window.scrollTo(0, 0);
       };
       BackButton.onClick(function () {
         scrollToTop();
         if (window.pageYOffset === 0) {
-          setCurrentPage(previusPage);
+          setCurrentPage(previousPage);
           BackButton.hide();
         }
       });
     }
-  }, [currentPage, previusPage]);
+  }, [currentPage, previousPage]);
 
   return (
     <div
@@ -223,7 +256,7 @@ function Main() {
           <Footer
             setCurrentPage={setCurrentPage}
             currentPage={currentPage}
-            setPreviusPage={setPreviusPage}
+            setPreviousPage={setPreviousPage}
           />
         )}
       {renderContent()}

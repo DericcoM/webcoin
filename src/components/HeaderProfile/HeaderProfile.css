@@ -24,14 +24,15 @@
   width: 47px;
   height: 47px;
   margin-right: 7px;
+  border-radius: 50%;
+  overflow: hidden; /* Добавьте это свойство */
 }
 
 .headerProfileUserAvatarIMG {
   /* Замените путь к изображению на нужный вам */
-  background-image: url("../../assets/ava1.png");
-  background-size: cover; /* Или другое свойство для масштабирования изображения */
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 
 .headerProfileUserInfo {

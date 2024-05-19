@@ -1,14 +1,14 @@
 import React from "react";
 import "./Footer.css";
 
-function Footer({ setCurrentPage, currentPage, setPreviusPage }) {
+function Footer({ setCurrentPage, currentPage, setPreviousPage }) {
   return (
     <div className={currentPage === "boost" ? "footer boosted" : "footer"}>
       <div
         className="navButton"
         onClick={() => {
           setCurrentPage("buy");
-          setPreviusPage("main");
+          setPreviousPage("main");
         }}
       >
         <div id="players" className="navButtonImg">
@@ -20,7 +20,7 @@ function Footer({ setCurrentPage, currentPage, setPreviusPage }) {
         className="navButton"
         onClick={() => {
           setCurrentPage("boost");
-          setPreviusPage("main");
+          setPreviousPage("main");
         }}
       >
         <div id="boost" className="navButtonImg">
@@ -32,7 +32,7 @@ function Footer({ setCurrentPage, currentPage, setPreviusPage }) {
         className="navButton"
         onClick={() => {
           setCurrentPage("trade");
-          setPreviusPage("main");
+          setPreviousPage("main");
         }}
       >
         <div id="trade" className="navButtonImg">

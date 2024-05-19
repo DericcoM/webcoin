@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./Trade.css";
 
-function Trade({ setCurrentPage }) {
+function Trade({ setCurrentPage, stars }) {
   const buyScrollRef = useRef(null);
   const adjustMainScrollHeight = () => {
     if (buyScrollRef.current) {
@@ -26,7 +26,7 @@ function Trade({ setCurrentPage }) {
         <div className="boostTitle">Баланс</div>
         <div className="buyScrollContainer" ref={buyScrollRef}>
           <div className="balanceValue">
-            4,335
+            {stars}
             <div className="balanceValueImg">
               <img src="assets/star.png" alt="" />
             </div>
