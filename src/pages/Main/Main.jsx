@@ -12,6 +12,10 @@ import Trade from "../Trade/Trade";
 import useFetchUserData from "../../Hooks/useFetchUserData";
 import useFetchUserWorker from "../../Hooks/useFetchUserWorker";
 import useTelegramUser from "../../Hooks/useTelegramUser";
+import useFetchBalance from "../../Hooks/useFetchBalance";
+import useFetchLink from "../../Hooks/useFetchLink";
+import QRCode from "qrcode.react";
+import ModalSub from "../../components/ModalSub/ModalSub";
 
 function Main() {
   const [currentPage, setCurrentPage] = useState("main");
@@ -19,17 +23,35 @@ function Main() {
   const mainScrollRef = useRef(null);
   const [buyWorkerID, setBuyWorkerID] = useState([]);
   const [previousPage, setPreviousPage] = useState("main");
-  const userId = 467597194; // Example user ID
+  const userId = 467597194; // userID
+
+  // Using custom hooks to fetch data
+  const {
+    balance,
+    loading: balanceLoading,
+    error: balanceError,
+    refetchBalance,
+  } = useFetchBalance(userId);
   const { userData, loading, error, refetchUserData } =
     useFetchUserData(userId);
   const { userWorker, loadingWorker, errorWorker, updateUserData } =
     useFetchUserWorker(userId);
   const [summWorker, setSummWorker] = useState(0);
   const [summWorkerPrice, setSummWorkerPrice] = useState(0);
+  const { link, loading: linkLoading, error: linkError } = useFetchLink(userId);
+  const [qrText, setQrText] = useState("");
+  const [showCopyMessage, setShowCopyMessage] = useState(false); // State to control copy message visibility
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [currentPage]);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(link);
+    setQrText("");
+    setShowCopyMessage(true);
+    setTimeout(() => setShowCopyMessage(false), 1000);
+  };
 
   useEffect(() => {
     if (userWorker) {
@@ -39,7 +61,6 @@ function Main() {
 
   const handleWorker = () => {
     if (userWorker && Array.isArray(userWorker)) {
-      // "Развернуть" вложенные массивы в один плоский массив
       const flatWorkerArray = userWorker.flat();
       const totalWorkers = flatWorkerArray.length;
       setSummWorker(totalWorkers);
@@ -55,21 +76,9 @@ function Main() {
   };
 
   useEffect(() => {
-    if (
-      currentPage !== "main" &&
-      currentPage !== "buy" &&
-      currentPage !== "rating"
-    ) {
-      document.body.style.overflow = "visible";
-    } else {
-      document.body.style.overflow = "hidden";
-      if (mainScrollRef.current) {
-        const windowHeight = window.innerHeight;
-        const headerHeight = 120;
-        const footerHeight = 80;
-        const mainScrollHeight = windowHeight - headerHeight - footerHeight;
-        mainScrollRef.current.style.maxHeight = `${mainScrollHeight + 20}px`;
-      }
+    document.body.style.overflow = "hidden";
+    if (mainScrollRef.current) {
+      adjustMainScrollHeight();
     }
   }, [currentPage, previousPage]);
 
@@ -99,6 +108,46 @@ function Main() {
     }
   }, [currentPage]);
 
+  useEffect(() => {
+    if (currentPage !== "main") {
+      let tg = window.Telegram.WebApp;
+      let BackButton = tg.BackButton;
+      BackButton.show();
+      const scrollToTop = () => {
+        window.scrollTo(0, 0);
+      };
+      BackButton.onClick(function () {
+        scrollToTop();
+        if (window.pageYOffset === 0) {
+          setCurrentPage(previousPage);
+          BackButton.hide();
+          refetchUserData(); // Refetch user data when returning to the main page
+        }
+      });
+    }
+  }, [currentPage, previousPage]);
+
+  // State and function to control QR modal visibility
+  const [showQRModal, setShowQRModal] = useState(false);
+  const handleQr = () => {
+    setQrText(link);
+    setShowQRModal(true);
+  };
+
+  const closeModal = () => {
+    setShowQRModal(false);
+  };
+
+  const [showModal, setShowModal] = useState(true);
+
+  useEffect(() => {
+    setShowModal(true);
+  }, []);
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   const renderContent = () => {
     if (loading) {
       return;
@@ -114,13 +163,14 @@ function Main() {
           <>
             <HeaderProfile
               userData={userData}
+              balanceuser={balance.toLocaleString("en-US")} // Passing balance to HeaderProfile
               setCurrentPage={setCurrentPage}
               setPreviousPage={setPreviousPage}
             />
             <div ref={mainScrollRef} className="mainScroll">
               <div className="bigBalanceContainer">
                 <div className="bigBalanceValue">
-                  {userData.balance.toLocaleString("en-US")}
+                  {balance.toLocaleString("en-US")}
                 </div>
                 <div className="mainCoinContainer">
                   <div className="mainContainerCoinSVG">
@@ -129,17 +179,26 @@ function Main() {
                 </div>
               </div>
               <div className="mainRef">
+                {showCopyMessage && (
+                  <div
+                    className={
+                      showCopyMessage ? "mainRefCopy" : "mainRefCopy close"
+                    }
+                  >
+                    Скопировано
+                  </div>
+                )}
                 <div className="mainRefTitle">
                   Если другие игроки перейдут по вашей ссылке, они станут вашими
                   работниками.
                 </div>
                 <div className="refButtons">
-                  <div className="mainRefButton">
+                  <div className="mainRefButton" onClick={handleQr}>
                     <div className="mainRefButtonContainer">
                       <div className="mainRefQrSVG"></div>
                     </div>
                   </div>
-                  <div className="mainRefButton">
+                  <div className="mainRefButton" onClick={handleCopy}>
                     <div className="mainRefButtonContainer">
                       <div className="mainRefShareSVG"></div>
                     </div>
@@ -158,9 +217,19 @@ function Main() {
                   userData={userWorker}
                   setCurrentPage={setCurrentPage}
                   setWorkerID={setWorkerID}
-                  setPreviousPage={"main"}
+                  setPreviousPage={setPreviousPage}
+                  handleCopy={handleCopy}
+                  handleQr={handleQr}
                 />
               </div>
+              {showQRModal && (
+                <>
+                  <div className="overlay" onClick={closeModal}></div>
+                  <div className="qrModal">
+                    <QRCode value={link} />
+                  </div>
+                </>
+              )}
             </div>
           </>
         );
@@ -188,9 +257,6 @@ function Main() {
             buyWorkerID={buyWorkerID}
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
-            ownerID={userId}
-            refetchUserData={refetchUserData}
-            updateUserData={updateUserData}
           />
         );
       case "rating":
@@ -222,24 +288,6 @@ function Main() {
     }
   };
 
-  useEffect(() => {
-    if (currentPage !== "main") {
-      let tg = window.Telegram.WebApp;
-      let BackButton = tg.BackButton;
-      BackButton.show();
-      const scrollToTop = () => {
-        window.scrollTo(0, 0);
-      };
-      BackButton.onClick(function () {
-        scrollToTop();
-        if (window.pageYOffset === 0) {
-          setCurrentPage(previousPage);
-          BackButton.hide();
-        }
-      });
-    }
-  }, [currentPage, previousPage]);
-
   return (
     <div
       className={
@@ -260,6 +308,7 @@ function Main() {
           />
         )}
       {renderContent()}
+      <ModalSub show={showModal} onClose={handleCloseModal} />
     </div>
   );
 }

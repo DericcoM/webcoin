@@ -129,6 +129,7 @@
 
 .scoreBoardList {
   overflow-y: scroll;
+  min-height: 288px;
   max-height: calc(100vh - 92px);
 }
 

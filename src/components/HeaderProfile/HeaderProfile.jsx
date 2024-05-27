@@ -1,8 +1,13 @@
 import React from "react";
 import "./HeaderProfile.css";
 
-function HeaderProfile({ userData, setCurrentPage, setPreviousPage }) {
-  const balance = userData.balance.toLocaleString("en-US");
+function HeaderProfile({
+  userData,
+  setCurrentPage,
+  setPreviousPage,
+  balanceuser,
+}) {
+  const balance = balanceuser;
   const rating = userData.rating.toLocaleString("en-US") + "th";
   // const ratingString = rating + "th";
   return (

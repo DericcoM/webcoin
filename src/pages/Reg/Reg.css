@@ -1,0 +1,175 @@
+.reg {
+  display: flex;
+  padding: 20% 0 0 0;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.regTitle {
+  font-family: SF Pro Display;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.regAvatar {
+  background: #1f1f1f;
+  border-radius: 50%;
+  width: 112px;
+  height: 112px;
+  margin-top: 21px;
+  margin-bottom: 9px;
+}
+
+.regAvatarImg {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 29% 28%;
+}
+
+.regAvatarImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.regAvatarChange {
+  display: flex;
+  font-family: SF Pro Display;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.regAvatarChangeImg {
+  width: 14px;
+  height: 14px;
+  margin-left: 4px;
+}
+
+.regAvatarChangeImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.regForm {
+  margin-top: 21px;
+}
+
+.inputForm {
+  background: #1f1f1f;
+  border-radius: 20px;
+  height: 53px;
+  width: fit-content;
+  min-width: 320px;
+  display: flex;
+  align-items: center;
+  padding: 0 19px;
+  margin-bottom: 9px;
+}
+
+.inputFormImg {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  margin-right: 16px;
+  padding-right: 12px;
+  border-right: #313131 2px solid;
+}
+
+.inputFormImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.input {
+  background: transparent;
+  outline: none;
+  border: none;
+  color: #ffffff; /* Белый цвет текста */
+  font-family: "SF Pro Display";
+  font-size: 15px;
+  font-weight: 400;
+  padding-bottom: 5px; /* Отступ снизу для полоски */
+  position: relative;
+  width: 100%; /* Ширина 100% для корректного отображения полоски */
+}
+
+.input::placeholder {
+  color: #7d7d7d;
+}
+
+.input::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px; /* Высота полоски */
+  background-color: #ffffff; /* Цвет полоски */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: scaleX(0); /* Начальное состояние полоски */
+  transition: transform 0.3s ease; /* Плавный переход */
+}
+
+.input:focus::after {
+  transform: scaleX(1); /* Масштабирование полоски при фокусе */
+}
+
+.inputForm.confirmEmail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #181818;
+  height: 41px;
+  background: #f6f6f6;
+  font-family: "SF Pro Display";
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.inputForm.confirmEmail:active {
+  background-color: #808080; /* Gray background color on click */
+  color: #fff; /* White text color on click */
+  outline: none; /* Ensure no outline when active */
+  border: none; /* Remove any default borders */
+  outline: none; /* Remove outline when focused */
+  user-select: none; /* Prevent text selection */
+  -webkit-user-select: none; /* Prevent text selection in WebKit browsers */
+}
+
+.inputForm.confirmEmail:focus {
+  outline: none; /* Ensure no outline when focused */
+  border: none; /* Remove any default borders */
+  outline: none; /* Remove outline when focused */
+  user-select: none; /* Prevent text selection */
+  -webkit-user-select: none; /* Prevent text selection in WebKit browsers */
+}
+
+.input.code {
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+}
+
+.authButton.regB {
+  margin-top: 59px;
+  text-decoration: none;
+  outline: none;
+}
+
+.authDocConfirm {
+  margin: 28px 35px;
+  text-align: center;
+  color: #373737;
+  font-family: "SF Pro Display";
+  font-size: 10px;
+  font-weight: 500;
+}

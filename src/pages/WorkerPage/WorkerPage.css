@@ -1,5 +1,7 @@
 .workerPage {
-  height: fit-content;
+  overflow-y: auto;
+  /* Remove fixed min-height */
+  max-height: calc(100vh - 20px); /* Adjust to subtract header/footer height */
 }
 
 .workerPageTitle {

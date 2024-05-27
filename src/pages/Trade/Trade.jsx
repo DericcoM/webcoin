@@ -7,7 +7,7 @@ function Trade({ setCurrentPage, stars }) {
     if (buyScrollRef.current) {
       const windowHeight = window.innerHeight;
       const footerHeight = 80; // Высота подвала
-      const maxScrollHeight = windowHeight - footerHeight - 90; // 100 пикселей от низа
+      const maxScrollHeight = windowHeight - footerHeight - 35; // 100 пикселей от низа
       buyScrollRef.current.style.maxHeight = `${maxScrollHeight}px`;
     }
   };
@@ -23,8 +23,9 @@ function Trade({ setCurrentPage, stars }) {
   return (
     <>
       <div className="trade">
-        <div className="boostTitle">Баланс</div>
         <div className="buyScrollContainer" ref={buyScrollRef}>
+          <div className="boostTitle">Баланс</div>
+
           <div className="balanceValue">
             {stars}
             <div className="balanceValueImg">

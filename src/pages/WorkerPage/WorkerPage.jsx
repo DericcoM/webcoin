@@ -4,7 +4,7 @@ import useFetchUserData from "../../Hooks/useFetchUserData";
 import useFetchUserWorker from "../../Hooks/useFetchUserWorker";
 import { fetchWorkerUp, fetchWorkerShield } from "../../api/api";
 
-function WorkerPage({ userID, workerID }) {
+function WorkerPage({ userID, workerID, setPreviousPage }) {
   const { userData, loading, error, refetchUserData } =
     useFetchUserData(workerID);
   const { userWorker, loadingWorker, errorWorker } =
@@ -12,6 +12,7 @@ function WorkerPage({ userID, workerID }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  setPreviousPage("main");
   useEffect(() => {
     if (!loading && !error) {
       setModalOpen(false); // Закрыть модальное окно при обновлении данных

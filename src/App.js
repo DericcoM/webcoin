@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import Main from './pages/Main/Main'
 import React, { useEffect } from "react";
-
+import Auth from './pages/Auth/Auth';
 
 function App() {
   let tg = window.Telegram.WebApp;
@@ -38,6 +38,7 @@ function App() {
         <Route path="/">
           <Route index element={<Main />} />
         </Route>
+        <Route path="/auth" element={<Auth />} />
       </Routes>
   )
 }

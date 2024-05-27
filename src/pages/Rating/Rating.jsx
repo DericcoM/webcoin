@@ -8,6 +8,7 @@ function Rating({ setCurrentPage, mainID, mainData }) {
 
   const amountPlayer = players.length;
   const remainDate = "18ч";
+  const playerCardHeight = 63; // Height of each player card in px
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,22 +30,24 @@ function Rating({ setCurrentPage, mainID, mainData }) {
 
   const filterBalance = (balance) => balance.toLocaleString("en-US");
 
+  const updateScoreBoardHeight = () => {
+    if (scoreBoardListRef.current) {
+      const height =
+        window.innerHeight -
+        scoreBoardListRef.current.getBoundingClientRect().top -
+        92;
+      const totalHeight = sortedPlayers.length * playerCardHeight;
+      const finalHeight = Math.min(totalHeight, height);
+      scoreBoardListRef.current.style.height = `${finalHeight}px`;
+    }
+  };
+
   useEffect(() => {
-    const handleResize = () => {
-      if (scoreBoardListRef.current) {
-        const height =
-          window.innerHeight -
-          scoreBoardListRef.current.getBoundingClientRect().top -
-          92;
-        scoreBoardListRef.current.style.height = `${height}px`;
-      }
-    };
+    window.addEventListener("resize", updateScoreBoardHeight);
+    updateScoreBoardHeight(); // Call once to set the height initially
 
-    window.addEventListener("resize", handleResize);
-    handleResize(); // Call once to set the height initially
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    return () => window.removeEventListener("resize", updateScoreBoardHeight);
+  }, [sortedPlayers]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -68,9 +71,7 @@ function Rating({ setCurrentPage, mainID, mainData }) {
         <div className="remainDate">Осталось {remainDate}</div>
         <div className="line"></div>
         <div
-          className={`scoreBoardList${
-            scoreBoardListRef.current ? " dynamicHeight" : ""
-          }`}
+          className="scoreBoardList"
           ref={scoreBoardListRef}
         >
           {sortedPlayers.map((player, index) => (

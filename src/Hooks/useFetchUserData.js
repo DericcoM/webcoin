@@ -22,11 +22,6 @@ const useFetchUserData = (userId) => {
     if (userId) {
       getUserData();
     }
-
-    const interval = setInterval(getUserData, 60000);
-
-    // Очищаем интервал при размонтировании компонента
-    return () => clearInterval(interval);
   }, [userId]);
   
   const refetchUserData = async () => {

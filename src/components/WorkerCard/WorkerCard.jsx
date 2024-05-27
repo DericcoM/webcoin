@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./WorkerCard.css";
 
-function WorkerCard({ userData, setCurrentPage, setWorkerID }) {
+function WorkerCard({
+  userData,
+  setCurrentPage,
+  setWorkerID,
+  setPreviousPage,
+  handleQr,
+  handleCopy
+}) {
   const [players, setPlayers] = useState([]);
 
   useEffect(() => {
@@ -23,6 +30,7 @@ function WorkerCard({ userData, setCurrentPage, setWorkerID }) {
     return resultArray;
   }, []);
 
+
   if (!players || players.length === 0) {
     return (
       <div className="workers">
@@ -37,12 +45,12 @@ function WorkerCard({ userData, setCurrentPage, setWorkerID }) {
           <div className="noWorkersText">
             <div className="noWorkersTitle">У вас нет работников.</div>
             <div className="noWorkersButtons">
-              <div className="noWorkerButton">
+              <div className="noWorkerButton" onClick={handleQr}>
                 <div className="noWorkerButtonContainer">
                   <div className="mainRefQrSVG"></div>
                 </div>
               </div>
-              <div className="noWorkerButton">
+              <div className="noWorkerButton" onClick={handleCopy}>
                 <div className="noWorkerButtonContainer">
                   <div className="mainRefShareSVG"></div>
                 </div>
@@ -69,6 +77,7 @@ function WorkerCard({ userData, setCurrentPage, setWorkerID }) {
                 setCurrentPage("worker");
                 console.log(worker.user_id);
                 setWorkerID(worker.user_id);
+                setPreviousPage("main");
               }}
             >
               <div className="workerAvatar">

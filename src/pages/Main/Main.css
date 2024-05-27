@@ -55,6 +55,7 @@ body {
 }
 
 .mainRef {
+  position: relative;
   background: #1f1f1f;
   height: 73px;
   width: 100%;
@@ -63,6 +64,22 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.mainRefCopy {
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999; /* Установите высокий z-index, чтобы модальное окно было поверх всего */
+
+  color: #ffff;
+  background: #1f1f1f;
+  padding: 20px;
+  font-size: 13px;
+  border-radius: 20px;
+  transition: all 0.2s linear;
 }
 
 .mainRefTitle {
@@ -164,16 +181,22 @@ body {
   padding: 3px 14px;
 }
 
-/* Стили для блока mainScroll */
+/* Styles for the mainScroll block */
 .mainScroll {
   overflow-y: auto;
-  max-height: calc(82vh - 77px);
+  max-height: calc(100vh - 180px); /* Adjust the height calculation */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS devices */
 }
 
-/* Скрыть полосу прокрутки в Chrome, Safari и Edge */
+/* Hide scrollbar in Chrome, Safari, and Edge */
 .mainScroll::-webkit-scrollbar {
-  width: 0; /* Ширина полосы прокрутки */
-  height: 0; /* Высота полосы прокрутки */
+  width: 0;
+  height: 0;
+}
+
+/* Optional: Custom styles for the mainScroll content */
+.mainScrollContent {
+  padding: 20px; /* Add some padding if needed */
 }
 
 /* BACK */
@@ -191,4 +214,38 @@ body {
 
 .back-button svg {
   margin-right: 8px;
+}
+
+/* Добавьте стили для модального окна */
+.qrModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999; /* Установите высокий z-index, чтобы модальное окно было поверх всего */
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Затемненный задний фон */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Установите непрозрачность заднего фона */
+  z-index: 999; /* Установите высокий z-index, чтобы он был под модальным окном, но поверх всего остального */
+}
+
+/* Скрыть модальное окно по умолчанию */
+.qrModal.hidden {
+  display: none;
 }
