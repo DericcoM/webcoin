@@ -38,7 +38,7 @@ function App() {
         <Route path="/">
           <Route index element={<Main />} />
         </Route>
-        <Route path="/auth" element={<Auth />} />
+        {/* <Route path="/auth" element={<Auth />} /> */}
       </Routes>
   )
 }

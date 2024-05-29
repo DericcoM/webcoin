@@ -8,32 +8,32 @@ function BuyWorker({
   setCurrentPage,
   setPreviousPage,
   ownerID,
-  refetchUserData,
-  updateUserData,
+  userID,
 }) {
-  const { userData, loading, error } = useFetchUserData(buyWorkerID);
+  const { userData, loading, error, refetchUserData } =
+    useFetchUserData(buyWorkerID);
   const [modalOpen, setModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (!loading && !error) {
-      setModalOpen(false); // Закрыть модальное окно при обновлении данных
+      setModalOpen(false); // Close modal when data is updated
     }
   }, [loading, error]);
 
   if (loading) {
-    return;
+    return <div>Loading...</div>;
   }
 
   if (error) {
     return <div>Error loading user data: {error.message}</div>;
   }
 
-  const handleBuy = async () => {
+  const handleBuy = () => {
     try {
-      await buyWorker(ownerID, buyWorkerID);
-      await refetchUserData(); // Обновить данные пользователя
-      await updateUserData(); // Обновить данные работников
+      buyWorker(userID, buyWorkerID);
+      refetchUserData(); // Update user data
+      // Transition to the main page after updates
       setCurrentPage("main");
       setPreviousPage("main");
     } catch (error) {

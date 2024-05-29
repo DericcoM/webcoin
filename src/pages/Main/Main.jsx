@@ -23,9 +23,8 @@ function Main() {
   const mainScrollRef = useRef(null);
   const [buyWorkerID, setBuyWorkerID] = useState([]);
   const [previousPage, setPreviousPage] = useState("main");
-  const userId = 467597194; // userID
+  const userId = useTelegramUser(); // userID
 
-  // Using custom hooks to fetch data
   const {
     balance,
     loading: balanceLoading,
@@ -127,6 +126,14 @@ function Main() {
     }
   }, [currentPage, previousPage]);
 
+  useEffect(() => {
+    // Call updateUserData when the currentPage is "main"
+    if (currentPage === "main") {
+      updateUserData();
+      refetchBalance(); // Refetch balance when returning to "main" page
+    }
+  }, [currentPage, updateUserData, refetchBalance]);
+
   // State and function to control QR modal visibility
   const [showQRModal, setShowQRModal] = useState(false);
   const handleQr = () => {
@@ -147,7 +154,6 @@ function Main() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-
   const renderContent = () => {
     if (loading) {
       return;
@@ -254,6 +260,7 @@ function Main() {
       case "buyWorker":
         return (
           <BuyWorker
+            userID={userId}
             buyWorkerID={buyWorkerID}
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}

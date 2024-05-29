@@ -6,28 +6,7 @@ const useFetchBalance = (userId) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchBalance = async () => {
-      try {
-        setLoading(true);
-        const userData = await fetchUserData(userId);
-        const userBalance = Array.isArray(userData) && userData.length === 1 ? userData[0].balance : userData.balance;
-        setBalance(userBalance);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBalance(); // Вызываем функцию получения баланса сразу
-    const interval = setInterval(fetchBalance, 10000); // Запускаем интервал для периодического обновления
-
-    return () => clearInterval(interval); // Очищаем интервал при размонтировании компонента
-  }, [userId]);
-  
-  // Функция для повторного запроса баланса
-  const refetchBalance = async () => {
+  const fetchBalance = async () => {
     try {
       setLoading(true);
       const userData = await fetchUserData(userId);
@@ -40,7 +19,14 @@ const useFetchBalance = (userId) => {
     }
   };
 
-  return { balance, loading, error, refetchBalance };
+  useEffect(() => {
+    fetchBalance(); // Initial fetch
+    const interval = setInterval(fetchBalance, 10000); // Fetch every 10 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [userId]);
+
+  return { balance, loading, error, refetchBalance: fetchBalance };
 };
 
 export default useFetchBalance;

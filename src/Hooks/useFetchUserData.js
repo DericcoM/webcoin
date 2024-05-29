@@ -23,7 +23,7 @@ const useFetchUserData = (userId) => {
       getUserData();
     }
   }, [userId]);
-  
+
   const refetchUserData = async () => {
     try {
       setLoading(true);
