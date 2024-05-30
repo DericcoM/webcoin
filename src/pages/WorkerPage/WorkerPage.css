@@ -118,6 +118,7 @@
   display: flex;
   align-items: center;
   margin: 5px 0;
+  justify-content: space-between;
 }
 
 .workerPlayersUnitGroup {
@@ -150,6 +151,7 @@
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  flex-direction: column;
 }
 
 .backdrop {
@@ -163,12 +165,56 @@
 
 .error-message {
   z-index: 1251251251;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 5px;
+  background-color: #181818;
+  padding: 16px;
+  border-radius: 20px;
+  height: 99px;
+  width: 200px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   max-width: 80%;
   text-align: center;
-  color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  flex-direction: column;
+}
+
+.error-msg {
+  margin-top: 15px;
+  color: #585858;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.workerPlayersUnit_Income {
+  margin-right: 5px;
+  background: #292929;
+  padding: 15px 10px;
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 15px;
+}
+
+.workerUp:last-child {
+  margin-bottom: 20px;
+}
+
+.workerUp.balance {
+  background: #fff;
+}
+
+.workerUp.balance .workerUpTitle {
+  color: #181818;
   font-weight: 700;
+}
+
+.workerUp.clicked {
+  background: #181818; /* изменяем фон на текст */
+}
+
+.workerUp.clicked .workerUpTitle {
+  color: #fff; /* изменяем текст на фон */
 }

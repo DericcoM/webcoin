@@ -10,7 +10,7 @@
 
 .boostTitle {
   text-align: center;
-  margin: 0 auto;
+  margin: 10px auto;
   font-size: 24px;
   font-weight: 500;
   margin-bottom: 21px;
@@ -210,4 +210,90 @@
 
 .boostPremiumHourBlock {
   margin-bottom: 21px;
+}
+
+.ant-slider {
+  width: 90% !important;
+  margin-top: 54px;
+}
+
+:where(.css-dev-only-do-not-override-j9bb5n).ant-slider
+  .ant-slider-handle::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #1f1f1f;
+  box-shadow: 0 0 0 2px #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: inset-inline-start 0.2s, inset-block-start 0.2s, width 0.2s,
+    height 0.2s, box-shadow 0.2s;
+}
+
+:where(.css-dev-only-do-not-override-j9bb5n).ant-tooltip .ant-tooltip-inner {
+  min-width: 1em;
+  min-height: 32px;
+  padding: 6px 8px;
+  color: #181818;
+  text-align: start;
+  font-weight: 600;
+  text-decoration: none;
+  word-wrap: break-word;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+:where(.css-dev-only-do-not-override-j9bb5n).ant-tooltip {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.5714285714285714;
+  list-style: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  position: absolute;
+  z-index: 1070;
+  display: block;
+  width: max-content;
+  max-width: 250px;
+  visibility: visible;
+  transform-origin: var(--arrow-x, 50%) var(--arrow-y, 50%);
+  --antd-arrow-background-color: transparent;
+}
+
+:where(.css-dev-only-do-not-override-j9bb5n).ant-slider:hover
+  .ant-slider-handle::after {
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.bckggold {
+  background: #292929;
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+}
+
+.boostSocialsLinkasd {
+  margin: 7px auto;
+  width: 31px;
+  height: 31px;
+}
+
+.boostSocialsLinkasd img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.boostSocialsButton.testr {
+  width: 79%;
 }

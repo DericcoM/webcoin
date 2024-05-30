@@ -71,3 +71,22 @@ export const fetchUserWorker = async (userId) => {
       throw error;
     }
   };
+
+  export const fetchUserSkin = async (skin, userId) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}update_skin/${skin}/${userId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch user worker:', error);
+      throw error;
+    }
+  };
+
+  export const fetchSafeTimer = async (userID) => {
+    try {
+      const response = await axios.get(`https://ammolin.ru/api/get_safe_timer/${userID}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };

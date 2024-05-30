@@ -21,7 +21,7 @@ const useFetchBalance = (userId) => {
 
   useEffect(() => {
     fetchBalance(); // Initial fetch
-    const interval = setInterval(fetchBalance, 10000); // Fetch every 10 seconds
+    const interval = setInterval(fetchBalance, 30000); // Fetch every 10 seconds
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, [userId]);

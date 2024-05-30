@@ -16,6 +16,8 @@ import useFetchBalance from "../../Hooks/useFetchBalance";
 import useFetchLink from "../../Hooks/useFetchLink";
 import QRCode from "qrcode.react";
 import ModalSub from "../../components/ModalSub/ModalSub";
+import Profile from "../Profile/Profile";
+import Skins from "../Skins/Skins";
 
 function Main() {
   const [currentPage, setCurrentPage] = useState("main");
@@ -23,8 +25,8 @@ function Main() {
   const mainScrollRef = useRef(null);
   const [buyWorkerID, setBuyWorkerID] = useState([]);
   const [previousPage, setPreviousPage] = useState("main");
-  const userId = useTelegramUser(); // userID
-
+  const userId = 467597194;
+  // const userId = useTelegramUser();
   const {
     balance,
     loading: balanceLoading,
@@ -40,6 +42,7 @@ function Main() {
   const { link, loading: linkLoading, error: linkError } = useFetchLink(userId);
   const [qrText, setQrText] = useState("");
   const [showCopyMessage, setShowCopyMessage] = useState(false); // State to control copy message visibility
+  const [currentUserSkin, setCurrentUserSkin] = useState("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -56,7 +59,7 @@ function Main() {
     if (userWorker) {
       handleWorker();
     }
-  }, [userWorker]);
+  }, [userWorker, currentPage]);
 
   const handleWorker = () => {
     if (userWorker && Array.isArray(userWorker)) {
@@ -70,7 +73,10 @@ function Main() {
         }
         return sum;
       }, 0);
-      setSummWorkerPrice(totalIncome);
+
+      // Round the totalIncome to three decimal places
+      const roundedIncome = parseFloat(totalIncome.toFixed(3));
+      setSummWorkerPrice(roundedIncome);
     }
   };
 
@@ -129,8 +135,14 @@ function Main() {
   useEffect(() => {
     // Call updateUserData when the currentPage is "main"
     if (currentPage === "main") {
+      // Выполняем функцию каждую минуту
       updateUserData();
-      refetchBalance(); // Refetch balance when returning to "main" page
+      const intervalId = setInterval(() => {
+        refetchBalance(); // Обновляем баланс каждую минуту при возврате на страницу "main"
+      }, 30000); // Интервал в миллисекундах (60 секунд)
+
+      // Очищаем интервал при размонтировании компонента или изменении страницы
+      return () => clearInterval(intervalId);
     }
   }, [currentPage, updateUserData, refetchBalance]);
 
@@ -178,9 +190,18 @@ function Main() {
                 <div className="bigBalanceValue">
                   {balance.toLocaleString("en-US")}
                 </div>
-                <div className="mainCoinContainer">
+                <div
+                  className="mainCoinContainer"
+                  onClick={() => {
+                    setCurrentPage("skins");
+                    setPreviousPage("main");
+                  }}
+                >
                   <div className="mainContainerCoinSVG">
-                    <img src="assets/bigCoin.png" alt="" />
+                    <img
+                      src={`assets/skins/${userData.icon_coin}.png`}
+                      alt=""
+                    />
                   </div>
                 </div>
               </div>
@@ -246,6 +267,7 @@ function Main() {
             workerID={workerID}
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
+            balance={balance}
           />
         );
       case "buy":
@@ -290,6 +312,25 @@ function Main() {
             stars={userData.stars}
           />
         );
+      case "profile":
+        return (
+          <Profile
+            setCurrentPage={setCurrentPage}
+            setPreviousPage={setPreviousPage}
+            userID={userId}
+          />
+        );
+      case "skins":
+        return (
+          <Skins
+            setCurrentPage={setCurrentPage}
+            setPreviousPage={setPreviousPage}
+            userID={userId}
+            currentUserSkin={userData.icon_coin}
+            setCurrentUserSkin={setCurrentUserSkin}
+          />
+        );
+
       default:
         return null;
     }
@@ -307,7 +348,8 @@ function Main() {
     >
       {currentPage !== "worker" &&
         currentPage !== "buyWorker" &&
-        currentPage !== "rating" && (
+        currentPage !== "rating" &&
+        currentPage !== "profile" && (
           <Footer
             setCurrentPage={setCurrentPage}
             currentPage={currentPage}

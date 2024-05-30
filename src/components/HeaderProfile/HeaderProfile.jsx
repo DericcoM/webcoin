@@ -13,7 +13,13 @@ function HeaderProfile({
   return (
     <div className="headerProfile">
       <div className="headerProfileContainer">
-        <div className="headerProfileUser">
+        <div
+          className="headerProfileUser"
+          onClick={() => {
+            setCurrentPage("profile");
+            setPreviousPage("main");
+          }}
+        >
           <div className="headerProfileUserAvatar">
             <img
               className="headerProfileUserAvatarIMG"

@@ -2,17 +2,24 @@ import React, { useState, useEffect } from "react";
 import "./WorkerPage.css";
 import useFetchUserData from "../../Hooks/useFetchUserData";
 import useFetchUserWorker from "../../Hooks/useFetchUserWorker";
-import { fetchWorkerUp, fetchWorkerShield } from "../../api/api";
+import useSafeTimer from "../../Hooks/useSafeTimer";
+import {
+  fetchWorkerUp,
+  fetchWorkerShield,
+  fetchSafeTimer,
+} from "../../api/api";
 
-function WorkerPage({ userID, workerID, setPreviousPage }) {
+function WorkerPage({ userID, workerID, setPreviousPage, balance }) {
   const { userData, loading, error, refetchUserData } =
     useFetchUserData(workerID);
   const { userWorker, loadingWorker, errorWorker } =
     useFetchUserWorker(workerID);
   const [modalOpen, setModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [timer, setTimer] = useState();
 
   setPreviousPage("main");
+
   useEffect(() => {
     if (!loading && !error) {
       setModalOpen(false); // Закрыть модальное окно при обновлении данных
@@ -51,7 +58,7 @@ function WorkerPage({ userID, workerID, setPreviousPage }) {
     let errorMessageToShow = "Произошла ошибка";
     if (error.response && error.response.data && error.response.data.error) {
       if (error.response.status === 400) {
-        errorMessageToShow = "Недостаточно средств";
+        errorMessageToShow = "Недостаточно средств.";
       } else {
         errorMessageToShow = error.response.data.error;
       }
@@ -67,6 +74,7 @@ function WorkerPage({ userID, workerID, setPreviousPage }) {
   };
 
   const handleSheildNo = () => {};
+
   return (
     <>
       <div className="workerPage">
@@ -79,14 +87,59 @@ function WorkerPage({ userID, workerID, setPreviousPage }) {
         </div>
         <div className="workerPageStatusBar">
           <div className="workerPageShield">
-            {userData.is_safe === "yes" ? "Защищен" : "Не защищен"}
+            {userData.is_safe === "yes"
+              ? `Защищен ${userData.timer}`
+              : "Не защищен"}
           </div>
           <div className="workerPagePayment">{userData.income}/min</div>
         </div>
         <div className="dottedLine"></div>
+        <div className={"workerUp"}>
+          <p className="workerUpTitle">
+            Зарабатывает {userData.sum_income}/мин
+          </p>
+        </div>
+
+        <div className="workerPlayers">
+          <div className="workerPlayersUnit">
+            <div className="workerPlayersUnitGroup">
+              <div className="workerPlayersUnitPoint">C:</div>
+              <div className="workerPlayersUnitCount">N чел.</div>
+            </div>
+            <div className="workerPlayersUnit_Income">+4/min</div>
+          </div>
+          <div className="workerPlayersUnit">
+            <div className="workerPlayersUnitGroup">
+              <div className="workerPlayersUnitPoint">D:</div>
+              <div className="workerPlayersUnitCount">N чел.</div>
+            </div>
+            <div className="workerPlayersUnit_Income">+8/min</div>
+          </div>
+          <div className="workerPlayersUnit">
+            <div className="workerPlayersUnitGroup">
+              <div className="workerPlayersUnitPoint">E:</div>
+              <div className="workerPlayersUnitCount">N чел.</div>
+            </div>
+            <div className="workerPlayersUnit_Income">+12/min</div>
+          </div>
+          <div className="workerPlayersUnit">
+            <div className="workerPlayersUnitGroup">
+              <div className="workerPlayersUnitPoint">F:</div>
+              <div className="workerPlayersUnitCount">N чел.</div>
+            </div>
+            <div className="workerPlayersUnit_Income">+16/min</div>
+          </div>
+          <div className="workerPlayersUnit">
+            <div className="workerPlayersUnitGroup">
+              <div className="workerPlayersUnitPoint">G:</div>
+              <div className="workerPlayersUnitCount">N чел.</div>
+            </div>
+            <div className="workerPlayersUnit_Income">+20/min</div>
+          </div>
+        </div>
         <div
           className={
-            userData.is_safe === "yes" ? "workerUp yes" : "workerUp no"
+            balance >= userData.level_price ? "workerUp yes balance" : "workerUp no"
           }
           onClick={handleUp}
         >
@@ -121,43 +174,15 @@ function WorkerPage({ userID, workerID, setPreviousPage }) {
             на 8 часов
           </p>
         </div>
-        <div className="workerPlayers">
-          <div className="workerPlayersUnit">
-            <div className="workerPlayersUnitGroup">
-              <div className="workerPlayersUnitPoint">C:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
-            </div>
-          </div>
-          <div className="workerPlayersUnit">
-            <div className="workerPlayersUnitGroup">
-              <div className="workerPlayersUnitPoint">D:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
-            </div>
-          </div>
-          <div className="workerPlayersUnit">
-            <div className="workerPlayersUnitGroup">
-              <div className="workerPlayersUnitPoint">E:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
-            </div>
-          </div>
-          <div className="workerPlayersUnit">
-            <div className="workerPlayersUnitGroup">
-              <div className="workerPlayersUnitPoint">F:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
-            </div>
-          </div>
-          <div className="workerPlayersUnit">
-            <div className="workerPlayersUnitGroup">
-              <div className="workerPlayersUnitPoint">G:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
-            </div>
-          </div>
-        </div>
       </div>
+
       {modalOpen && (
         <div className="modal">
           <div className="backdrop" onClick={handleModalClose}></div>
-          <div className="error-message">{errorMessage}</div>
+          <div className="error-message">
+            {errorMessage}
+            <div className="error-msg">Попробуйте позже</div>
+          </div>
         </div>
       )}
     </>

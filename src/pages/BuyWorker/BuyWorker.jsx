@@ -140,7 +140,10 @@ function BuyWorker({
       {modalOpen && (
         <div className="modal">
           <div className="backdrop" onClick={handleModalClose}></div>
-          <div className="error-message">{errorMessage}</div>
+          <div className="error-message">
+            {errorMessage}
+            <div className="error-msg">Попробуйте позже</div>
+          </div>
         </div>
       )}
     </>

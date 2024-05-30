@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import "./Boost.css";
-
+import { Slider } from "antd";
 function Boost({ setCurrentPage }) {
   const buyScrollRef = useRef(null);
+  const [value, setValue] = useState(1);
 
   const adjustMainScrollHeight = () => {
     if (buyScrollRef.current) {
@@ -21,6 +22,10 @@ function Boost({ setCurrentPage }) {
     };
   }, []);
 
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+
   return (
     <div className="boost">
       <div className="buyScrollContainer" ref={buyScrollRef}>
@@ -33,52 +38,92 @@ function Boost({ setCurrentPage }) {
         </div>
         <div className="socials">
           <div className="boostSocials">
-            <div className="boostSocialsButton">Подписаться на группу</div>
-            <div className="boostSocialsEarn">
+            <div className="boostSocialsButton testr">
+              Скоро здесь что то появится
+            </div>
+            {/* <div className="boostSocialsEarn">
               <div className="boostTaskTitleImg soc">
                 <img src="assets/goldMiniCoin.png" alt="" />
               </div>
               +1,000
             </div>
             <div className="boostSocialsLink">
-              <img src="assets/vk.png" alt="" />
+              <img src="assets/skins/gold.png" alt="" />
+            </div> */}
+            <div className="bckggold">
+              <div className="boostSocialsLinkasd">
+                <img src="assets/skins/gold.png" alt="" />
+              </div>
             </div>
           </div>
           <div className="boostSocials">
-            <div className="boostSocialsButton">Оценить публикацию</div>
-            <div className="boostSocialsEarn">
+            <div className="boostSocialsButton testr">
+              Скоро здесь что то появится
+            </div>
+            {/* <div className="boostSocialsEarn">
               <div className="boostTaskTitleImg soc">
                 <img src="assets/goldMiniCoin.png" alt="" />
               </div>
               +1,000
             </div>
             <div className="boostSocialsLink">
-              <img src="assets/yandex.png" alt="" />
+              <img src="assets/skins/gold.png" alt="" />
+            </div> */}
+            <div className="bckggold">
+              <div className="boostSocialsLinkasd">
+                <img src="assets/skins/gold.png" alt="" />
+              </div>
             </div>
           </div>
           <div className="boostSocials">
-            <div className="boostSocialsButton">Подписаться на канал</div>
-            <div className="boostSocialsEarn">
+            <div className="boostSocialsButton testr">
+              Скоро здесь что то появится
+            </div>
+            {/* <div className="boostSocialsEarn">
               <div className="boostTaskTitleImg soc">
                 <img src="assets/goldMiniCoin.png" alt="" />
               </div>
               +1,000
             </div>
             <div className="boostSocialsLink">
-              <img src="assets/tg.png" alt="" />
+              <img src="assets/skins/gold.png" alt="" />
+            </div> */}
+            <div className="bckggold">
+              <div className="boostSocialsLinkasd">
+                <img src="assets/skins/gold.png" alt="" />
+              </div>
             </div>
           </div>
         </div>
         <div className="dottedLine soc"></div>
         <div className="boostPremium">
           <div className="boostPremiumTitle">
-            <span className="premium">Premium</span> на 12 дней.
+            Вам доступно <span className="premium">3 слота</span>
           </div>
           <div className="boostPremiumDesc">
-            Подписка открывает доступ к множеству <br /> фильтров на вкладке
-            Players
+            Увеличьте количество слотов, чтобы
+            <br /> можно было приглашать больше друзей
           </div>
-          <div className="boostPremiumButton">Купить за N ₽</div>
+          <Slider
+            defaultValue={1}
+            min={1}
+            max={10}
+            tooltipVisible={true}
+            railStyle={{ backgroundColor: "#696969", height: 3 }} // стиль полоски
+            trackStyle={{ backgroundColor: "#fff" }} // стиль активной полоски
+            handleStyle={{
+              borderColor: "#fff",
+              backgroundColor: "#000",
+              boxShadow: "none",
+            }} // стиль кружка
+            tooltipStyle={{ backgroundColor: "#fff", color: "#181818" }} // стиль подсказки
+          />
+          <div className="boostPremiumButton">
+            Купить за N{" "}
+            <div className="boostTaskTitleImg">
+              <img src="assets/goldMiniCoin.png" alt="" />
+            </div>
+          </div>
         </div>
         <div className="boostPremium">
           <div className="boostPremiumTitle fast">

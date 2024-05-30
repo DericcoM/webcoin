@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import "./Reg.css";
+import React, { useState, useEffect, useRef } from "react";
+import "./Profile.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import useTelegramUser from "../../Hooks/useTelegramUser";
 import useFetchUserData from "../../Hooks/useFetchUserData";
 
-function Reg() {
+function Profile(setCurrentPage, setPreviousPage, userID) {
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -13,16 +13,34 @@ function Reg() {
   const [buttonDisabled, setButtonDisabled] = useState(false); // Define buttonDisabled state
   const [buttonStyle, setButtonStyle] = useState({}); // Define buttonStyle state
   const navigate = useNavigate();
-  const userId = 1;
+  const userId = userID;
   const { userData, loading, error } = useFetchUserData(userId);
+  const buyScrollRef = useRef(null);
+
+  //   useEffect(() => {
+  //     if (!loading && !error) {
+  //       if (userData && userData.id) {
+  //         navigate("/main");
+  //       }
+  //     }
+  //   }, [loading, error, userData, navigate]);
+
+  const adjustMainScrollHeight = () => {
+    if (buyScrollRef.current) {
+      const windowHeight = window.innerHeight;
+      const footerHeight = -12; // Height of the footer
+      const maxScrollHeight = windowHeight - footerHeight - 35; // Adjust as needed for spacing
+      buyScrollRef.current.style.maxHeight = `${maxScrollHeight}px`;
+    }
+  };
 
   useEffect(() => {
-    if (!loading && !error) {
-      if (userData && userData.id) {
-        navigate("/main");
-      }
-    }
-  }, [loading, error, userData, navigate]);
+    adjustMainScrollHeight();
+    window.addEventListener("resize", adjustMainScrollHeight);
+    return () => {
+      window.removeEventListener("resize", adjustMainScrollHeight);
+    };
+  }, []);
 
   const handleNicknameChange = (event) => {
     setNickname(event.target.value);
@@ -124,9 +142,9 @@ function Reg() {
 
   return (
     <>
-      <div className="auth overflow-scroll">
-        <div className="reg">
-          <div className="regTitle">Регистрация</div>
+      <div className="reg profile">
+        <div className="buyScrollContainer profile" ref={buyScrollRef}>
+          <div className="regTitle profile">Профиль</div>
           <div className="regAvatar">
             <div className="regAvatarImg">
               <img src="assets/addPhoto.png" alt="" />
@@ -145,7 +163,7 @@ function Reg() {
               </div>
               <input
                 className="input"
-                placeholder="Ваш никнейм"
+                placeholder="Изменить никнейм"
                 type="text"
                 value={nickname}
                 onChange={handleNicknameChange}
@@ -158,7 +176,7 @@ function Reg() {
               </div>
               <input
                 className="input"
-                placeholder="Ваша почта"
+                placeholder="Изменить почту"
                 type="email"
                 value={email}
                 onChange={handleEmailChange}
@@ -182,12 +200,24 @@ function Reg() {
             </div>
             {errorMsg && <div className="error">{errorMsg}</div>}
             <button type="submit" className="authButton regB">
-              Начать
+              Подтвердить
             </button>
           </form>
+          <div className="authSubTitle">
+            Следите за нашими обновлениями в социальных сетях:
+          </div>
+          <div className="authSocials profile">
+            <div className="authSocialsImg">
+              <img src="assets/tgAuth.png" alt="" />
+            </div>
+            <div className="authSocialsSite">tvoycoin.com</div>
+            <div className="authSocialsImg">
+              <img src="assets/vkAuth.png" alt="" />
+            </div>
+          </div>
           <div className="authDoc">Политика конфиденциальности</div>
-          <div className="authDoc">Пользовательское соглашение</div>
-          <div className="authSvg">
+          <div className="authDoc profile">Пользовательское соглашение</div>
+          {/* <div className="authSvg">
             <svg width="145" height="21" viewBox="0 0 145 21" fill="none">
               <g opacity="0.34">
                 <path
@@ -240,11 +270,11 @@ function Reg() {
             приложениями к ним. Положения Вам полностью понятны, и Вы не имеете
             возражений и согласны с условиями игры. Нажимая "Начать", Вы даете
             согласие на обработку персональных данных.
-          </div>
+          </div> */}
         </div>
       </div>
     </>
   );
 }
 
-export default Reg;
+export default Profile;

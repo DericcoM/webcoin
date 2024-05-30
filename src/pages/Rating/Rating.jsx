@@ -7,9 +7,27 @@ function Rating({ setCurrentPage, mainID, mainData }) {
   const scoreBoardListRef = useRef(null);
 
   const amountPlayer = players.length;
-  const remainDate = "18ч";
+
   const playerCardHeight = 63; // Height of each player card in px
 
+  function hoursUntilMidnightInMoscow() {
+    const now = new Date(); // Current local time
+    const msUntilMidnight =
+      new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1, // Next day
+        0, // Hours
+        0, // Minutes
+        0 // Seconds
+      ).getTime() - now.getTime(); // Difference in milliseconds until midnight
+
+    const hoursUntilMidnight = Math.floor(msUntilMidnight / (1000 * 60 * 60)); // Convert milliseconds to hours and add Moscow time offset
+
+    return hoursUntilMidnight;
+  }
+
+  const remainDate = hoursUntilMidnightInMoscow() + "ч";
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -32,12 +50,11 @@ function Rating({ setCurrentPage, mainID, mainData }) {
 
   const updateScoreBoardHeight = () => {
     if (scoreBoardListRef.current) {
-      const height =
-        window.innerHeight -
-        scoreBoardListRef.current.getBoundingClientRect().top -
-        92;
-      const totalHeight = sortedPlayers.length * playerCardHeight;
-      const finalHeight = Math.min(totalHeight, height);
+      const windowHeight = window.innerHeight;
+      const topPosition = scoreBoardListRef.current.getBoundingClientRect().top;
+      const remainingSpace = windowHeight - topPosition;
+      const maxVisiblePlayers = Math.floor(remainingSpace / playerCardHeight);
+      const finalHeight = maxVisiblePlayers * playerCardHeight;
       scoreBoardListRef.current.style.height = `${finalHeight}px`;
     }
   };
@@ -47,7 +64,7 @@ function Rating({ setCurrentPage, mainID, mainData }) {
     updateScoreBoardHeight(); // Call once to set the height initially
 
     return () => window.removeEventListener("resize", updateScoreBoardHeight);
-  }, [sortedPlayers]);
+  }, [players]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -63,62 +80,67 @@ function Rating({ setCurrentPage, mainID, mainData }) {
       <div className="ratingBackground">
         <div className="rectangle"></div>
         <div className="ratingKubokContainer">
-          <img src="assets/bigKubok.png" alt="" />
+          <img src="assets/kubokStars.png" alt="" />
         </div>
-      </div>
-      <div className="scoreBoard">
-        <div className="scoreBoardTitle">День</div>
-        <div className="remainDate">Осталось {remainDate}</div>
-        <div className="line"></div>
-        <div
-          className="scoreBoardList"
-          ref={scoreBoardListRef}
-        >
-          {sortedPlayers.map((player, index) => (
-            <div key={player.id} className="ratingPlayerCard">
-              {index < 3 ? (
-                <div className="ratingPlayerCardIMG">
-                  <img
-                    src={`assets/${index + 1}.png`}
-                    alt={`Место ${index + 1}`}
-                  />
+        <div className="scoreBoard">
+          <div className="scoreBoardTitle">
+            <div className="pull">
+              100
+              <div className="balanceValueImg rating">
+                <img src="assets/star.png" alt="" />
+              </div>
+            </div>
+            День
+          </div>
+          <div className="remainDate">Осталось {remainDate}</div>
+          <div className="line"></div>
+          <div className="scoreBoardList" ref={scoreBoardListRef}>
+            {sortedPlayers.map((player, index) => (
+              <div key={player.id} className="ratingPlayerCard">
+                {index < 3 ? (
+                  <div className="ratingPlayerCardIMG">
+                    <img
+                      src={`assets/${index + 1}.png`}
+                      alt={`Место ${index + 1}`}
+                    />
+                  </div>
+                ) : (
+                  <div className="scorePosition">{index + 1}</div>
+                )}
+                <div className="ratingAvatar">
+                  <img src={player.img || "assets/worker.png"} alt="" />
                 </div>
-              ) : (
-                <div className="scorePosition">{index + 1}</div>
-              )}
+                <div className="ratingDesc">
+                  <div className="ratingWorkerName">{player.user_fullname}</div>
+                  <div className="ratingWorkerBalance">
+                    <div className="ratingWorkerBalanceIMG">
+                      <img src="assets/goldMiniCoin.png" alt="" />
+                    </div>
+                    {filterBalance(player.balance)}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="ownerPos">
+            <div className="ownerPosLeft">
+              <div className="scorePosition">{userPosition + 1}</div>
               <div className="ratingAvatar">
-                <img src={player.img || "assets/worker.png"} alt="" />
+                <img src={mainData.img} alt="" />
               </div>
               <div className="ratingDesc">
-                <div className="ratingWorkerName">{player.user_fullname}</div>
+                <div className="ratingWorkerName">{mainData.user_fullname}</div>
                 <div className="ratingWorkerBalance">
                   <div className="ratingWorkerBalanceIMG">
                     <img src="assets/goldMiniCoin.png" alt="" />
                   </div>
-                  {filterBalance(player.balance)}
+                  {filterBalance(mainData.balance)}
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
-      <div className="ownerPos">
-        <div className="ownerPosLeft">
-          <div className="scorePosition">{userPosition + 1}</div>
-          <div className="ratingAvatar">
-            <img src={mainData.img} alt="" />
-          </div>
-          <div className="ratingDesc">
-            <div className="ratingWorkerName">{mainData.user_fullname}</div>
-            <div className="ratingWorkerBalance">
-              <div className="ratingWorkerBalanceIMG">
-                <img src="assets/goldMiniCoin.png" alt="" />
-              </div>
-              {filterBalance(mainData.balance)}
-            </div>
+            <div className="ownerPosYou">You</div>
           </div>
         </div>
-        <div className="ownerPosYou">You</div>
       </div>
     </div>
   );
