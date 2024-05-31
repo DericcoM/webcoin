@@ -68,7 +68,7 @@ function WorkerBuy({
         <div className="workerBuyCardInfo">
           <div className="workerBuyName">{name}</div>
           <div className="workerBuyStatusWorked">
-            Работает на {userData.user_fullname}
+            Работает на {userData.username}
           </div>
         </div>
       </div>

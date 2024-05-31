@@ -19,11 +19,9 @@ function App() {
   return (
       <Routes>
         <Route path="/">
-        <Route index element={<Main />} />
-          {/* <Route index element={<Home />} /> */}
+        {/* <Route index element={<Main />} /> */}
+          <Route index element={<Home />} />
         </Route>
-        <Route path="/reg" element={<Reg />} />
-        <Route path="/main" element={<Main />} />
       </Routes>
   )
 }

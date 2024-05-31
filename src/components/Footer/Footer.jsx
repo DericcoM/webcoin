@@ -1,7 +1,7 @@
 import React from "react";
 import "./Footer.css";
 
-function Footer({ setCurrentPage, currentPage, setPreviousPage }) {
+function Footer({ setCurrentPage, currentPage, setPreviousPage, userId }) {
   return (
     <div className={currentPage === "boost" ? "footer boosted" : "footer"}>
       <div
@@ -33,6 +33,7 @@ function Footer({ setCurrentPage, currentPage, setPreviousPage }) {
         onClick={() => {
           setCurrentPage("trade");
           setPreviousPage("main");
+          userId={userId}
         }}
       >
         <div id="trade" className="navButtonImg">

@@ -28,13 +28,11 @@ function HeaderProfile({
             />
           </div>
           <div className="headerProfileUserInfo">
-            <div className="headerProfileUserName">
-              {userData.user_fullname}
-            </div>
+            <div className="headerProfileUserName">{userData.username}</div>
             <div className="headerProfileUserCoins">
               <p>{balance}</p>
               <div className="headerProfileUserCoinsSVG">
-                <img src="assets/goldMiniCoin.png" alt="" />
+                <img src={`assets/skins/${userData.icon_coin}.png`} alt="" />
               </div>
             </div>
           </div>

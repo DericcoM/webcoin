@@ -1,8 +1,10 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./Trade.css";
+import { fetchRefersOwner } from "../../api/api";
 
-function Trade({ setCurrentPage, stars }) {
+function Trade({ setCurrentPage, stars, userId }) {
   const buyScrollRef = useRef(null);
+  const [data, setData] = useState({});
   const adjustMainScrollHeight = () => {
     if (buyScrollRef.current) {
       const windowHeight = window.innerHeight;
@@ -12,9 +14,19 @@ function Trade({ setCurrentPage, stars }) {
     }
   };
 
+  const handleRefers = async () => {
+    try {
+      const response = await fetchRefersOwner(userId);
+      setData(response);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   useEffect(() => {
     adjustMainScrollHeight();
     window.addEventListener("resize", adjustMainScrollHeight);
+    handleRefers();
     return () => {
       window.removeEventListener("resize", adjustMainScrollHeight);
     };
@@ -36,37 +48,37 @@ function Trade({ setCurrentPage, stars }) {
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">B:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
+              <div className="workerPlayersUnitCount">{data.b_refs} чел.</div>
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">C:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
+              <div className="workerPlayersUnitCount">{data.c_refs} чел.</div>
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">D:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
+              <div className="workerPlayersUnitCount">{data.d_refs} чел.</div>
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">E:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
+              <div className="workerPlayersUnitCount">{data.e_refs} чел.</div>
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">F:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
+              <div className="workerPlayersUnitCount">{data.f_refs} чел.</div>
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">G:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
+              <div className="workerPlayersUnitCount">{data.g_refs} чел.</div>
             </div>
           </div>
           <div className={"workerUp buy free"}>

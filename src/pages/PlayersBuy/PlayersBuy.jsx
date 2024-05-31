@@ -88,7 +88,7 @@ function PlayersBuy({
           <WorkerBuy
             key={player.id}
             id={player.user_id}
-            name={player.user_fullname}
+            name={player.username}
             status={player.status}
             owner={player.owner}
             ownerID={player.work}

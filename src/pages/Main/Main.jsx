@@ -25,8 +25,8 @@ function Main() {
   const mainScrollRef = useRef(null);
   const [buyWorkerID, setBuyWorkerID] = useState([]);
   const [previousPage, setPreviousPage] = useState("main");
-  const userId = 467597194;
-  // const userId = useTelegramUser();
+  // const userId = 467597194;
+  const userId = useTelegramUser();
   const {
     balance,
     loading: balanceLoading,
@@ -327,7 +327,7 @@ function Main() {
             setPreviousPage={setPreviousPage}
             userID={userId}
             currentUserSkin={userData.icon_coin}
-            setCurrentUserSkin={setCurrentUserSkin}
+            setCurrentUserSkin={setCurrentUserSkin} // Передаем функцию setCurrentUserSkin
           />
         );
 
@@ -354,6 +354,7 @@ function Main() {
             setCurrentPage={setCurrentPage}
             currentPage={currentPage}
             setPreviousPage={setPreviousPage}
+            userId={userId}
           />
         )}
       {renderContent()}

@@ -1,5 +1,6 @@
 .rating {
   overflow-x: hidden;
+  position: relative; /* Ensure relative positioning for absolute children */
 }
 
 .containerRating {
@@ -28,23 +29,6 @@
 }
 
 .rectangle {
-  /* z-index: -1;
-  background: linear-gradient(#60a6ea, #0035f1);
-  height: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  border-bottom-left-radius: 30px;
-  border-bottom-right-radius: 30px;
-  border-top-left-radius: 10px; /* New */
-  /* border-top-right-radius: 10px; /* New */
-  /* display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  filter: blur(30px);
-  opacity: 0.7; */
-
   z-index: -1;
   background: linear-gradient(#60a6ea, #0035f1);
   height: 90%;
@@ -52,8 +36,6 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  border-top-left-radius: 585px;
-  border-top-right-radius: 1000px;
   border-top-left-radius: 170px;
   border-top-right-radius: 170px;
   display: flex;
@@ -99,6 +81,7 @@
   background-color: rgba(31, 31, 31, 0.5);
   border-radius: 20px;
   padding: 17px 8px;
+  margin-bottom: 91px; /* Space for the owner position */
 }
 
 .scoreBoardTitle {
@@ -165,7 +148,7 @@
   padding-bottom: 20px;
   overflow-y: scroll;
   min-height: 245px;
-  max-height: calc(100vh - 92px);
+  max-height: calc(100vh - 92px - 91px); /* Adjusted for owner position */
 }
 
 .ratingPlayerCard {
@@ -210,8 +193,8 @@
 }
 
 .ratingWorkerBalanceIMG {
-  width: 17px;
-  height: 17px;
+  width: 22px;
+  height: 22px;
   margin-right: 5px;
 }
 
@@ -247,9 +230,9 @@
   height: 91px;
   width: 100%;
   border-top-left-radius: 20px;
-  position: absolute;
   border-top-right-radius: 20px;
-  bottom: 0;
+  position: fixed; /* Make it fixed */
+  bottom: 0; /* Stick it to the bottom */
   left: 0;
   display: flex;
   align-items: center;

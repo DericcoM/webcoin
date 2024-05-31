@@ -1,28 +1,36 @@
 import React, { useState, useEffect } from "react";
 import "./Reg.css";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import useTelegramUser from "../../Hooks/useTelegramUser";
 import useFetchUserData from "../../Hooks/useFetchUserData";
+import useTelegramUser from "../../Hooks/useTelegramUser";
 
-function Reg() {
+function Reg({ setReg }) {
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const [buttonDisabled, setButtonDisabled] = useState(false); // Define buttonDisabled state
-  const [buttonStyle, setButtonStyle] = useState({}); // Define buttonStyle state
-  const navigate = useNavigate();
-  const userId = 1;
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [buttonStyle, setButtonStyle] = useState({});
+  const [avatar, setAvatar] = useState(null);
+  const [avatarName, setAvatarName] = useState("block_ava.jpg");
+  const userId = useTelegramUser();
+  // const userId = 467597194;
   const { userData, loading, error } = useFetchUserData(userId);
 
   useEffect(() => {
     if (!loading && !error) {
-      if (userData && userData.id) {
-        navigate("/main");
+      try {
+        const response = fetch(
+          `https://ammolin.ru/api/is_telegram_player/${userId}`
+        );
+
+        if (response.status === 200) {
+          setReg("main");
+        }
+      } catch (error) {
+        console.error("Error:", error);
       }
     }
-  }, [loading, error, userData, navigate]);
+  }, [loading, error, userData]);
 
   const handleNicknameChange = (event) => {
     setNickname(event.target.value);
@@ -36,13 +44,25 @@ function Reg() {
     setCode(event.target.value);
   };
 
+  const handleAvatarChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setAvatar(file);
+
+      // Display the selected avatar immediately
+      const reader = new FileReader();
+      reader.onload = () => {
+        document.querySelector(".regAvatarImg img").src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const sendVerificationCode = async () => {
-    // Check if the nickname field is filled
     if (!nickname) {
       setErrorMsg("Укажите никнейм.");
       return;
     }
-    // Check if the email field is filled
     if (!email) {
       setErrorMsg("Укажите почту.");
       return;
@@ -55,7 +75,6 @@ function Reg() {
     }
 
     try {
-      // Disable the button and change its styles
       setButtonDisabled(true);
       setButtonStyle({
         backgroundColor: "#434343",
@@ -63,21 +82,19 @@ function Reg() {
         cursor: "not-allowed",
       });
 
-      const response = await fetch(
-        `https://ammolin.ru/api/check_code/${email}`
-      );
-      const data = await response.json();
-      if (data.error) {
-        setErrorMsg(data.error);
-      } else {
+      const response = await fetch(`https://ammolin.ru/api/send_code/${email}`);
+      const responseText = await response.text();
+
+      if (responseText.includes("Success")) {
         setErrorMsg("");
+      } else {
+        setErrorMsg(responseText);
       }
 
-      // Enable the button and revert its styles after 2 minutes
       setTimeout(() => {
         setButtonDisabled(false);
-        setButtonStyle({}); // Revert to initial styles
-      }, 120000); // 2 minutes in milliseconds
+        setButtonStyle({});
+      }, 120000);
     } catch (error) {
       console.error("Error:", error);
       setErrorMsg("Возникла ошибка, попробуйте позже!");
@@ -86,36 +103,39 @@ function Reg() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Check if all fields are filled
-    if (!nickname || !email || !code) {
-      setErrorMsg("Заполните все поля!");
+    if (!nickname || !email || !code || !avatarName) {
+      setErrorMsg("Заполните все поля и загрузите аватар!");
       return;
     }
-    // Validate email format
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setErrorMsg("Введите правильный e-mail адрес!");
       return;
     }
+
     try {
-      // Call API to check the code
       const response = await fetch(
-        `https://ammolin.ru/api/confirm_code/${email}`
+        `https://ammolin.ru/api/check_code/${email}/${code}`
       );
-      const data = await response.json();
-      if (data.code !== code) {
-        setErrorMsg("Неправильный код подтверждения!");
-        return;
-      }
-      // Call API to register user
-      const registerResponse = await fetch(
-        `https://ammolin.ru/api/register/${nickname}/${email}/${userId}/${code}`,
-        {
-          // Include any necessary headers and body
+
+      if (response.status === 200) {
+        const registerResponse = await fetch(
+          `https://ammolin.ru/api/register/${nickname}/${email}/${userId}/${avatarName}`
+        );
+
+        const registerResponseText = await registerResponse.text();
+        if (
+          registerResponse.status === 200 &&
+          registerResponseText.includes("Success")
+        ) {
+          setReg("main");
+        } else {
+          setErrorMsg("Возникла ошибка при регистрации, попробуйте позже!");
         }
-      );
-      // Handle registration success, redirect user
-      window.location.href = "/"; // Redirect to homepage
+      } else if (response.status === 403) {
+        setErrorMsg("Неправильный код подтверждения!");
+      }
     } catch (error) {
       console.error("Error:", error);
       setErrorMsg("Возникла ошибка, попробуйте позже!");
@@ -127,21 +147,32 @@ function Reg() {
       <div className="auth overflow-scroll">
         <div className="reg">
           <div className="regTitle">Регистрация</div>
-          <div className="regAvatar">
+          <div
+            className="regAvatar"
+            onClick={() =>
+              document.querySelector(".regAvatarChange input").click()
+            }
+          >
             <div className="regAvatarImg">
-              <img src="assets/addPhoto.png" alt="" />
+              <img src="assets/addPhoto.png" alt="avatar" />
             </div>
           </div>
           <div className="regAvatarChange">
             Изменить
             <div className="regAvatarChangeImg">
-              <img src="assets/edit.png" alt="" />
+              <img src="assets/edit.png" alt="edit" />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                style={{ display: "none" }}
+              />
             </div>
           </div>
           <form className="regForm" onSubmit={handleSubmit}>
             <div className="inputForm">
               <div className="inputFormImg">
-                <img src="assets/profileAuth.png" alt="" />
+                <img src="assets/profileAuth.png" alt="profile" />
               </div>
               <input
                 className="input"
@@ -154,7 +185,7 @@ function Reg() {
             </div>
             <div className="inputForm">
               <div className="inputFormImg">
-                <img src="assets/sms.png" alt="" />
+                <img src="assets/sms.png" alt="sms" />
               </div>
               <input
                 className="input"

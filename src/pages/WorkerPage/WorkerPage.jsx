@@ -7,6 +7,7 @@ import {
   fetchWorkerUp,
   fetchWorkerShield,
   fetchSafeTimer,
+  fetchRefers,
 } from "../../api/api";
 
 function WorkerPage({ userID, workerID, setPreviousPage, balance }) {
@@ -17,6 +18,20 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [timer, setTimer] = useState();
+  const [dataRefs, setDataRefs] = useState({});
+
+  const handleRefers = async () => {
+    try {
+      const response = await fetchRefers(workerID);
+      setDataRefs(response);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleRefers();
+  }, []);
 
   setPreviousPage("main");
 
@@ -82,7 +97,7 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance }) {
           <div className="workerPageAvatarContainer">
             <img className="workerPageAvatar" src={userData.img} alt="" />
           </div>
-          <div className="workerPageName">{userData.user_fullname}</div>
+          <div className="workerPageName">{userData.username}</div>
           <div className="workerPageStatus">Работает на вас</div>
         </div>
         <div className="workerPageStatusBar">
@@ -104,42 +119,64 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance }) {
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">C:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
+              <div className="workerPlayersUnitCount">
+                {dataRefs.c_refs} чел.
+              </div>
             </div>
-            <div className="workerPlayersUnit_Income">+4/min</div>
+            <div className="workerPlayersUnit_Income">
+              +{dataRefs.c_income}/min
+            </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">D:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
+              <div className="workerPlayersUnitCount">
+                {dataRefs.d_refs} чел.
+              </div>
             </div>
-            <div className="workerPlayersUnit_Income">+8/min</div>
+            <div className="workerPlayersUnit_Income">
+              +{dataRefs.d_income}/min
+            </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">E:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
+              <div className="workerPlayersUnitCount">
+                {dataRefs.e_refs} чел.
+              </div>
             </div>
-            <div className="workerPlayersUnit_Income">+12/min</div>
+            <div className="workerPlayersUnit_Income">
+              +{dataRefs.e_income}/min
+            </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">F:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
+              <div className="workerPlayersUnitCount">
+                {dataRefs.f_refs} чел.
+              </div>
             </div>
-            <div className="workerPlayersUnit_Income">+16/min</div>
+            <div className="workerPlayersUnit_Income">
+              +{dataRefs.f_income}/min
+            </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">G:</div>
-              <div className="workerPlayersUnitCount">N чел.</div>
+              <div className="workerPlayersUnitCount">
+                {dataRefs.g_refs} чел.
+              </div>
             </div>
-            <div className="workerPlayersUnit_Income">+20/min</div>
+            <div className="workerPlayersUnit_Income">
+              +{dataRefs.g_income}/min
+            </div>
           </div>
         </div>
         <div
           className={
-            balance >= userData.level_price ? "workerUp yes balance" : "workerUp no"
+            balance >= userData.level_price
+              ? "workerUp yes balance"
+              : "workerUp no"
           }
           onClick={handleUp}
         >

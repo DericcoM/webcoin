@@ -29,9 +29,9 @@ function BuyWorker({
     return <div>Error loading user data: {error.message}</div>;
   }
 
-  const handleBuy = () => {
+  const handleBuy = async () => {
     try {
-      buyWorker(userID, buyWorkerID);
+      await buyWorker(userID, buyWorkerID);
       refetchUserData(); // Update user data
       // Transition to the main page after updates
       setCurrentPage("main");
@@ -69,7 +69,7 @@ function BuyWorker({
           <div className="workerPageAvatarContainer">
             <img className="workerPageAvatar" src={userData.img} alt="" />
           </div>
-          <div className="workerPageName">{userData.user_fullname}</div>
+          <div className="workerPageName">{userData.username}</div>
           <div className="buyWorkerWorked">Занят на работе</div>
           <div className="buyWorkerPageBalanceContainer">
             <div className="buyWorkerPageBalance">{userData.price}</div>

@@ -1,9 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./Boost.css";
 import { Slider } from "antd";
+
 function Boost({ setCurrentPage }) {
   const buyScrollRef = useRef(null);
   const [value, setValue] = useState(1);
+  const unitPrice = 0.5;
 
   const adjustMainScrollHeight = () => {
     if (buyScrollRef.current) {
@@ -22,8 +24,12 @@ function Boost({ setCurrentPage }) {
     };
   }, []);
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
+  const handleChange = (value) => {
+    setValue(value);
+  };
+
+  const calculatePrice = (value) => {
+    return value * unitPrice;
   };
 
   return (
@@ -108,6 +114,9 @@ function Boost({ setCurrentPage }) {
             defaultValue={1}
             min={1}
             max={10}
+            step={1}
+            value={value}
+            onChange={handleChange}
             tooltipVisible={true}
             railStyle={{ backgroundColor: "#696969", height: 3 }} // стиль полоски
             trackStyle={{ backgroundColor: "#fff" }} // стиль активной полоски
@@ -118,8 +127,8 @@ function Boost({ setCurrentPage }) {
             }} // стиль кружка
             tooltipStyle={{ backgroundColor: "#fff", color: "#181818" }} // стиль подсказки
           />
-          <div className="boostPremiumButton">
-            Купить за N{" "}
+          <div className="boostPremiumButton buy">
+            Купить за {calculatePrice(value)}{" "}
             <div className="boostTaskTitleImg">
               <img src="assets/goldMiniCoin.png" alt="" />
             </div>
@@ -135,15 +144,15 @@ function Boost({ setCurrentPage }) {
           <div className="boostPremiumHourBlock">
             <div className="boostPremiumHour">
               <div className="boostPremiumX">2X</div>
-              <div className="boostPremiumBuyX">Купить за N ₽ / 1 час</div>
+              <div className="boostPremiumBuyX">Купить за 300 ₽ / 1 час</div>
             </div>
             <div className="boostPremiumHour">
               <div className="boostPremiumX">5X</div>
-              <div className="boostPremiumBuyX">Купить за N ₽ / 1 час</div>
+              <div className="boostPremiumBuyX">Купить за 450 ₽ / 1 час</div>
             </div>
             <div className="boostPremiumHour">
               <div className="boostPremiumX">10X</div>
-              <div className="boostPremiumBuyX">Купить за N ₽ / 1 час</div>
+              <div className="boostPremiumBuyX">Купить за 699 ₽ / 1 час</div>
             </div>
           </div>
         </div>

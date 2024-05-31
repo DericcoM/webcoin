@@ -297,3 +297,7 @@
 .boostSocialsButton.testr {
   width: 79%;
 }
+
+.boostPremiumButton.buy {
+  min-width: 208px;
+}

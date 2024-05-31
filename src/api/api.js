@@ -90,3 +90,39 @@ export const fetchUserWorker = async (userId) => {
       throw error;
     }
   };
+
+  export const fetchRefers = async (userID) => {
+    try {
+      const response = await axios.get(`https://ammolin.ru/api/get_other_refers/${userID}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  export const fetchRefersOwner = async (userID) => {
+    try {
+      const response = await axios.get(`https://ammolin.ru/api/get_my_refers/${userID}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  export const buySkin = async (skin, userID, price) => {
+    try {
+      const response = await axios.get(`https://ammolin.ru/api/buy_skin/${skin}/${userID}/${price}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  export const getSkin = async (userID) => {
+    try {
+      const response = await axios.get(`https://ammolin.ru/api/get_skins/${userID}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };

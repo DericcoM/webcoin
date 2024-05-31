@@ -83,7 +83,7 @@ function WorkerCard({
               <div className="workerAvatar">
                 <img className="workerAvatarIMG" src={worker.img} alt="" />
               </div>
-              <div className="workerName">{worker.user_fullname}</div>
+              <div className="workerName">{worker.username}</div>
               <div className="workerPrice">{worker.income}/min</div>
             </div>
           ))}
