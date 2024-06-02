@@ -1,7 +1,9 @@
 import React from "react";
 import "./ModalSub.css";
+import usePayment from "../../Hooks/usePayment";
 
 function ModalSub({ show, onClose }) {
+  const { redirectToPayment, loading, error } = usePayment();
   if (!show) {
     return null;
   }
@@ -28,7 +30,13 @@ function ModalSub({ show, onClose }) {
               развитие проекта.
             </div>
           </div>
-          <div className="authButton subBuy" onClick={onClose}>
+          <div
+            className="authButton subBuy"
+            onClick={() => {
+              // redirectToPayment("game");
+              onClose();
+            }}
+          >
             99 Рублей
           </div>
         </div>

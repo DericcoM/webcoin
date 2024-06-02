@@ -7,7 +7,7 @@ function WorkerCard({
   setWorkerID,
   setPreviousPage,
   handleQr,
-  handleCopy
+  handleCopy,
 }) {
   const [players, setPlayers] = useState([]);
 
@@ -29,7 +29,6 @@ function WorkerCard({
 
     return resultArray;
   }, []);
-
 
   if (!players || players.length === 0) {
     return (
@@ -84,7 +83,7 @@ function WorkerCard({
                 <img className="workerAvatarIMG" src={worker.img} alt="" />
               </div>
               <div className="workerName">{worker.username}</div>
-              <div className="workerPrice">{worker.income}/min</div>
+              <div className="workerPrice">{worker.sum_ref_income}/min</div>
             </div>
           ))}
         </div>

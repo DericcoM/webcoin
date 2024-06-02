@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./Main.css";
+import axios from "axios";
 import HeaderProfile from "../../components/HeaderProfile/HeaderProfile";
 import Footer from "../../components/Footer/Footer";
 import WorkerCard from "../../components/WorkerCard/WorkerCard";
@@ -18,6 +19,7 @@ import QRCode from "qrcode.react";
 import ModalSub from "../../components/ModalSub/ModalSub";
 import Profile from "../Profile/Profile";
 import Skins from "../Skins/Skins";
+import { getSub } from "../../api/api";
 
 function Main() {
   const [currentPage, setCurrentPage] = useState("main");
@@ -43,16 +45,29 @@ function Main() {
   const [qrText, setQrText] = useState("");
   const [showCopyMessage, setShowCopyMessage] = useState(false); // State to control copy message visibility
   const [currentUserSkin, setCurrentUserSkin] = useState("");
+  const [subStatus, setSubStatus] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [currentPage]);
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     navigator.clipboard.writeText(link);
     setQrText("");
     setShowCopyMessage(true);
     setTimeout(() => setShowCopyMessage(false), 1000);
+
+    if (navigator.share) {
+      // Вызовите меню "Поделиться"
+      await navigator.share({
+        title: "Ссылка",
+        text: "Переходи в игру, и начинай зарабатывать.",
+        url: link,
+      });
+      console.log("Ссылка успешно поделена");
+    } else {
+      console.log("Web Share API не поддерживается в этом браузере");
+    }
   };
 
   useEffect(() => {
@@ -139,7 +154,7 @@ function Main() {
       updateUserData();
       const intervalId = setInterval(() => {
         refetchBalance(); // Обновляем баланс каждую минуту при возврате на страницу "main"
-      }, 30000); // Интервал в миллисекундах (60 секунд)
+      }, 15000); // Интервал в миллисекундах (60 секунд)
 
       // Очищаем интервал при размонтировании компонента или изменении страницы
       return () => clearInterval(intervalId);
@@ -160,8 +175,24 @@ function Main() {
   const [showModal, setShowModal] = useState(true);
 
   useEffect(() => {
-    setShowModal(true);
+    subStatus === false ? setShowModal(true) : setShowModal(false);
+    getStatusSub();
   }, []);
+
+  const getStatusSub = async () => {
+    try {
+      const response = await getSub(userId);
+      if (response.status === 200) {
+        setSubStatus(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleUpdateBalance = () => {
+    refetchBalance();
+  };
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -247,6 +278,7 @@ function Main() {
                   setPreviousPage={setPreviousPage}
                   handleCopy={handleCopy}
                   handleQr={handleQr}
+                  handleUpdateBalance={handleUpdateBalance}
                 />
               </div>
               {showQRModal && (
@@ -268,6 +300,7 @@ function Main() {
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
             balance={balance}
+            handleUpdateBalance={handleUpdateBalance}
           />
         );
       case "buy":
@@ -277,6 +310,7 @@ function Main() {
             setCurrentPage={setCurrentPage}
             setBuyWorkerID={setBuyWorkerID}
             setPreviousPage={setPreviousPage}
+            handleUpdateBalance={handleUpdateBalance}
           />
         );
       case "buyWorker":
@@ -286,6 +320,7 @@ function Main() {
             buyWorkerID={buyWorkerID}
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
+            handleUpdateBalance={handleUpdateBalance}
           />
         );
       case "rating":
@@ -295,6 +330,7 @@ function Main() {
             mainData={userData}
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
+            handleUpdateBalance={handleUpdateBalance}
           />
         );
       case "boost":
@@ -302,6 +338,8 @@ function Main() {
           <Boost
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
+            handleUpdateBalance={handleUpdateBalance}
+            userId={userId}
           />
         );
       case "trade":
@@ -310,6 +348,7 @@ function Main() {
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
             stars={userData.stars}
+            handleUpdateBalance={handleUpdateBalance}
           />
         );
       case "profile":
@@ -318,6 +357,10 @@ function Main() {
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
             userID={userId}
+            defaultName={userData.username}
+            defaultEmail={userData.mail}
+            img={userData.img}
+            handleUpdateBalance={handleUpdateBalance}
           />
         );
       case "skins":
@@ -328,6 +371,7 @@ function Main() {
             userID={userId}
             currentUserSkin={userData.icon_coin}
             setCurrentUserSkin={setCurrentUserSkin} // Передаем функцию setCurrentUserSkin
+            handleUpdateBalance={handleUpdateBalance}
           />
         );
 
@@ -355,6 +399,7 @@ function Main() {
             currentPage={currentPage}
             setPreviousPage={setPreviousPage}
             userId={userId}
+            handleUpdateBalance={handleUpdateBalance}
           />
         )}
       {renderContent()}

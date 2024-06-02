@@ -126,3 +126,30 @@ export const fetchUserWorker = async (userId) => {
       throw error;
     }
   };
+
+  export const buySlot = async (userId, count) => {
+    try {
+      const response = await axios.get(`https://ammolin.ru/api/buy_slot/${userId}/${count}`);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };  
+
+  export const getSlot = async (userID) => {
+    try {
+      const response = await axios.get(`https://ammolin.ru/api/get_slots/${userID}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  export const getSub = async (userID) => {
+    try {
+      const response = await axios.get(`https://ammolin.ru/api/is_bought/${userID}`);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };

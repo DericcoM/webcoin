@@ -10,7 +10,7 @@ import {
   fetchRefers,
 } from "../../api/api";
 
-function WorkerPage({ userID, workerID, setPreviousPage, balance }) {
+function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBalance}) {
   const { userData, loading, error, refetchUserData } =
     useFetchUserData(workerID);
   const { userWorker, loadingWorker, errorWorker } =
@@ -64,6 +64,7 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance }) {
       const response = await fetchWorkerShield(userID, workerID);
       // После успешного выполнения запроса обновляем данные о пользователе
       refetchUserData();
+      handleUpdateBalance();
     } catch (error) {
       handleModalError(error);
     }
@@ -106,12 +107,12 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance }) {
               ? `Защищен ${userData.timer}`
               : "Не защищен"}
           </div>
-          <div className="workerPagePayment">{userData.income}/min</div>
+          <div className="workerPagePayment">{userData.sum_ref_income}/min</div>
         </div>
         <div className="dottedLine"></div>
         <div className={"workerUp"}>
           <p className="workerUpTitle">
-            Зарабатывает {userData.sum_income}/мин
+            Зарабатывает {userData.income}/мин
           </p>
         </div>
 

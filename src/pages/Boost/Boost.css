@@ -208,6 +208,11 @@
   align-items: center;
 }
 
+.boostPremiumBuyX:active {
+  background: #fff;
+  color: #292929;
+}
+
 .boostPremiumHourBlock {
   margin-bottom: 21px;
 }
@@ -300,4 +305,9 @@
 
 .boostPremiumButton.buy {
   min-width: 208px;
+}
+
+.boostPremiumButton.buy:active {
+  background: #fff;
+  color: #292929;
 }

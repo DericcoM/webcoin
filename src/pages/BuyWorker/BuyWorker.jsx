@@ -9,6 +9,7 @@ function BuyWorker({
   setPreviousPage,
   ownerID,
   userID,
+  handleUpdateBalance
 }) {
   const { userData, loading, error, refetchUserData } =
     useFetchUserData(buyWorkerID);
@@ -34,6 +35,7 @@ function BuyWorker({
       await buyWorker(userID, buyWorkerID);
       refetchUserData(); // Update user data
       // Transition to the main page after updates
+      handleUpdateBalance()
       setCurrentPage("main");
       setPreviousPage("main");
     } catch (error) {

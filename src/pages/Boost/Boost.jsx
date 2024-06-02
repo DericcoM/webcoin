@@ -1,11 +1,76 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./Boost.css";
 import { Slider } from "antd";
+import usePayment from "../../Hooks/usePayment";
+import useBuySlot from "../../Hooks/useBuySlot";
+import axios from "axios";
+import { buySlot, getSlot } from "../../api/api";
 
-function Boost({ setCurrentPage }) {
+function Boost({ setPreviousPage, setCurrentPage, userId }) {
   const buyScrollRef = useRef(null);
   const [value, setValue] = useState(1);
   const unitPrice = 0.5;
+  const [modalOpen, setModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { redirectToPayment, setupBackButton, loading, error } = usePayment();
+  const { redirectToPaymentSlot, loadingSlot, errorSlot } = useBuySlot();
+  const [slotValue, setSlotValue] = useState();
+
+  const getSlotCount = async () => {
+    try {
+      const response = await getSlot(userId);
+      setSlotValue(response[0].slots);
+    } catch (err) {
+      handleModalError(err);
+    }
+  };
+
+  useEffect(() => {
+    getSlotCount();
+  }, []);
+
+  const getPaymentSlot = async (userId, count) => {
+    try {
+      const response = await buySlot(userId, count);
+      console.log(response.status);
+      if (response.status === 200) {
+        getSlotCount();
+        setValue(1);
+      } else {
+        handleModalError(error);
+      }
+    } catch (err) {
+      handleModalError(err);
+    } finally {
+    }
+  };
+
+  const handleBuyNo = () => {};
+
+  const handleModalError = (error) => {
+    let errorMessageToShow = "Произошла ошибка";
+    if (error.response && error.response.data && error.response.data.error) {
+      if (error.response.status === 400) {
+        errorMessageToShow = "Недостаточно средств";
+      } else {
+        errorMessageToShow = error.response.data.error;
+      }
+    } else if (error.message) {
+      errorMessageToShow = error.message;
+    }
+    setErrorMessage(errorMessageToShow);
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  useEffect(() => {
+    if (!loading && !error) {
+      setModalOpen(false); // Close modal when data is updated
+    }
+  }, [loading, error]);
 
   const adjustMainScrollHeight = () => {
     if (buyScrollRef.current) {
@@ -18,6 +83,7 @@ function Boost({ setCurrentPage }) {
 
   useEffect(() => {
     adjustMainScrollHeight();
+    setupBackButton();
     window.addEventListener("resize", adjustMainScrollHeight);
     return () => {
       window.removeEventListener("resize", adjustMainScrollHeight);
@@ -104,7 +170,7 @@ function Boost({ setCurrentPage }) {
         <div className="dottedLine soc"></div>
         <div className="boostPremium">
           <div className="boostPremiumTitle">
-            Вам доступно <span className="premium">3 слота</span>
+            Вам доступно <span className="premium">{slotValue} слота</span>
           </div>
           <div className="boostPremiumDesc">
             Увеличьте количество слотов, чтобы
@@ -127,7 +193,10 @@ function Boost({ setCurrentPage }) {
             }} // стиль кружка
             tooltipStyle={{ backgroundColor: "#fff", color: "#181818" }} // стиль подсказки
           />
-          <div className="boostPremiumButton buy">
+          <div
+            className="boostPremiumButton buy"
+            onClick={() => getPaymentSlot(userId, value)}
+          >
             Купить за {calculatePrice(value)}{" "}
             <div className="boostTaskTitleImg">
               <img src="assets/goldMiniCoin.png" alt="" />
@@ -143,20 +212,77 @@ function Boost({ setCurrentPage }) {
           </div>
           <div className="boostPremiumHourBlock">
             <div className="boostPremiumHour">
-              <div className="boostPremiumX">2X</div>
-              <div className="boostPremiumBuyX">Купить за 300 ₽ / 1 час</div>
+              <div
+                className="boostPremiumX"
+                onClick={() => {
+                  redirectToPayment("2x");
+                  setPreviousPage("main");
+                }}
+              >
+                2X
+              </div>
+              <div
+                className="boostPremiumBuyX"
+                onClick={() => {
+                  redirectToPayment("2x");
+                  setPreviousPage("main");
+                }}
+              >
+                Купить за 300 ₽ / 1 час
+              </div>
             </div>
             <div className="boostPremiumHour">
-              <div className="boostPremiumX">5X</div>
-              <div className="boostPremiumBuyX">Купить за 450 ₽ / 1 час</div>
+              <div
+                className="boostPremiumX"
+                onClick={() => {
+                  redirectToPayment("5x");
+                  setPreviousPage("main");
+                }}
+              >
+                5X
+              </div>
+              <div
+                className="boostPremiumBuyX"
+                onClick={() => {
+                  redirectToPayment("5x");
+                  setPreviousPage("main");
+                }}
+              >
+                Купить за 450 ₽ / 1 час
+              </div>
             </div>
             <div className="boostPremiumHour">
-              <div className="boostPremiumX">10X</div>
-              <div className="boostPremiumBuyX">Купить за 699 ₽ / 1 час</div>
+              <div
+                className="boostPremiumX"
+                onClick={() => {
+                  redirectToPayment("10x");
+                  setPreviousPage("main");
+                }}
+              >
+                10X
+              </div>
+              <div
+                className="boostPremiumBuyX"
+                onClick={() => {
+                  redirectToPayment("10x");
+                  setPreviousPage("main");
+                }}
+              >
+                Купить за 699 ₽ / 1 час
+              </div>
             </div>
           </div>
         </div>
       </div>
+      {modalOpen && (
+        <div className="modal">
+          <div className="backdrop" onClick={handleModalClose}></div>
+          <div className="error-message">
+            {errorMessage}
+            <div className="error-msg">Попробуйте позже</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
