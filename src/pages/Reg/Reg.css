@@ -37,6 +37,14 @@
   object-fit: contain; /* Ensures the image covers the entire area */
 }
 
+.regAvatarImg.upload img {
+  object-fit: cover;
+}
+
+.regAvatarImg.upload {
+  margin: 0;
+}
+
 .regAvatarChange {
   display: flex;
   font-family: SF Pro Display;

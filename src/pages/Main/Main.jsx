@@ -28,6 +28,7 @@ function Main() {
   const [buyWorkerID, setBuyWorkerID] = useState([]);
   const [previousPage, setPreviousPage] = useState("main");
   // const userId = 467597194;
+  // const userId = 124124;
   const userId = useTelegramUser();
   const {
     balance,
@@ -46,6 +47,8 @@ function Main() {
   const [showCopyMessage, setShowCopyMessage] = useState(false); // State to control copy message visibility
   const [currentUserSkin, setCurrentUserSkin] = useState("");
   const [subStatus, setSubStatus] = useState(false);
+  const [avatarNew, setAvatarNew] = useState(null);
+  const [nameNew, setNameNew] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -215,6 +218,8 @@ function Main() {
               balanceuser={balance.toLocaleString("en-US")} // Passing balance to HeaderProfile
               setCurrentPage={setCurrentPage}
               setPreviousPage={setPreviousPage}
+              avatarNew={avatarNew}
+              nameNew={nameNew}
             />
             <div ref={mainScrollRef} className="mainScroll">
               <div className="bigBalanceContainer">
@@ -357,10 +362,13 @@ function Main() {
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
             userID={userId}
-            defaultName={userData.username}
+            defaultName={nameNew !== null ? nameNew : userData.username}
             defaultEmail={userData.mail}
-            img={userData.img}
+            imgUser={avatarNew !== null ? avatarNew : userData.img}
             handleUpdateBalance={handleUpdateBalance}
+            updateUserData={updateUserData}
+            setAvatarNew={setAvatarNew}
+            setNameNew={setNameNew}
           />
         );
       case "skins":

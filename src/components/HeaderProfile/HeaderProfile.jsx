@@ -6,6 +6,8 @@ function HeaderProfile({
   setCurrentPage,
   setPreviousPage,
   balanceuser,
+  avatarNew,
+  nameNew
 }) {
   const balance = balanceuser;
   const rating = userData.rating.toLocaleString("en-US") + "th";
@@ -23,12 +25,12 @@ function HeaderProfile({
           <div className="headerProfileUserAvatar">
             <img
               className="headerProfileUserAvatarIMG"
-              src={userData.img}
+              src={avatarNew !== null ? avatarNew : userData.img}
               alt=""
             />
           </div>
           <div className="headerProfileUserInfo">
-            <div className="headerProfileUserName">{userData.username}</div>
+            <div className="headerProfileUserName">{nameNew !== null ? nameNew : userData.username}</div>
             <div className="headerProfileUserCoins">
               <p>{balance}</p>
               <div className="headerProfileUserCoinsSVG">

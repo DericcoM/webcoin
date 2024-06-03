@@ -6,6 +6,7 @@ import Reg from "../Reg/Reg";
 
 function Home() {
   // const userId = 467597194;
+  // const userId = 124124;
   const userId = useTelegramUser();
   const { userData, loading, error } = useFetchUserData(userId);
   const [reg, setReg] = useState(null); // Initial state should be null

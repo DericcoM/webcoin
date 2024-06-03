@@ -11,9 +11,11 @@ function Reg({ setReg }) {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [buttonStyle, setButtonStyle] = useState({});
   const [avatar, setAvatar] = useState(null);
-  const [avatarName, setAvatarName] = useState("block_ava.jpg");
+  const [upload, setUpload] = useState(false);
   const userId = useTelegramUser();
   // const userId = 467597194;
+  // const userId = 124124;
+
   const { userData, loading, error } = useFetchUserData(userId);
 
   useEffect(() => {
@@ -48,7 +50,7 @@ function Reg({ setReg }) {
     const file = event.target.files[0];
     if (file) {
       setAvatar(file);
-
+      setUpload(true);
       // Display the selected avatar immediately
       const reader = new FileReader();
       reader.onload = () => {
@@ -103,7 +105,7 @@ function Reg({ setReg }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!nickname || !email || !code || !avatarName) {
+    if (!nickname || !email || !code || !avatar) {
       setErrorMsg("Заполните все поля и загрузите аватар!");
       return;
     }
@@ -120,8 +122,18 @@ function Reg({ setReg }) {
       );
 
       if (response.status === 200) {
+        const formData = new FormData();
+        formData.append("username", nickname);
+        formData.append("mail", email);
+        formData.append("user_id", userId);
+        formData.append("img", avatar); // Ensure the key matches what the server expects
+
         const registerResponse = await fetch(
-          `https://ammolin.ru/api/register/${nickname}/${email}/${userId}/${avatarName}`
+          `https://ammolin.ru/api/register`,
+          {
+            method: "POST",
+            body: formData,
+          }
         );
 
         const registerResponseText = await registerResponse.text();
@@ -153,7 +165,11 @@ function Reg({ setReg }) {
               document.querySelector(".regAvatarChange input").click()
             }
           >
-            <div className="regAvatarImg">
+            <div
+              className={
+                upload === true ? "regAvatarImg upload" : "regAvatarImg"
+              }
+            >
               <img src="assets/addPhoto.png" alt="avatar" />
             </div>
           </div>

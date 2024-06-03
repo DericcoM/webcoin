@@ -10,6 +10,11 @@ function Profile({
   userID,
   defaultName,
   defaultEmail,
+  imgUser,
+  handleUpdateBalance,
+  updateUserData,
+  setAvatarNew,
+  setNameNew,
 }) {
   const [nickname, setNickname] = useState(defaultName); // Initialize with name prop
   const [email, setEmail] = useState(defaultEmail); // Initialize with email prop
@@ -22,6 +27,20 @@ function Profile({
   const userId = userID;
   const { userData, loading, error } = useFetchUserData(userId);
   const buyScrollRef = useRef(null);
+  const [avatar, setAvatar] = useState(null);
+
+  const handleAvatarChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setAvatar(file);
+      // Display the selected avatar immediately
+      const reader = new FileReader();
+      reader.onload = () => {
+        document.querySelector(".regAvatarImg img").src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const adjustMainScrollHeight = () => {
     if (buyScrollRef.current) {
@@ -114,14 +133,17 @@ function Profile({
       );
 
       if (response.status === 200) {
+        const formData = new FormData();
+        formData.append("username", nickname);
+        formData.append("mail", email);
+        formData.append("user_id", userId);
+        formData.append("img", avatar);
+
         const updateResponse = await fetch(
-          `https://ammolin.ru/api/change_profile/${nickname}/${email}/${userId}/${img}`,
+          `https://ammolin.ru/api/change_profile`,
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ nickname, email }),
+            body: formData,
           }
         );
 
@@ -130,7 +152,9 @@ function Profile({
           updateResponse.status === 200 &&
           updateResponseText.includes("Success")
         ) {
-          navigate("/main");
+          setCurrentPage("main");
+          setAvatarNew(`assets/avatars/${avatar.name}`);
+          setNameNew(nickname);
         } else {
           setErrorMsg(
             "Возникла ошибка при обновлении профиля, попробуйте позже!"
@@ -150,15 +174,26 @@ function Profile({
       <div className="reg profile">
         <div className="buyScrollContainer profile" ref={buyScrollRef}>
           <div className="regTitle profile">Профиль</div>
-          <div className="regAvatar">
-            <div className="regAvatarImg">
-              <img src="assets/addPhoto.png" alt="avatar" />
+          <div
+            className="regAvatar"
+            onClick={() =>
+              document.querySelector(".regAvatarChange input").click()
+            }
+          >
+            <div className="regAvatarImg upload">
+              <img src={imgUser} alt="avatar" />
             </div>
           </div>
           <div className="regAvatarChange">
             Изменить
             <div className="regAvatarChangeImg">
               <img src="assets/edit.png" alt="edit" />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                style={{ display: "none" }}
+              />
             </div>
           </div>
           <form className="regForm" onSubmit={handleSubmit}>
