@@ -32,7 +32,7 @@
   /* Замените путь к изображению на нужный вам */
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .headerProfileUserInfo {

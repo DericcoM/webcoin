@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'self' https://widget.cloudpayments.ru/;">
+  <title>Payment</title>
+  <script src="https://widget.cloudpayments.ru/bundles/cloudpayments.js"></script>
+</head>
+<body>
+  <div id="payment-form"></div>
+  <script>
+    let payments = new cp.CloudPayments();
+    payments.pay('charge', {
+      publicId: 'pk_24e356224d1feaeb34d15e014904b',
+      description: 'Оплата товаров в example.com',
+      amount: 123000,
+      skin: "mini",
+      currency: 'RUB',
+      invoiceId: 1234567,
+    }).then((result) => {
+      // Optionally notify the parent window of the result
+      window.parent.postMessage(result, '*');
+    });
+  </script>
+</body>
+</html>

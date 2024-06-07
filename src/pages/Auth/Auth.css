@@ -96,6 +96,7 @@
 }
 
 .authSocialsSite {
+  text-decoration: none;
   background: #fff;
   border-radius: 124px;
   height: 30px;
@@ -127,6 +128,7 @@
 }
 
 .authDoc {
+  text-decoration: none;
   text-align: center;
   color: #5f5f5f;
   font-family: "SF Pro Display";

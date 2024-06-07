@@ -2,9 +2,11 @@ import React, { useRef, useEffect, useState } from "react";
 import "./Trade.css";
 import { fetchRefersOwner } from "../../api/api";
 
-function Trade({ setCurrentPage, stars, userId }) {
+function Trade({ setCurrentPage, stars, userId, setPreviousPage }) {
   const buyScrollRef = useRef(null);
   const [data, setData] = useState({});
+  const [iframeVisible, setIframeVisible] = useState(false);
+  const [iframeUrl, setIframeUrl] = useState("");
   const adjustMainScrollHeight = () => {
     if (buyScrollRef.current) {
       const windowHeight = window.innerHeight;
@@ -31,6 +33,10 @@ function Trade({ setCurrentPage, stars, userId }) {
       window.removeEventListener("resize", adjustMainScrollHeight);
     };
   }, []);
+
+  const openIframe = (url) => {
+    window.open(url, "_blank");
+  };
 
   return (
     <>
@@ -84,7 +90,13 @@ function Trade({ setCurrentPage, stars, userId }) {
           <div className={"workerUp buy free"}>
             <p className={"workerUpTitle free"}>Обменять</p>
           </div>
-          <div className="convention">Правила пользования</div>
+          <a
+            href="#"
+            onClick={() => openIframe("https://tvoycoin.com/bonus")}
+            className="convention"
+          >
+            Правила участия в бонусной программе
+          </a>
         </div>
       </div>
     </>

@@ -9,7 +9,7 @@ const usePayment = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`https://ammolin.ru/api/get_payment_link/${process}`);
+      const response = await axios.get(`https://aylsetalinad.ru/api/get_payment_link/${process}`);
       return response.data.confirmation.confirmation_url;
     } catch (err) {
       setError(err);
@@ -31,7 +31,7 @@ const usePayment = () => {
     const BackButton = tg.BackButton;
     BackButton.show();
     BackButton.onClick(() => {
-      window.location.href = "https://ammolin.ru";
+      window.location.href = "https://aylsetalinad.ru";
       BackButton.hide();
     });
   };

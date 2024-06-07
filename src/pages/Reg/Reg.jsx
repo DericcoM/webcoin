@@ -12,6 +12,9 @@ function Reg({ setReg }) {
   const [buttonStyle, setButtonStyle] = useState({});
   const [avatar, setAvatar] = useState(null);
   const [upload, setUpload] = useState(false);
+
+  const [iframeVisible, setIframeVisible] = useState(false);
+  const [iframeUrl, setIframeUrl] = useState("");
   const userId = useTelegramUser();
   // const userId = 467597194;
   // const userId = 124124;
@@ -22,7 +25,7 @@ function Reg({ setReg }) {
     if (!loading && !error) {
       try {
         const response = fetch(
-          `https://ammolin.ru/api/is_telegram_player/${userId}`
+          `https://aylsetalinad.ru/api/is_telegram_player/${userId}`
         );
 
         if (response.status === 200) {
@@ -84,7 +87,9 @@ function Reg({ setReg }) {
         cursor: "not-allowed",
       });
 
-      const response = await fetch(`https://ammolin.ru/api/send_code/${email}`);
+      const response = await fetch(
+        `https://aylsetalinad.ru/api/send_code/${email}`
+      );
       const responseText = await response.text();
 
       if (responseText.includes("Success")) {
@@ -118,7 +123,7 @@ function Reg({ setReg }) {
 
     try {
       const response = await fetch(
-        `https://ammolin.ru/api/check_code/${email}/${code}`
+        `https://aylsetalinad.ru/api/check_code/${email}/${code}`
       );
 
       if (response.status === 200) {
@@ -129,7 +134,7 @@ function Reg({ setReg }) {
         formData.append("img", avatar); // Ensure the key matches what the server expects
 
         const registerResponse = await fetch(
-          `https://ammolin.ru/api/register`,
+          `https://aylsetalinad.ru/api/register`,
           {
             method: "POST",
             body: formData,
@@ -152,6 +157,26 @@ function Reg({ setReg }) {
       console.error("Error:", error);
       setErrorMsg("Возникла ошибка, попробуйте позже!");
     }
+  };
+
+  const handleIframeClose = () => {
+    setIframeVisible(false);
+    setIframeUrl("");
+  };
+
+  const openIframe = (url) => {
+    let tg = window.Telegram.WebApp;
+    let BackButton = tg.BackButton;
+    BackButton.show();
+
+    let previousUrl = document.referrer;
+
+    BackButton.onClick(function () {
+      window.location.href = previousUrl;
+    });
+
+    setIframeVisible(true);
+    setIframeUrl(url);
   };
 
   return (
@@ -232,8 +257,20 @@ function Reg({ setReg }) {
               Начать
             </button>
           </form>
-          <div className="authDoc">Политика конфиденциальности</div>
-          <div className="authDoc">Пользовательское соглашение</div>
+          <a
+            href="#"
+            onClick={() => openIframe("http://tvoycoin.com/policy")}
+            className="authDoc"
+          >
+            Политика конфиденциальности
+          </a>
+          <a
+            href="#"
+            onClick={() => openIframe("http://tvoycoin.com/user_agreement")}
+            className="authDoc profile"
+          >
+            Пользовательское соглашение
+          </a>
           <div className="authSvg">
             <svg width="145" height="21" viewBox="0 0 145 21" fill="none">
               <g opacity="0.34">
@@ -290,6 +327,17 @@ function Reg({ setReg }) {
           </div>
         </div>
       </div>
+      {iframeVisible && (
+        <div className="fullscreen-iframe">
+          <div className="iframe-overlay" onClick={handleIframeClose}></div>
+          <iframe
+            style={{ width: "100vw", height: "100vh" }}
+            src={iframeUrl}
+            className="iframe-content"
+            frameBorder="0"
+          ></iframe>
+        </div>
+      )}
     </>
   );
 }

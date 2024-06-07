@@ -28,9 +28,15 @@
 }
 
 .convention {
+  margin: 0 auto;
+  text-align: center;
+  margin-bottom: 10px;
+  text-decoration: none;
   color: #4f4f4f;
   text-align: center;
   font-size: 14px;
   font-weight: 600;
-  margin: 13px 0;
+  margin: 13px auto;
+  display: flex;
+  justify-content: center;
 }

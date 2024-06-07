@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://ammolin.ru/api/'; // Ensure this is correct
+const API_BASE_URL = 'https://aylsetalinad.ru/api/'; // Ensure this is correct
 
 export const fetchUserData = async (userId) => {
   try {
@@ -84,7 +84,7 @@ export const fetchUserWorker = async (userId) => {
 
   export const fetchSafeTimer = async (userID) => {
     try {
-      const response = await axios.get(`https://ammolin.ru/api/get_safe_timer/${userID}`);
+      const response = await axios.get(`${API_BASE_URL}get_safe_timer/${userID}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -93,7 +93,7 @@ export const fetchUserWorker = async (userId) => {
 
   export const fetchRefers = async (userID) => {
     try {
-      const response = await axios.get(`https://ammolin.ru/api/get_other_refers/${userID}`);
+      const response = await axios.get(`${API_BASE_URL}get_other_refers/${userID}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -102,7 +102,7 @@ export const fetchUserWorker = async (userId) => {
 
   export const fetchRefersOwner = async (userID) => {
     try {
-      const response = await axios.get(`https://ammolin.ru/api/get_my_refers/${userID}`);
+      const response = await axios.get(`${API_BASE_URL}get_my_refers/${userID}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -111,7 +111,7 @@ export const fetchUserWorker = async (userId) => {
 
   export const buySkin = async (skin, userID, price) => {
     try {
-      const response = await axios.get(`https://ammolin.ru/api/buy_skin/${skin}/${userID}/${price}`);
+      const response = await axios.get(`${API_BASE_URL}buy_skin/${skin}/${userID}/${price}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -120,7 +120,7 @@ export const fetchUserWorker = async (userId) => {
 
   export const getSkin = async (userID) => {
     try {
-      const response = await axios.get(`https://ammolin.ru/api/get_skins/${userID}`);
+      const response = await axios.get(`${API_BASE_URL}get_skins/${userID}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -129,7 +129,7 @@ export const fetchUserWorker = async (userId) => {
 
   export const buySlot = async (userId, count) => {
     try {
-      const response = await axios.get(`https://ammolin.ru/api/buy_slot/${userId}/${count}`);
+      const response = await axios.get(`${API_BASE_URL}api/buy_slot/${userId}/${count}`);
       return response;
     } catch (error) {
       throw error;
@@ -138,16 +138,16 @@ export const fetchUserWorker = async (userId) => {
 
   export const getSlot = async (userID) => {
     try {
-      const response = await axios.get(`https://ammolin.ru/api/get_slots/${userID}`);
+      const response = await axios.get(`${API_BASE_URL}get_slots/${userID}`);
       return response.data;
     } catch (error) {
       throw error;
     }
   };
 
-  export const getSub = async (userID) => {
+  export const getSub =  (userID) => {
     try {
-      const response = await axios.get(`https://ammolin.ru/api/is_bought/${userID}`);
+      const response =  axios.get(`${API_BASE_URL}is_bought/${userID}`);
       return response;
     } catch (error) {
       throw error;

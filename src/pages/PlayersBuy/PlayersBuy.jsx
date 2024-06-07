@@ -19,7 +19,7 @@ function PlayersBuy({
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `https://ammolin.ru/api/get_shop/${userID}`,
+        `https://aylsetalinad.ru/api/get_shop/${userID}`,
         {
           params: { page, limit: 10 },
         }

@@ -16,8 +16,8 @@ function Profile({
   setAvatarNew,
   setNameNew,
 }) {
-  const [nickname, setNickname] = useState(defaultName); // Initialize with name prop
-  const [email, setEmail] = useState(defaultEmail); // Initialize with email prop
+  const [nickname, setNickname] = useState(defaultName);
+  const [email, setEmail] = useState(defaultEmail);
   const [img, setImg] = useState(null);
   const [code, setCode] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -33,7 +33,6 @@ function Profile({
     const file = event.target.files[0];
     if (file) {
       setAvatar(file);
-      // Display the selected avatar immediately
       const reader = new FileReader();
       reader.onload = () => {
         document.querySelector(".regAvatarImg img").src = reader.result;
@@ -95,7 +94,9 @@ function Profile({
         cursor: "not-allowed",
       });
 
-      const response = await fetch(`https://ammolin.ru/api/send_code/${email}`);
+      const response = await fetch(
+        `https://aylsetalinad.ru/api/send_code/${email}`
+      );
       const responseText = await response.text();
 
       if (responseText.includes("Success")) {
@@ -129,7 +130,7 @@ function Profile({
 
     try {
       const response = await fetch(
-        `https://ammolin.ru/api/check_code/${email}/${code}`
+        `https://aylsetalinad.ru/api/check_code/${email}/${code}`
       );
 
       if (response.status === 200) {
@@ -140,7 +141,7 @@ function Profile({
         formData.append("img", avatar);
 
         const updateResponse = await fetch(
-          `https://ammolin.ru/api/change_profile`,
+          `https://aylsetalinad.ru/api/change_profile`,
           {
             method: "POST",
             body: formData,
@@ -167,6 +168,10 @@ function Profile({
       console.error("Error:", error);
       setErrorMsg("Возникла ошибка, попробуйте позже!");
     }
+  };
+
+  const openInNewTab = (url) => {
+    window.open(url, "_blank");
   };
 
   return (
@@ -226,6 +231,7 @@ function Profile({
               className="inputForm confirmEmail"
               onClick={sendVerificationCode}
               style={buttonStyle}
+              disabled={buttonDisabled}
             >
               Отправить код
             </div>
@@ -247,16 +253,44 @@ function Profile({
             Следите за нашими обновлениями в социальных сетях:
           </div>
           <div className="authSocials profile">
-            <a href="https://t.me/tvoycommunity" className="authSocialsImg">
+            <a
+              href="https://t.me/tvoycommunity"
+              className="authSocialsImg"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img src="assets/tgAuth.png" alt="" />
             </a>
-            <div className="authSocialsSite">tvoycoin.com</div>
-            <a href="https://vk.com/tvoycommunity" className="authSocialsImg">
+            <a
+              href="#"
+              className="authSocialsSite"
+              onClick={() => openInNewTab("http://tvoycoin.com")}
+            >
+              tvoycoin.com
+            </a>
+            <a
+              href="https://vk.com/tvoycommunity"
+              className="authSocialsImg"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img src="assets/vkAuth.png" alt="" />
             </a>
           </div>
-          <div className="authDoc">Политика конфиденциальности</div>
-          <div className="authDoc profile">Пользовательское соглашение</div>
+          <a
+            href="#"
+            onClick={() => openInNewTab("http://tvoycoin.com/policy")}
+            className="authDoc"
+          >
+            Политика конфиденциальности
+          </a>
+          <a
+            href="#"
+            onClick={() => openInNewTab("http://tvoycoin.com/user_agreement")}
+            className="authDoc profile"
+          >
+            Пользовательское соглашение
+          </a>
         </div>
       </div>
     </>

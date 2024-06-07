@@ -3,6 +3,7 @@ import useFetchUserData from "../../Hooks/useFetchUserData";
 import useTelegramUser from "../../Hooks/useTelegramUser";
 import Main from "../Main/Main";
 import Reg from "../Reg/Reg";
+import Loader from "../../components/Loader/Loader";
 
 function Home() {
   // const userId = 467597194;
@@ -11,11 +12,12 @@ function Home() {
   const { userData, loading, error } = useFetchUserData(userId);
   const [reg, setReg] = useState(null); // Initial state should be null
   const [value, setValue] = useState("");
+  const [loadingError, setLoadingError] = useState(false); // State to track loading error
 
   const handleReg = async () => {
     try {
       const response = await fetch(
-        `https://ammolin.ru/api/is_telegram_player/${userId}`
+        `https://aylsetalinad.ru/api/is_telegram_player/${userId}`
       );
       console.log(response.status);
       setValue(response.status);
@@ -26,6 +28,7 @@ function Home() {
       }
     } catch (error) {
       console.error("Error:", error);
+      setLoadingError(true); // Set loading error to true if there's an error
     }
   };
 
@@ -36,14 +39,24 @@ function Home() {
   }, [userId]); // Depend on userId to ensure it runs when userId is available
 
   if (loading || reg === null) {
-    return <div>Loading...</div>;
+    return <Loader />; // Show Loader while loading or reg is null
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
+  if (loadingError) {
+    // If loading error occurs, prompt for retry
+    return (
+      <div>
+        <p>Error loading data. Please try again.</p>
+        <button onClick={handleReg}>Retry</button>
+      </div>
+    );
   }
 
-  return reg === "main" ? <Main userId={userId} /> : <Reg userId={userId} setReg={setReg} />;
+  return reg === "main" ? (
+    <Main userId={userId} />
+  ) : (
+    <Reg userId={userId} setReg={setReg} />
+  );
 }
 
 export default Home;

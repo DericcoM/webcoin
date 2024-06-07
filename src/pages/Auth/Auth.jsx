@@ -76,7 +76,7 @@ function Auth({}) {
                 <div className="authSocialsImg">
                   <img src="assets/tgAuth.png" alt="" />
                 </div>
-                <div className="authSocialsSite">tvoycoin.com</div>
+                <a href="http://tvoycoin.com" className="authSocialsSite">tvoycoin.com</a>
                 <div className="authSocialsImg">
                   <img src="assets/vkAuth.png" alt="" />
                 </div>

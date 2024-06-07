@@ -1,3 +1,14 @@
+/* ModalSub.css */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black color */
+  z-index: 1000; /* Ensure the overlay is below the modal */
+}
+
 .modalSub {
   position: fixed;
   z-index: 11241512125;
@@ -13,15 +24,8 @@
   background: #1f1f1f;
 }
 
-/* ModalSub.css */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black color */
-  z-index: 1000; /* Ensure the overlay is below the modal */
+.modalSub.show {
+  display: block;
 }
 
 .modal-content {
@@ -59,4 +63,14 @@
   width: 38%;
   margin: 0 auto;
   font-weight: 700;
+}
+
+.fullscreen-iframe {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border: none;
+  z-index: 9999; /* Ensure it is on top of everything */
 }

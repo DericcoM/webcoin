@@ -20,6 +20,8 @@ import ModalSub from "../../components/ModalSub/ModalSub";
 import Profile from "../Profile/Profile";
 import Skins from "../Skins/Skins";
 import { getSub } from "../../api/api";
+import Loader from "../../components/Loader/Loader";
+import useFetchSub from "../../Hooks/useFetchSub";
 
 function Main() {
   const [currentPage, setCurrentPage] = useState("main");
@@ -38,6 +40,7 @@ function Main() {
   } = useFetchBalance(userId);
   const { userData, loading, error, refetchUserData } =
     useFetchUserData(userId);
+  const [userTest, setUserTest] = useState(userData);
   const { userWorker, loadingWorker, errorWorker, updateUserData } =
     useFetchUserWorker(userId);
   const [summWorker, setSummWorker] = useState(0);
@@ -46,9 +49,16 @@ function Main() {
   const [qrText, setQrText] = useState("");
   const [showCopyMessage, setShowCopyMessage] = useState(false); // State to control copy message visibility
   const [currentUserSkin, setCurrentUserSkin] = useState("");
-  const [subStatus, setSubStatus] = useState(false);
   const [avatarNew, setAvatarNew] = useState(null);
   const [nameNew, setNameNew] = useState(null);
+  const [handleSub, setHandleSub] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // Состояние для отслеживания загрузки контента
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Устанавливаем isLoading в false после 2 секунд
+    }, 1000);
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -175,31 +185,14 @@ function Main() {
     setShowQRModal(false);
   };
 
-  const [showModal, setShowModal] = useState(true);
-
-  useEffect(() => {
-    subStatus === false ? setShowModal(true) : setShowModal(false);
-    getStatusSub();
-  }, []);
-
-  const getStatusSub = async () => {
-    try {
-      const response = await getSub(userId);
-      if (response.status === 200) {
-        setSubStatus(true);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const handleUpdateBalance = () => {
     refetchBalance();
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
+  if (isLoading) {
+    return <Loader />;
+  }
+
   const renderContent = () => {
     if (loading) {
       return;
@@ -388,31 +381,41 @@ function Main() {
     }
   };
 
+  const subUser = () => {
+    const sub = userData.is_bought;
+    // console.log("124124", sub === "no" && handleSub !== null);
+    if (sub === "no") {
+      return <ModalSub userId={userId} setHandleSub={setHandleSub} updateUserData={refetchUserData} />;
+    }
+  };
+
   return (
-    <div
-      className={
-        currentPage === "rating"
-          ? "containerRating"
-          : currentPage === "boost"
-          ? "containerBoost"
-          : "container"
-      }
-    >
-      {currentPage !== "worker" &&
-        currentPage !== "buyWorker" &&
-        currentPage !== "rating" &&
-        currentPage !== "profile" && (
-          <Footer
-            setCurrentPage={setCurrentPage}
-            currentPage={currentPage}
-            setPreviousPage={setPreviousPage}
-            userId={userId}
-            handleUpdateBalance={handleUpdateBalance}
-          />
-        )}
-      {renderContent()}
-      <ModalSub show={showModal} onClose={handleCloseModal} />
-    </div>
+    !isLoading && (
+      <div
+        className={
+          currentPage === "rating"
+            ? "containerRating"
+            : currentPage === "boost"
+            ? "containerBoost"
+            : "container"
+        }
+      >
+        {currentPage !== "worker" &&
+          currentPage !== "buyWorker" &&
+          currentPage !== "rating" &&
+          currentPage !== "profile" && (
+            <Footer
+              setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
+              setPreviousPage={setPreviousPage}
+              userId={userId}
+              handleUpdateBalance={handleUpdateBalance}
+            />
+          )}
+        {!isLoading && renderContent()}
+        {subUser()}
+      </div>
+    )
   );
 }
 

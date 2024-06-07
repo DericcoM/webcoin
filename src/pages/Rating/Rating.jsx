@@ -33,7 +33,7 @@ function Rating({ setCurrentPage, mainID, mainData }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://ammolin.ru/api/get_rating");
+        const response = await fetch("https://aylsetalinad.ru/api/get_rating");
         const data = await response.json();
         setPlayers(data);
       } catch (error) {

@@ -205,5 +205,7 @@ a {
 }
 
 .authDoc.profile {
-    margin-bottom: 10px;
+  text-decoration: none;
+  margin-bottom: 10px;
+  margin-top: 5px;
 }

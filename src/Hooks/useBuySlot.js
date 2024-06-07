@@ -9,7 +9,7 @@ const useBuySlot = () => {
     setLoadingSlot(true);
     setErrorSlot(null);
     try {
-      const response = await axios.get(`https://ammolin.ru/api/buy_slot/${userId}/${count}`);
+      const response = await axios.get(`https://aylsetalinad.ru/api/buy_slot/${userId}/${count}`);
       
       if (response.status === 200) {
         
