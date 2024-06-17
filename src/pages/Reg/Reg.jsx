@@ -15,9 +15,9 @@ function Reg({ setReg }) {
 
   const [iframeVisible, setIframeVisible] = useState(false);
   const [iframeUrl, setIframeUrl] = useState("");
-  const userId = useTelegramUser();
+  // const userId = useTelegramUser();
   // const userId = 467597194;
-  // const userId = 124124;
+  const userId = 123456789;
 
   const { userData, loading, error } = useFetchUserData(userId);
 

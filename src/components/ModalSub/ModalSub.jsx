@@ -75,7 +75,7 @@ function ModalSub({ show, onClose, userId, setSubStatus, handleSub, updateUserDa
               развитие проекта.
             </div>
           </div>
-          <div className="authButton subBuy" onClick={handlePay}>
+          <div className="authButton subBuy" onClick={onClose}>
             99 Рублей
           </div>
         </div>

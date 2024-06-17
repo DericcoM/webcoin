@@ -7,8 +7,8 @@ import Loader from "../../components/Loader/Loader";
 
 function Home() {
   // const userId = 467597194;
-  // const userId = 124124;
-  const userId = useTelegramUser();
+  const userId = 123456789;
+  // const userId = useTelegramUser();
   const { userData, loading, error } = useFetchUserData(userId);
   const [reg, setReg] = useState(null); // Initial state should be null
   const [value, setValue] = useState("");

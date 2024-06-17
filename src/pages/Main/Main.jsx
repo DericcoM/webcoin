@@ -30,8 +30,8 @@ function Main() {
   const [buyWorkerID, setBuyWorkerID] = useState([]);
   const [previousPage, setPreviousPage] = useState("main");
   // const userId = 467597194;
-  // const userId = 124124;
-  const userId = useTelegramUser();
+  const userId = 123456789;
+  // const userId = useTelegramUser();
   const {
     balance,
     loading: balanceLoading,
@@ -54,6 +54,7 @@ function Main() {
   const [handleSub, setHandleSub] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Состояние для отслеживания загрузки контента
 
+  const [modalClose, setModalClose] = useState(false);
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false); // Устанавливаем isLoading в false после 2 секунд
@@ -279,6 +280,12 @@ function Main() {
                   handleUpdateBalance={handleUpdateBalance}
                 />
               </div>
+              <a href="https://aaio.so/" target="_blank">
+                <img
+                  src="https://aaio.so/assets/svg/banners/mini/dark-2.svg"
+                  title="Aaio - Сервис по приему онлайн платежей"
+                />
+              </a>
               {showQRModal && (
                 <>
                   <div className="overlay" onClick={closeModal}></div>
@@ -381,11 +388,26 @@ function Main() {
     }
   };
 
+  const handleClose = () => {
+    setModalClose(true);
+  };
+
   const subUser = () => {
     const sub = userData.is_bought;
     // console.log("124124", sub === "no" && handleSub !== null);
     if (sub === "no") {
-      return <ModalSub userId={userId} setHandleSub={setHandleSub} updateUserData={refetchUserData} />;
+      if (modalClose) {
+        return null;
+      } else {
+        return (
+          <ModalSub
+            onClose={handleClose}
+            userId={userId}
+            setHandleSub={setHandleSub}
+            updateUserData={refetchUserData}
+          />
+        );
+      }
     }
   };
 
