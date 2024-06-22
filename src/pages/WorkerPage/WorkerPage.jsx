@@ -10,7 +10,13 @@ import {
   fetchRefers,
 } from "../../api/api";
 
-function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBalance}) {
+function WorkerPage({
+  userID,
+  workerID,
+  setPreviousPage,
+  balance,
+  handleUpdateBalance,
+}) {
   const { userData, loading, error, refetchUserData } =
     useFetchUserData(workerID);
   const { userWorker, loadingWorker, errorWorker } =
@@ -52,6 +58,7 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBa
   const handleUp = async () => {
     try {
       const response = await fetchWorkerUp(userID, workerID);
+      console.log("upgrade");
       // После успешного выполнения запроса обновляем данные о пользователе
       refetchUserData();
     } catch (error) {
@@ -71,10 +78,10 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBa
   };
 
   const handleModalError = (error) => {
-    let errorMessageToShow = "Произошла ошибка";
+    let errorMessageToShow = "An error has occurred";
     if (error.response && error.response.data && error.response.data.error) {
       if (error.response.status === 400) {
-        errorMessageToShow = "Недостаточно средств.";
+        errorMessageToShow = "Insufficient funds.";
       } else {
         errorMessageToShow = error.response.data.error;
       }
@@ -99,21 +106,19 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBa
             <img className="workerPageAvatar" src={userData.img} alt="" />
           </div>
           <div className="workerPageName">{userData.username}</div>
-          <div className="workerPageStatus">Работает на вас</div>
+          <div className="workerPageStatus">Worked on you</div>
         </div>
         <div className="workerPageStatusBar">
           <div className="workerPageShield">
             {userData.is_safe === "yes"
-              ? `Защищен ${userData.timer}`
-              : "Не защищен"}
+              ? `Protected ${userData.timer}`
+              : "Not protected"}
           </div>
           <div className="workerPagePayment">{userData.sum_ref_income}/min</div>
         </div>
         <div className="dottedLine"></div>
         <div className={"workerUp"}>
-          <p className="workerUpTitle">
-            Зарабатывает {userData.income}/мин
-          </p>
+          <p className="workerUpTitle">Earns {userData.income}/мин</p>
         </div>
 
         <div className="workerPlayers">
@@ -121,7 +126,7 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBa
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">C:</div>
               <div className="workerPlayersUnitCount">
-                {dataRefs.c_refs} чел.
+                {dataRefs.c_refs} refs.
               </div>
             </div>
             <div className="workerPlayersUnit_Income">
@@ -132,7 +137,7 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBa
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">D:</div>
               <div className="workerPlayersUnitCount">
-                {dataRefs.d_refs} чел.
+                {dataRefs.d_refs} refs.
               </div>
             </div>
             <div className="workerPlayersUnit_Income">
@@ -143,7 +148,7 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBa
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">E:</div>
               <div className="workerPlayersUnitCount">
-                {dataRefs.e_refs} чел.
+                {dataRefs.e_refs} refs.
               </div>
             </div>
             <div className="workerPlayersUnit_Income">
@@ -154,7 +159,7 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBa
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">F:</div>
               <div className="workerPlayersUnitCount">
-                {dataRefs.f_refs} чел.
+                {dataRefs.f_refs} refs.
               </div>
             </div>
             <div className="workerPlayersUnit_Income">
@@ -165,7 +170,7 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBa
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">G:</div>
               <div className="workerPlayersUnitCount">
-                {dataRefs.g_refs} чел.
+                {dataRefs.g_refs} refs.
               </div>
             </div>
             <div className="workerPlayersUnit_Income">
@@ -181,7 +186,7 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBa
           }
           onClick={handleUp}
         >
-          <p className="workerUpTitle">Прокачать за {userData.level_price}</p>
+          <p className="workerUpTitle">Upgrade for {userData.level_price}</p>
           <div className="workerUpCoin">
             <img src="assets/goldMiniCoin.png" alt="" />
           </div>
@@ -197,7 +202,7 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBa
                 : "workerUpTitle no"
             }
           >
-            Защитить за {userData.shield_price}
+            Protect for {userData.shield_price}
           </p>
           <div className="workerUpCoin">
             <img src="assets/goldMiniCoin.png" alt="" />
@@ -209,7 +214,7 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBa
                 : "workerUpTitle no"
             }
           >
-            на 8 часов
+            for 8 hours
           </p>
         </div>
       </div>
@@ -219,7 +224,7 @@ function WorkerPage({ userID, workerID, setPreviousPage, balance, handleUpdateBa
           <div className="backdrop" onClick={handleModalClose}></div>
           <div className="error-message">
             {errorMessage}
-            <div className="error-msg">Попробуйте позже</div>
+            <div className="error-msg">Try again later</div>
           </div>
         </div>
       )}

@@ -81,7 +81,10 @@
   margin-top: 9px;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s linear;
 }
+
+
 
 .workerUpTitle {
   font-family: SF Pro Display;

@@ -6,15 +6,32 @@ import useBuySlot from "../../Hooks/useBuySlot";
 import axios from "axios";
 import { buySlot, getSlot } from "../../api/api";
 
-function Boost({ setPreviousPage, setCurrentPage, userId }) {
+function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
   const buyScrollRef = useRef(null);
   const [value, setValue] = useState(1);
   const unitPrice = 0.5;
   const [modalOpen, setModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const { redirectToPayment, setupBackButton, loading, error } = usePayment();
+  const { getPaymentLink, loading, error } = usePayment();
   const { redirectToPaymentSlot, loadingSlot, errorSlot } = useBuySlot();
   const [slotValue, setSlotValue] = useState();
+
+  const handlePaymentClick = async (process, userId) => {
+    console.log(boost);
+    if (!boost) {
+      console.log("asd");
+      const response = await getPaymentLink(process, userId);
+      if (response === 403) {
+        setErrorMessage("Not enough stars to buy");
+        setModalOpen(true);
+      } else {
+        setPreviousPage("main");
+      }
+    } else {
+      setErrorMessage("Booster already used");
+      setModalOpen(true);
+    }
+  };
 
   const getSlotCount = async () => {
     try {
@@ -48,10 +65,13 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
   const handleBuyNo = () => {};
 
   const handleModalError = (error) => {
-    let errorMessageToShow = "Произошла ошибка";
+    let errorMessageToShow = "An error has occurred";
     if (error.response && error.response.data && error.response.data.error) {
       if (error.response.status === 400) {
-        errorMessageToShow = "Недостаточно средств";
+        errorMessageToShow = "Insufficient funds";
+      }
+      if (error.response.status === 403) {
+        errorMessageToShow = "Insufficient funds";
       } else {
         errorMessageToShow = error.response.data.error;
       }
@@ -83,7 +103,6 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
 
   useEffect(() => {
     adjustMainScrollHeight();
-    setupBackButton();
     window.addEventListener("resize", adjustMainScrollHeight);
     return () => {
       window.removeEventListener("resize", adjustMainScrollHeight);
@@ -101,9 +120,9 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
   return (
     <div className="boost">
       <div className="buyScrollContainer" ref={buyScrollRef}>
-        <div className="boostTitle">Апгрейд</div>
+        <div className="boostTitle">Boost</div>
         <div className="boostTaskTitle">
-          Задания за
+          Tasks for
           <div className="boostTaskTitleImg">
             <img src="assets/goldMiniCoin.png" alt="" />
           </div>
@@ -111,7 +130,7 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
         <div className="socials">
           <div className="boostSocials">
             <div className="boostSocialsButton testr">
-              Скоро здесь что то появится
+              Something will be here soon
             </div>
             {/* <div className="boostSocialsEarn">
               <div className="boostTaskTitleImg soc">
@@ -130,7 +149,7 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
           </div>
           <div className="boostSocials">
             <div className="boostSocialsButton testr">
-              Скоро здесь что то появится
+              Something will be here soon
             </div>
             {/* <div className="boostSocialsEarn">
               <div className="boostTaskTitleImg soc">
@@ -149,7 +168,7 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
           </div>
           <div className="boostSocials">
             <div className="boostSocialsButton testr">
-              Скоро здесь что то появится
+              Something will be here soon
             </div>
             {/* <div className="boostSocialsEarn">
               <div className="boostTaskTitleImg soc">
@@ -170,11 +189,12 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
         <div className="dottedLine soc"></div>
         <div className="boostPremium">
           <div className="boostPremiumTitle">
-            Вам доступно <span className="premium">{slotValue} слота</span>
+            You have{" "}
+            <span className="premium">{slotValue} invitation slots</span>
           </div>
           <div className="boostPremiumDesc">
-            Увеличьте количество слотов, чтобы
-            <br /> можно было приглашать больше друзей
+            Increase the number of slots to
+            <br /> it was possible to invite more friends
           </div>
           <Slider
             defaultValue={1}
@@ -197,7 +217,7 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
             className="boostPremiumButton buy"
             onClick={() => getPaymentSlot(userId, value)}
           >
-            Купить за {calculatePrice(value)}{" "}
+            Buy for {calculatePrice(value)}{" "}
             <div className="boostTaskTitleImg">
               <img src="assets/goldMiniCoin.png" alt="" />
             </div>
@@ -205,7 +225,7 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
         </div>
         <div className="boostPremium">
           <div className="boostPremiumTitle fast">
-            Ускорение заработка
+            Acceleration of earnings
             <div className="boostPremiumTitleImg">
               <img src="assets/goldMiniCoin.png" alt="" />
             </div>
@@ -215,7 +235,7 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
               <div
                 className="boostPremiumX"
                 onClick={() => {
-                  redirectToPayment("2x");
+                  handlePaymentClick("2x", userId);
                   setPreviousPage("main");
                 }}
               >
@@ -224,18 +244,22 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
               <div
                 className="boostPremiumBuyX"
                 onClick={() => {
-                  redirectToPayment("2x");
+                  handlePaymentClick("2x", userId);
                   setPreviousPage("main");
                 }}
               >
-                Купить за 300 ₽ / 1 час
+                Boost for 30{" "}
+                <div className="balanceValueImg boost">
+                  <img src="assets/star.png" alt="" />
+                </div>{" "}
+                / 1 hour
               </div>
             </div>
             <div className="boostPremiumHour">
               <div
                 className="boostPremiumX"
                 onClick={() => {
-                  redirectToPayment("5x");
+                  handlePaymentClick("5x", userId);
                   setPreviousPage("main");
                 }}
               >
@@ -244,18 +268,22 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
               <div
                 className="boostPremiumBuyX"
                 onClick={() => {
-                  redirectToPayment("5x");
+                  handlePaymentClick("5x", userId);
                   setPreviousPage("main");
                 }}
               >
-                Купить за 450 ₽ / 1 час
+                Boost for 50{" "}
+                <div className="balanceValueImg boost">
+                  <img src="assets/star.png" alt="" />
+                </div>{" "}
+                / 1 hour
               </div>
             </div>
             <div className="boostPremiumHour">
               <div
                 className="boostPremiumX"
                 onClick={() => {
-                  redirectToPayment("10x");
+                  handlePaymentClick("10x", userId);
                   setPreviousPage("main");
                 }}
               >
@@ -264,11 +292,15 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
               <div
                 className="boostPremiumBuyX"
                 onClick={() => {
-                  redirectToPayment("10x");
+                  handlePaymentClick("10x", userId);
                   setPreviousPage("main");
                 }}
               >
-                Купить за 699 ₽ / 1 час
+                Boost for 90{" "}
+                <div className="balanceValueImg boost">
+                  <img src="assets/star.png" alt="" />
+                </div>{" "}
+                / 1 hour
               </div>
             </div>
           </div>
@@ -279,7 +311,7 @@ function Boost({ setPreviousPage, setCurrentPage, userId }) {
           <div className="backdrop" onClick={handleModalClose}></div>
           <div className="error-message">
             {errorMessage}
-            <div className="error-msg">Попробуйте позже</div>
+            <div className="error-msg">Try again later</div>
           </div>
         </div>
       )}

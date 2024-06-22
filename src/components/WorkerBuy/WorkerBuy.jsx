@@ -32,7 +32,7 @@ function WorkerBuy({
             ownerID === 1 ? "workerBuyStatusWorkedYou" : "workerBuyStatusWorked"
           }
         >
-          {ownerID === 1 ? "Работает на вас" : `Работает на ${owner}`}
+          {ownerID === 1 ? "Worked on you" : `Worked on ${owner}`}
         </div>
       );
     }
@@ -68,7 +68,7 @@ function WorkerBuy({
         <div className="workerBuyCardInfo">
           <div className="workerBuyName">{name}</div>
           <div className="workerBuyStatusWorked">
-            Работает на {userData.username}
+            Worked on {userData.username}
           </div>
         </div>
       </div>

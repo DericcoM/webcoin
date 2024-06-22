@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./Reg.css";
 import useFetchUserData from "../../Hooks/useFetchUserData";
 import useTelegramUser from "../../Hooks/useTelegramUser";
+import useTelegramInfo from "../../Hooks/useTelegramInfo";
 
 function Reg({ setReg }) {
   const [nickname, setNickname] = useState("");
-  const [email, setEmail] = useState("");
-  const [code, setCode] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [buttonStyle, setButtonStyle] = useState({});
@@ -15,11 +14,17 @@ function Reg({ setReg }) {
 
   const [iframeVisible, setIframeVisible] = useState(false);
   const [iframeUrl, setIframeUrl] = useState("");
-  // const userId = useTelegramUser();
+  const [photo, setPhoto] = useState(null);
+  const [userName, userPhoto, isAttachmentMenu] = useTelegramInfo();
+  const userId = useTelegramUser();
   // const userId = 467597194;
-  const userId = 123456789;
 
   const { userData, loading, error } = useFetchUserData(userId);
+
+  useEffect(() => {
+    setNickname(userName);
+    setPhoto(userPhoto);
+  }, [loading, error, userData]);
 
   useEffect(() => {
     if (!loading && !error) {
@@ -41,121 +46,59 @@ function Reg({ setReg }) {
     setNickname(event.target.value);
   };
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handleCodeChange = (event) => {
-    setCode(event.target.value);
-  };
-
   const handleAvatarChange = (event) => {
     const file = event.target.files[0];
+
     if (file) {
       setAvatar(file);
       setUpload(true);
-      // Display the selected avatar immediately
       const reader = new FileReader();
       reader.onload = () => {
         document.querySelector(".regAvatarImg img").src = reader.result;
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  const sendVerificationCode = async () => {
-    if (!nickname) {
-      setErrorMsg("Укажите никнейм.");
-      return;
-    }
-    if (!email) {
-      setErrorMsg("Укажите почту.");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrorMsg("Введите правильный e-mail адрес!");
-      return;
-    }
-
-    try {
-      setButtonDisabled(true);
-      setButtonStyle({
-        backgroundColor: "#434343",
-        color: "#7D7D7D",
-        cursor: "not-allowed",
-      });
-
-      const response = await fetch(
-        `https://aylsetalinad.ru/api/send_code/${email}`
-      );
-      const responseText = await response.text();
-
-      if (responseText.includes("Success")) {
-        setErrorMsg("");
-      } else {
-        setErrorMsg(responseText);
-      }
-
-      setTimeout(() => {
-        setButtonDisabled(false);
-        setButtonStyle({});
-      }, 120000);
-    } catch (error) {
-      console.error("Error:", error);
-      setErrorMsg("Возникла ошибка, попробуйте позже!");
+    } else {
+      setUpload(false);
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!nickname || !email || !code || !avatar) {
-      setErrorMsg("Заполните все поля и загрузите аватар!");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrorMsg("Введите правильный e-mail адрес!");
+    if (!nickname) {
+      setErrorMsg("Check nickname");
       return;
     }
 
     try {
-      const response = await fetch(
-        `https://aylsetalinad.ru/api/check_code/${email}/${code}`
+      const formData = new FormData();
+      formData.append("username", nickname);
+      formData.append("user_id", userId);
+      if (avatar) {
+        formData.append("img", avatar);
+      } else {
+        formData.append("img", 123);
+      }
+
+      const registerResponse = await fetch(
+        `https://aylsetalinad.ru/api/register`,
+        {
+          method: "POST",
+          body: formData,
+        }
       );
 
-      if (response.status === 200) {
-        const formData = new FormData();
-        formData.append("username", nickname);
-        formData.append("mail", email);
-        formData.append("user_id", userId);
-        formData.append("img", avatar); // Ensure the key matches what the server expects
-
-        const registerResponse = await fetch(
-          `https://aylsetalinad.ru/api/register`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        const registerResponseText = await registerResponse.text();
-        if (
-          registerResponse.status === 200 &&
-          registerResponseText.includes("Success")
-        ) {
-          setReg("main");
-        } else {
-          setErrorMsg("Возникла ошибка при регистрации, попробуйте позже!");
-        }
-      } else if (response.status === 403) {
-        setErrorMsg("Неправильный код подтверждения!");
+      const registerResponseText = await registerResponse.text();
+      if (
+        registerResponse.status === 200 &&
+        registerResponseText.includes("Success")
+      ) {
+        setReg("main");
+      } else {
+        setErrorMsg("An error occurred during registration, try again later!");
       }
     } catch (error) {
       console.error("Error:", error);
-      setErrorMsg("Возникла ошибка, попробуйте позже!");
+      setErrorMsg("An error has occurred, try again later!");
     }
   };
 
@@ -183,7 +126,7 @@ function Reg({ setReg }) {
     <>
       <div className="auth overflow-scroll">
         <div className="reg">
-          <div className="regTitle">Регистрация</div>
+          <div className="regTitle">Registration</div>
           <div
             className="regAvatar"
             onClick={() =>
@@ -199,7 +142,7 @@ function Reg({ setReg }) {
             </div>
           </div>
           <div className="regAvatarChange">
-            Изменить
+            Change
             <div className="regAvatarChangeImg">
               <img src="assets/edit.png" alt="edit" />
               <input
@@ -215,61 +158,57 @@ function Reg({ setReg }) {
               <div className="inputFormImg">
                 <img src="assets/profileAuth.png" alt="profile" />
               </div>
+
               <input
                 className="input"
-                placeholder="Ваш никнейм"
+                placeholder="Name"
                 type="text"
                 value={nickname}
                 onChange={handleNicknameChange}
                 maxLength={10}
               />
             </div>
-            <div className="inputForm">
+            {/* <div className="inputForm">
               <div className="inputFormImg">
                 <img src="assets/sms.png" alt="sms" />
               </div>
               <input
                 className="input"
-                placeholder="Ваша почта"
+                placeholder="E-mail"
                 type="email"
                 value={email}
                 onChange={handleEmailChange}
               />
-            </div>
-            <div
+            </div> */}
+            {/* <div
               className="inputForm confirmEmail"
               onClick={sendVerificationCode}
               style={buttonStyle}
             >
-              Отправить код
-            </div>
-            <div className="inputForm">
+              Send code
+            </div> */}
+            {/* <div className="inputForm">
               <input
                 className="input code"
-                placeholder="Введите код"
+                placeholder="Code"
                 type="text"
                 value={code}
                 onChange={handleCodeChange}
               />
-            </div>
+            </div> */}
             {errorMsg && <div className="error">{errorMsg}</div>}
             <button type="submit" className="authButton regB">
-              Начать
+              Start
             </button>
           </form>
-          <a
-            href="#"
-            onClick={() => openIframe("http://tvoycoin.com/policy")}
-            className="authDoc"
-          >
-            Политика конфиденциальности
+          <a href="http://tvoycoin.com/policy" className="authDoc">
+            Privacy policy
           </a>
           <a
-            href="#"
-            onClick={() => openIframe("http://tvoycoin.com/user_agreement")}
+            href="http://tvoycoin.com/user_agreement"
             className="authDoc profile"
           >
-            Пользовательское соглашение
+            User agreement
           </a>
           <div className="authSvg">
             <svg width="145" height="21" viewBox="0 0 145 21" fill="none">
@@ -318,12 +257,12 @@ function Reg({ setReg }) {
             </svg>
           </div>
           <div className="authDocConfirm">
-            Нажимая "Начать", Вы подтверждаете, что полностью ознакомились с
-            лицензионным (пользовательским) соглашением, политикой
-            конфиденциальности информации и обработки персональных данных и
-            приложениями к ним. Положения Вам полностью понятны, и Вы не имеете
-            возражений и согласны с условиями игры. Нажимая "Начать", Вы даете
-            согласие на обработку персональных данных.
+            By clicking "Start", you confirm that you have fully read the
+            license (user) agreement, the privacy policy for information and
+            personal data processing and their appendices. The provisions are
+            completely clear to you, and you do not have objections and agree to
+            the terms of the game. By clicking "Start", you give consent to the
+            processing of personal data.
           </div>
         </div>
       </div>

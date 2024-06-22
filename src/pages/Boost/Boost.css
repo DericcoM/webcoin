@@ -311,3 +311,9 @@
   background: #fff;
   color: #292929;
 }
+
+.balanceValueImg.boost {
+  width: 25px;
+  height: 25px;
+  margin-right: 5px;
+}

@@ -9,7 +9,7 @@ function BuyWorker({
   setPreviousPage,
   ownerID,
   userID,
-  handleUpdateBalance
+  handleUpdateBalance,
 }) {
   const { userData, loading, error, refetchUserData } =
     useFetchUserData(buyWorkerID);
@@ -35,7 +35,7 @@ function BuyWorker({
       await buyWorker(userID, buyWorkerID);
       refetchUserData(); // Update user data
       // Transition to the main page after updates
-      handleUpdateBalance()
+      handleUpdateBalance();
       setCurrentPage("main");
       setPreviousPage("main");
     } catch (error) {
@@ -46,10 +46,10 @@ function BuyWorker({
   const handleBuyNo = () => {};
 
   const handleModalError = (error) => {
-    let errorMessageToShow = "Произошла ошибка";
+    let errorMessageToShow = "An error has occurred";
     if (error.response && error.response.data && error.response.data.error) {
       if (error.response.status === 400) {
-        errorMessageToShow = "Недостаточно средств";
+        errorMessageToShow = "Insufficient funds";
       } else {
         errorMessageToShow = error.response.data.error;
       }
@@ -72,7 +72,7 @@ function BuyWorker({
             <img className="workerPageAvatar" src={userData.img} alt="" />
           </div>
           <div className="workerPageName">{userData.username}</div>
-          <div className="buyWorkerWorked">Занят на работе</div>
+          <div className="buyWorkerWorked">Busy at work</div>
           <div className="buyWorkerPageBalanceContainer">
             <div className="buyWorkerPageBalance">{userData.price}</div>
             <div className="buyWorkerPageBalanceSVG">
@@ -94,7 +94,7 @@ function BuyWorker({
                   : "workerUpTitle worked"
               }
             >
-              Купить
+              Buy
             </p>
           </div>
         </div>
@@ -102,9 +102,9 @@ function BuyWorker({
         <div className="buyWorkerPageProperty">
           <div className="buyWorkerPropertyCard">
             <div className="buyWorkerPropertyCardTitle">
-              <div className="buyWorkerPropertyCardName">Доступность:</div>
+              <div className="buyWorkerPropertyCardName">Availability:</div>
               <div className="buyWorkerPropertyCardDesc">
-                {userData.is_safe === "no" ? "Свободен" : `Защищен`}
+                {userData.is_safe === "no" ? "Free" : `Protected`}
               </div>
             </div>
             <div className="buyWorkerPropertyIMG">
@@ -115,7 +115,7 @@ function BuyWorker({
           </div>
           <div className="buyWorkerPropertyCard">
             <div className="buyWorkerPropertyCardTitle">
-              <div className="buyWorkerPropertyCardName">Заработано звезд:</div>
+              <div className="buyWorkerPropertyCardName">Earned stars:</div>
               <div className="buyWorkerPropertyCardDesc">{userData.stars}</div>
             </div>
             <div className="buyWorkerPropertyIMG">
@@ -126,7 +126,7 @@ function BuyWorker({
           </div>
           <div className="buyWorkerPropertyCard">
             <div className="buyWorkerPropertyCardTitle">
-              <div className="buyWorkerPropertyCardName">Зарабатывает:</div>
+              <div className="buyWorkerPropertyCardName">Earns:</div>
               <div className="buyWorkerPropertyCardDesc">
                 {userData.sum_income}/min
               </div>

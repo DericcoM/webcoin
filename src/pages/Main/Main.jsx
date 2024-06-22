@@ -30,8 +30,9 @@ function Main() {
   const [buyWorkerID, setBuyWorkerID] = useState([]);
   const [previousPage, setPreviousPage] = useState("main");
   // const userId = 467597194;
-  const userId = 123456789;
-  // const userId = useTelegramUser();
+  // const userId = 123456789;
+  // const userId = 12345678;
+  const userId = useTelegramUser();
   const {
     balance,
     loading: balanceLoading,
@@ -53,9 +54,18 @@ function Main() {
   const [nameNew, setNameNew] = useState(null);
   const [handleSub, setHandleSub] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Состояние для отслеживания загрузки контента
-
+  const [sharedText, setSharedText] = useState("");
   const [modalClose, setModalClose] = useState(false);
+  const [shareUrl, setShareUrl] = useState("")
   useEffect(() => {
+    const textToCopy = `Hi, bro! ⭐️\n
+    This is a secret invite to a private club where you can earn cryptocurrency. Just shhh… Don't share it with anyone!🤫\n
+    Remember: YourClick. YourCommunity. YourGame. TvoyCoin — build your social empire today!`;
+    const encodedText = encodeURIComponent(textToCopy);
+    const url = `https://t.me/share/url?url=${link}&text=${encodedText}`;
+
+    setSharedText(url);
+
     setTimeout(() => {
       setIsLoading(false); // Устанавливаем isLoading в false после 2 секунд
     }, 1000);
@@ -66,21 +76,33 @@ function Main() {
   }, [currentPage]);
 
   const handleCopy = async () => {
-    navigator.clipboard.writeText(link);
-    setQrText("");
-    setShowCopyMessage(true);
-    setTimeout(() => setShowCopyMessage(false), 1000);
+    const textToCopy = `Hi, bro! ⭐️
+  ${link}
+  This is a secret invite to a private club where you can earn cryptocurrency. Just shhh… Don't share it with anyone!🤫
+      
+   Remember: YourClick. YourCommunity. YourGame. TvoyCoin — build your social empire today!`;
 
-    if (navigator.share) {
-      // Вызовите меню "Поделиться"
-      await navigator.share({
-        title: "Ссылка",
-        text: "Переходи в игру, и начинай зарабатывать.",
-        url: link,
-      });
-      console.log("Ссылка успешно поделена");
-    } else {
-      console.log("Web Share API не поддерживается в этом браузере");
+    try {
+      // Копируем текст в буфер обмена
+      await navigator.clipboard.writeText(textToCopy);
+
+      // Устанавливаем текст для QR-кода
+      setQrText(link);
+
+      // Показываем сообщение о копировании
+      setShowCopyMessage(true);
+      setTimeout(() => setShowCopyMessage(false), 1000);
+
+      // Формируем ссылку для передачи в Telegram
+      const encodedText = encodeURIComponent(`${textToCopy} ${link}`);
+      const telegramShareLink = `tg://msg?text=${encodedText}`;
+
+      // Открываем Telegram для отправки сообщения
+      window.open(telegramShareLink, "_blank");
+
+      console.log("Telegram link opened successfully");
+    } catch (error) {
+      console.error("Error copying or sharing:", error);
     }
   };
 
@@ -110,6 +132,13 @@ function Main() {
   };
 
   useEffect(() => {
+    const textToCopy = `Hi, bro! ⭐️\n
+    This is a secret invite to a private club where you can earn cryptocurrency. Just shhh… Don't share it with anyone!🤫\n
+    Remember: YourClick. YourCommunity. YourGame. TvoyCoin — build your social empire today!`;
+    const encodedText = encodeURIComponent(textToCopy);
+    const url = `https://t.me/share/url?url=${link}&text=${encodedText}`;
+
+    setSharedText(url);
     document.body.style.overflow = "hidden";
     if (mainScrollRef.current) {
       adjustMainScrollHeight();
@@ -162,6 +191,13 @@ function Main() {
   }, [currentPage, previousPage]);
 
   useEffect(() => {
+    const textToCopy = `Hi, bro! ⭐️\n
+    This is a secret invite to a private club where you can earn cryptocurrency. Just shhh… Don't share it with anyone!🤫\n
+    Remember: YourClick. YourCommunity. YourGame. TvoyCoin — build your social empire today!`;
+    const encodedText = encodeURIComponent(textToCopy);
+    const url = `https://t.me/share/url?url=${link}&text=${encodedText}`;
+
+    setSharedText(url);
     // Call updateUserData when the currentPage is "main"
     if (currentPage === "main") {
       // Выполняем функцию каждую минуту
@@ -246,8 +282,8 @@ function Main() {
                   </div>
                 )}
                 <div className="mainRefTitle">
-                  Если другие игроки перейдут по вашей ссылке, они станут вашими
-                  работниками.
+                  If other players follow your link, they will become yours
+                  workers.
                 </div>
                 <div className="refButtons">
                   <div className="mainRefButton" onClick={handleQr}>
@@ -255,22 +291,23 @@ function Main() {
                       <div className="mainRefQrSVG"></div>
                     </div>
                   </div>
-                  <div className="mainRefButton" onClick={handleCopy}>
+                  <a href={sharedText} className="mainRefButton">
                     <div className="mainRefButtonContainer">
                       <div className="mainRefShareSVG"></div>
                     </div>
-                  </div>
+                  </a>
                 </div>
               </div>
               <div className="worker">
                 <div className="workerHeader">
                   <div className="workerTitle">
-                    Мои работники:
+                    Your workers:
                     <div className="workerCount">{summWorker}</div>
                   </div>
                   <div className="workerMin">{summWorkerPrice}/min</div>
                 </div>
                 <WorkerCard
+                sharedText={sharedText}
                   userData={userWorker}
                   setCurrentPage={setCurrentPage}
                   setWorkerID={setWorkerID}
@@ -280,12 +317,6 @@ function Main() {
                   handleUpdateBalance={handleUpdateBalance}
                 />
               </div>
-              <a href="https://aaio.so/" target="_blank">
-                <img
-                  src="https://aaio.so/assets/svg/banners/mini/dark-2.svg"
-                  title="Aaio - Сервис по приему онлайн платежей"
-                />
-              </a>
               {showQRModal && (
                 <>
                   <div className="overlay" onClick={closeModal}></div>
@@ -341,6 +372,7 @@ function Main() {
       case "boost":
         return (
           <Boost
+            boost={userData.booster}
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
             handleUpdateBalance={handleUpdateBalance}
@@ -354,6 +386,7 @@ function Main() {
             setPreviousPage={setPreviousPage}
             stars={userData.stars}
             handleUpdateBalance={handleUpdateBalance}
+            userId={userId}
           />
         );
       case "profile":
@@ -388,29 +421,6 @@ function Main() {
     }
   };
 
-  const handleClose = () => {
-    setModalClose(true);
-  };
-
-  const subUser = () => {
-    const sub = userData.is_bought;
-    // console.log("124124", sub === "no" && handleSub !== null);
-    if (sub === "no") {
-      if (modalClose) {
-        return null;
-      } else {
-        return (
-          <ModalSub
-            onClose={handleClose}
-            userId={userId}
-            setHandleSub={setHandleSub}
-            updateUserData={refetchUserData}
-          />
-        );
-      }
-    }
-  };
-
   return (
     !isLoading && (
       <div
@@ -435,7 +445,6 @@ function Main() {
             />
           )}
         {!isLoading && renderContent()}
-        {subUser()}
       </div>
     )
   );

@@ -14,7 +14,7 @@ function Footer({ setCurrentPage, currentPage, setPreviousPage, userId }) {
         <div id="players" className="navButtonImg">
           <img src="assets/user.png" alt="" />
         </div>
-        <div className="navButtonText">Игроки</div>
+        <div className="navButtonText">Workers</div>
       </div>
       <div
         className="navButton"
@@ -26,7 +26,7 @@ function Footer({ setCurrentPage, currentPage, setPreviousPage, userId }) {
         <div id="boost" className="navButtonImg">
           <img src="assets/boost.png" alt="" />
         </div>
-        <div className="navButtonText">Апгрейд</div>
+        <div className="navButtonText">Boost</div>
       </div>
       <div
         className="navButton"
@@ -39,7 +39,7 @@ function Footer({ setCurrentPage, currentPage, setPreviousPage, userId }) {
         <div id="trade" className="navButtonImg">
           <img src="assets/trade.png" alt="" />
         </div>
-        <div className="navButtonText">Обмен</div>
+        <div className="navButtonText">Trade</div>
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ function Rating({ setCurrentPage, mainID, mainData }) {
     return hoursUntilMidnight;
   }
 
-  const remainDate = hoursUntilMidnightInMoscow() + "ч";
+  const remainDate = hoursUntilMidnightInMoscow();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,7 +87,7 @@ function Rating({ setCurrentPage, mainID, mainData }) {
 
   return (
     <div className="rating">
-      <div className="amountPlayer">{amountPlayer} Игроков</div>
+      <div className="amountPlayer">{amountPlayer} Players</div>
       <div className="ratingBackground">
         <div className="rectangle"></div>
         <div className="ratingKubokContainer">
@@ -101,9 +101,9 @@ function Rating({ setCurrentPage, mainID, mainData }) {
                 <img src="assets/star.png" alt="" />
               </div>
             </div>
-            День
+            Day
           </div>
-          <div className="remainDate">Осталось {remainDate}</div>
+          <div className="remainDate">{remainDate} hours left</div>
           <div className="line"></div>
           <div className="scoreBoardList" ref={scoreBoardListRef}>
             {players.map((player, index) => (
@@ -130,7 +130,7 @@ function Rating({ setCurrentPage, mainID, mainData }) {
                         alt=""
                       />
                     </div>
-                    {filterBalance(player.day_income)}
+                    {filterBalance(player.earned)}
                   </div>
                 </div>
               </div>
@@ -160,7 +160,7 @@ function Rating({ setCurrentPage, mainID, mainData }) {
                       alt=""
                     />
                   </div>
-                  {filterBalance(mainData.day_income)}
+                  {filterBalance(mainData.earned)}
                 </div>
               </div>
             </div>

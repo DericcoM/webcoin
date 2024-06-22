@@ -6,7 +6,7 @@ const Loader = () => {
     <div className="loader-container">
       <div className="loader-ring"></div>
       <div className="loader-case">
-        <div className="loader-text">Загрузка</div>
+        <div className="loader-text">Loading</div>
         <div className="loader-dots">
           <span className="dot1">.</span>
           <span className="dot2">.</span>

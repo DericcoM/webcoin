@@ -70,105 +70,97 @@ function Profile({
     setCode(event.target.value);
   };
 
-  const sendVerificationCode = async () => {
-    if (!nickname) {
-      setErrorMsg("Укажите никнейм.");
-      return;
-    }
-    if (!email) {
-      setErrorMsg("Укажите почту.");
-      return;
-    }
+  // const sendVerificationCode = async () => {
+  //   if (!nickname) {
+  //     setErrorMsg("Укажите никнейм.");
+  //     return;
+  //   }
+  //   if (!email) {
+  //     setErrorMsg("Укажите почту.");
+  //     return;
+  //   }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrorMsg("Введите правильный e-mail адрес!");
-      return;
-    }
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   if (!emailRegex.test(email)) {
+  //     setErrorMsg("Введите правильный e-mail адрес!");
+  //     return;
+  //   }
 
-    try {
-      setButtonDisabled(true);
-      setButtonStyle({
-        backgroundColor: "#434343",
-        color: "#7D7D7D",
-        cursor: "not-allowed",
-      });
+  //   try {
+  //     setButtonDisabled(true);
+  //     setButtonStyle({
+  //       backgroundColor: "#434343",
+  //       color: "#7D7D7D",
+  //       cursor: "not-allowed",
+  //     });
 
-      const response = await fetch(
-        `https://aylsetalinad.ru/api/send_code/${email}`
-      );
-      const responseText = await response.text();
+  //     const response = await fetch(
+  //       `https://aylsetalinad.ru/api/send_code/${email}`
+  //     );
+  //     const responseText = await response.text();
 
-      if (responseText.includes("Success")) {
-        setErrorMsg("");
-      } else {
-        setErrorMsg(responseText);
-      }
+  //     if (responseText.includes("Success")) {
+  //       setErrorMsg("");
+  //     } else {
+  //       setErrorMsg(responseText);
+  //     }
 
-      setTimeout(() => {
-        setButtonDisabled(false);
-        setButtonStyle({});
-      }, 120000);
-    } catch (error) {
-      console.error("Error:", error);
-      setErrorMsg("Возникла ошибка, попробуйте позже!");
-    }
-  };
+  //     setTimeout(() => {
+  //       setButtonDisabled(false);
+  //       setButtonStyle({});
+  //     }, 120000);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //     setErrorMsg("Возникла ошибка, попробуйте позже!");
+  //   }
+  // };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!nickname || !email || !code) {
+    if (!nickname) {
       setErrorMsg("Заполните все поля!");
       return;
     }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrorMsg("Введите правильный e-mail адрес!");
-      return;
-    }
-
+  
     try {
-      const response = await fetch(
-        `https://aylsetalinad.ru/api/check_code/${email}/${code}`
-      );
-
-      if (response.status === 200) {
-        const formData = new FormData();
-        formData.append("username", nickname);
-        formData.append("mail", email);
-        formData.append("user_id", userId);
+      const formData = new FormData();
+      formData.append("username", nickname);
+      formData.append("user_id", userId);
+  
+      // Check if the avatar is not changed
+      if (avatar) {
         formData.append("img", avatar);
-
-        const updateResponse = await fetch(
-          `https://aylsetalinad.ru/api/change_profile`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        const updateResponseText = await updateResponse.text();
-        if (
-          updateResponse.status === 200 &&
-          updateResponseText.includes("Success")
-        ) {
-          setCurrentPage("main");
-          setAvatarNew(`assets/avatars/${avatar.name}`);
-          setNameNew(nickname);
-        } else {
-          setErrorMsg(
-            "Возникла ошибка при обновлении профиля, попробуйте позже!"
-          );
+      } else {
+        formData.append("img", "123");
+      }
+  
+      const updateResponse = await fetch(
+        `https://aylsetalinad.ru/api/change_profile`,
+        {
+          method: "POST",
+          body: formData,
         }
-      } else if (response.status === 403) {
-        setErrorMsg("Неправильный код подтверждения!");
+      );
+  
+      const updateResponseText = await updateResponse.text();
+      if (
+        updateResponse.status === 200 &&
+        updateResponseText.includes("Success")
+      ) {
+        setCurrentPage("main");
+        if (avatar) {
+          setAvatarNew(`assets/avatars/${avatar.name}`);
+        }
+        setNameNew(nickname);
+      } else {
+        setErrorMsg("Error");
       }
     } catch (error) {
       console.error("Error:", error);
       setErrorMsg("Возникла ошибка, попробуйте позже!");
     }
   };
+  
 
   const openInNewTab = (url) => {
     window.open(url, "_blank");
@@ -178,7 +170,7 @@ function Profile({
     <>
       <div className="reg profile">
         <div className="buyScrollContainer profile" ref={buyScrollRef}>
-          <div className="regTitle profile">Профиль</div>
+          <div className="regTitle profile">Profile</div>
           <div
             className="regAvatar"
             onClick={() =>
@@ -190,7 +182,7 @@ function Profile({
             </div>
           </div>
           <div className="regAvatarChange">
-            Изменить
+            Change
             <div className="regAvatarChangeImg">
               <img src="assets/edit.png" alt="edit" />
               <input
@@ -208,49 +200,49 @@ function Profile({
               </div>
               <input
                 className="input"
-                placeholder="Изменить никнейм"
+                placeholder="Change name"
                 type="text"
                 value={nickname}
                 onChange={handleNicknameChange}
                 maxLength={10}
               />
             </div>
-            <div className="inputForm">
+            {/* <div className="inputForm">
               <div className="inputFormImg">
                 <img src="assets/sms.png" alt="sms" />
               </div>
               <input
                 className="input"
-                placeholder="Изменить почту"
+                placeholder="Change email"
                 type="email"
                 value={email}
                 onChange={handleEmailChange}
               />
-            </div>
-            <div
+            </div> */}
+            {/* <div
               className="inputForm confirmEmail"
               onClick={sendVerificationCode}
               style={buttonStyle}
               disabled={buttonDisabled}
             >
-              Отправить код
-            </div>
-            <div className="inputForm">
+              Send verification code
+            </div> */}
+            {/* <div className="inputForm">
               <input
                 className="input code"
-                placeholder="Введите код"
+                placeholder="Code"
                 type="text"
                 value={code}
                 onChange={handleCodeChange}
               />
-            </div>
+            </div> */}
             {errorMsg && <div className="error">{errorMsg}</div>}
             <button type="submit" className="authButton regB">
-              Подтвердить
+              Apply
             </button>
           </form>
           <div className="authSubTitle">
-            Следите за нашими обновлениями в социальных сетях:
+            Follow our updates on social media:
           </div>
           <div className="authSocials profile">
             <a
@@ -259,22 +251,22 @@ function Profile({
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="assets/tgAuth.png" alt="" />
+              <img src="assets/t.png" alt="" />
             </a>
             <a
-              href="#"
+              href="http://tvoycoin.com"
               className="authSocialsSite"
               onClick={() => openInNewTab("http://tvoycoin.com")}
             >
               tvoycoin.com
             </a>
             <a
-              href="https://vk.com/tvoycommunity"
+              href="https://x.com/tvoycoin"
               className="authSocialsImg"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="assets/vkAuth.png" alt="" />
+              <img src="assets/x.png" alt="" />
             </a>
           </div>
           <a
@@ -282,14 +274,14 @@ function Profile({
             onClick={() => openInNewTab("http://tvoycoin.com/policy")}
             className="authDoc"
           >
-            Политика конфиденциальности
+            Privacy policy
           </a>
           <a
             href="#"
             onClick={() => openInNewTab("http://tvoycoin.com/user_agreement")}
             className="authDoc profile"
           >
-            Пользовательское соглашение
+            User agreement
           </a>
         </div>
       </div>

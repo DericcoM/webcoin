@@ -54,7 +54,7 @@ function HeaderProfile({
             </div>
           </div>
           <div className="headerProfileUserInfoRating">
-            <div className="headerProfileRatingName">Рейтинг</div>
+            <div className="headerProfileRatingName">Rating</div>
             <div className="headerProfileUserRating">{rating}</div>
           </div>
         </div>

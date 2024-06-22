@@ -58,28 +58,28 @@ function Auth({}) {
                 </div>
               </div>
               <div className="authSubTitle">
-                Игра находится в{" "}
-                <span className="authSubTitleOrange">
-                  ограниченном доступе.
-                </span>{" "}
-                Покупка и участие в игре возможны только по{" "}
-                <span className="authSubTitleOrange">ценным приглашениям.</span>
+                The game is in{" "}
+                <span className="authSubTitleOrange">limited access.</span>{" "}
+                Participation in the game are only possible by{" "}
+                <span className="authSubTitleOrange">invitation.</span>
               </div>
-              <div className="authButton" onClick={handleAuth}>
-                Авторизация
-              </div>
+              {/* <div className="authButton" onClick={handleAuth}>
+              Authorization
+              </div> */}
               <div className="authSubTitle">
-                Следите за нашими обновлениями в социальных сетях, чтобы стать
-                частью эксперимента:
+                Follow our updates on social media to become a part of the
+                experiment:
               </div>
               <div className="authSocials">
-                <div className="authSocialsImg">
-                  <img src="assets/tgAuth.png" alt="" />
-                </div>
-                <a href="http://tvoycoin.com" className="authSocialsSite">tvoycoin.com</a>
-                <div className="authSocialsImg">
-                  <img src="assets/vkAuth.png" alt="" />
-                </div>
+                <a href="https://t.me/tvoycommunity" className="authSocialsImg">
+                  <img src="assets/t.png" alt="" />
+                </a>
+                <a href="http://tvoycoin.com" className="authSocialsSite">
+                  tvoycoin.com
+                </a>
+                <a href="https://x.com/tvoycoin" className="authSocialsImg">
+                  <img src="assets/x.png" alt="" />
+                </a>
               </div>
             </div>
           </>
@@ -93,8 +93,13 @@ function Auth({}) {
     }
   };
 
-  return <div className={`auth ${currentPageAuth === "reg" ? "overflow-scroll" : ""}`}>{renderContent()}</div>;
-
+  return (
+    <div
+      className={`auth ${currentPageAuth === "reg" ? "overflow-scroll" : ""}`}
+    >
+      {renderContent()}
+    </div>
+  );
 }
 
 export default Auth;

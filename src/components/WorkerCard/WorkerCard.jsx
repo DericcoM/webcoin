@@ -8,6 +8,7 @@ function WorkerCard({
   setPreviousPage,
   handleQr,
   handleCopy,
+  sharedText
 }) {
   const [players, setPlayers] = useState([]);
 
@@ -42,21 +43,21 @@ function WorkerCard({
             />
           </div>
           <div className="noWorkersText">
-            <div className="noWorkersTitle">У вас нет работников.</div>
+            <div className="noWorkersTitle">You don't have any workres.</div>
             <div className="noWorkersButtons">
               <div className="noWorkerButton" onClick={handleQr}>
                 <div className="noWorkerButtonContainer">
                   <div className="mainRefQrSVG"></div>
                 </div>
               </div>
-              <div className="noWorkerButton" onClick={handleCopy}>
+              <a href={sharedText} className="noWorkerButton" >
                 <div className="noWorkerButtonContainer">
                   <div className="mainRefShareSVG"></div>
                 </div>
-              </div>
+              </a>
             </div>
             <div className="noWorkersSubTittle">
-              Пригласи друзей по реферальной ссылке, чтобы начать зарабатывать.
+              Invite your friends via the referral link to start earning money.
             </div>
           </div>
         </div>
@@ -82,7 +83,12 @@ function WorkerCard({
               <div className="workerAvatar">
                 <img className="workerAvatarIMG" src={worker.img} alt="" />
               </div>
-              <div className="workerName">{worker.username}</div>
+              <div className="workerName">
+                {worker.username.length > 12
+                  ? `${worker.username.slice(0, 12)}...`
+                  : worker.username}
+              </div>
+
               <div className="workerPrice">{worker.sum_ref_income}/min</div>
             </div>
           ))}

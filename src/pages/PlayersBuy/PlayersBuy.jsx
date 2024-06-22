@@ -82,7 +82,7 @@ function PlayersBuy({
 
   return (
     <div className="playersBuyContainer">
-      <div className="playersBuyTitle">Покупка игроков</div>
+      <div className="playersBuyTitle">Worker's store</div>
       <div className="buyScrollContainer" ref={buyScrollRef}>
         {players.map((player) => (
           <WorkerBuy
@@ -100,7 +100,7 @@ function PlayersBuy({
             setPreviousPage={setPreviousPage}
           />
         ))}
-        {isLoading && <div className="loading">Загрузка...</div>}
+        {isLoading && <div className="loading">Loading...</div>}
       </div>
     </div>
   );

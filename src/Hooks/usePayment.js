@@ -5,38 +5,26 @@ const usePayment = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const getPaymentLink = async (process) => {
+  const getPaymentLink = async (process, userId) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`https://aylsetalinad.ru/api/get_payment_link/${process}`);
-      return response.data.confirmation.confirmation_url;
+      const response = await axios.get(`https://aylsetalinad.ru/api/buy_booster/${process}/${userId}`);
+      return response.data;
     } catch (err) {
-      setError(err);
-      console.error('Error fetching payment link:', err);
+      if (err.response && err.response.status === 403) {
+        setError(403);
+        return 403;
+      } else {
+        setError(err.message);
+        return err.message;
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const redirectToPayment = async (process) => {
-    const link = await getPaymentLink(process);
-    if (link) {
-      window.location.href = link;
-    }
-  };
-
-  const setupBackButton = () => {
-    const tg = window.Telegram.WebApp;
-    const BackButton = tg.BackButton;
-    BackButton.show();
-    BackButton.onClick(() => {
-      window.location.href = "https://aylsetalinad.ru";
-      BackButton.hide();
-    });
-  };
-
-  return { redirectToPayment, setupBackButton, loading, error };
+  return { getPaymentLink, loading, error };
 };
 
 export default usePayment;

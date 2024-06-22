@@ -63,10 +63,10 @@ function Skins({ userID, currentUserSkin, setCurrentUserSkin }) {
   const skinsData = {
     premium: [
       { name: "gold", price: 0 },
-      { name: "sapphire", price: 150000 },
-      { name: "emerald", price: 1000000 },
-      { name: "ruby", price: 15000000 },
-      { name: "diamond", price: 100000000 },
+      { name: "sapphire", price: "150 000" },
+      { name: "emerald", price: "1 000 000" },
+      { name: "ruby", price: "15 000 000" },
+      { name: "diamond", price: "100 000 000" },
     ],
     base: [
       { name: "zebra", price: 15 },
@@ -88,13 +88,13 @@ function Skins({ userID, currentUserSkin, setCurrentUserSkin }) {
   };
 
   const handleModalError = (error) => {
-    let errorMessageToShow = "Произошла ошибка";
+    let errorMessageToShow = "An error has occurred";
     if (error.response && error.response.data && error.response.data.error) {
       if (error.response.status === 500) {
-        errorMessageToShow = "Недостаточно средств.";
-      } 
+        errorMessageToShow = "Insufficient funds";
+      }
       if (error.response.status === 403) {
-        errorMessageToShow = "Недостаточно средств.";
+        errorMessageToShow = "Insufficient funds.";
       } else {
         errorMessageToShow = error.response.data.error;
       }

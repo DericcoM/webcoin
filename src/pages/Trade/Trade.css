@@ -40,3 +40,29 @@
   display: flex;
   justify-content: center;
 }
+
+.workerPlayersUnit.trade {
+  margin-top: 26px;
+  margin-bottom: -15px;
+  height: 60px;
+}
+
+.workerPlayersUnit.trade input {
+  text-align: center;
+}
+
+.workerPlayersUnit.trade input::placeholder {
+  text-align: center;
+}
+
+.tradeForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.curs {
+  color: #4f4f4f;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
