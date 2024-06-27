@@ -33,7 +33,7 @@ function Footer({ setCurrentPage, currentPage, setPreviousPage, userId }) {
         onClick={() => {
           setCurrentPage("trade");
           setPreviousPage("main");
-          userId={userId}
+          userId = { userId };
         }}
       >
         <div id="trade" className="navButtonImg">

@@ -36,6 +36,7 @@ function Rating({ setCurrentPage, mainID, mainData }) {
         const response = await fetch("https://aylsetalinad.ru/api/get_rating");
         const data = await response.json();
         setPlayers(data);
+        console.log("rating", data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -48,14 +49,13 @@ function Rating({ setCurrentPage, mainID, mainData }) {
 
   useEffect(() => {
     if (scoreBoardListRef.current) {
-      scrollToBottom();
+      scrollToTop();
     }
   }, [players]);
 
-  const scrollToBottom = () => {
+  const scrollToTop = () => {
     if (scoreBoardListRef.current) {
-      scoreBoardListRef.current.scrollTop =
-        scoreBoardListRef.current.scrollHeight;
+      scoreBoardListRef.current.scrollTop = 0;
     }
   };
 
@@ -96,7 +96,7 @@ function Rating({ setCurrentPage, mainID, mainData }) {
         <div className="scoreBoard">
           <div className="scoreBoardTitle">
             <div className="pull">
-              100
+              1000
               <div className="balanceValueImg rating">
                 <img src="assets/star.png" alt="" />
               </div>

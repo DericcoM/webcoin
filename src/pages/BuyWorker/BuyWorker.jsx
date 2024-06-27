@@ -64,6 +64,11 @@ function BuyWorker({
     setModalOpen(false);
   };
 
+  const handleBack = () => {
+    setPreviousPage("main"); // Установка предыдущей страницы
+    setCurrentPage("buy");
+  };
+
   return (
     <>
       <div className="buyWorkerPage">

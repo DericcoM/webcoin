@@ -62,28 +62,28 @@ function Skins({ userID, currentUserSkin, setCurrentUserSkin }) {
 
   const skinsData = {
     premium: [
-      { name: "gold", price: 0 },
-      { name: "sapphire", price: "150 000" },
-      { name: "emerald", price: "1 000 000" },
-      { name: "ruby", price: "15 000 000" },
-      { name: "diamond", price: "100 000 000" },
+      { name: "gold", price: 0, sum: "0" },
+      { name: "sapphire", price: 150000 , sum: "150 000" },
+      { name: "emerald", price: 1000000 , sum: "1 000 000" },
+      { name: "ruby", price: 15000000 , sum: "15 000 000" },
+      { name: "diamond", price: 100000000 , sum: "100 000 000" },
     ],
     base: [
-      { name: "zebra", price: 15 },
-      { name: "pixel", price: 15 },
-      { name: "chips", price: 15 },
-      { name: "leopard", price: 15 },
-      { name: "vector", price: 15 },
-      { name: "lava", price: 30 },
-      { name: "cookie", price: 30 },
-      { name: "chip", price: 30 },
-      { name: "leather", price: 30 },
-      { name: "ball", price: 30 },
-      { name: "candy", price: 45 },
-      { name: "carpet", price: 45 },
-      { name: "firm", price: 45 },
-      { name: "glass", price: 45 },
-      { name: "cow", price: 45 },
+      { name: "zebra", price: 15, sum: "15" },
+      { name: "pixel", price: 15, sum: "15" },
+      { name: "chips", price: 15, sum: "15" },
+      { name: "leopard", price: 15, sum: "15" },
+      { name: "vector", price: 15, sum: "15" },
+      { name: "lava", price: 30, sum: "30" },
+      { name: "cookie", price: 30, sum: "30" },
+      { name: "chip", price: 30, sum: "30" },
+      { name: "leather", price: 30, sum: "30" },
+      { name: "ball", price: 30, sum: "30" },
+      { name: "candy", price: 45, sum: "45" },
+      { name: "carpet", price: 45, sum: "45"},
+      { name: "firm", price: 45, sum: "45" },
+      { name: "glass", price: 45, sum: "45" },
+      { name: "cow", price: 45, sum: "45" },
     ],
   };
 
@@ -133,7 +133,7 @@ function Skins({ userID, currentUserSkin, setCurrentUserSkin }) {
               {skin.name.charAt(0).toUpperCase() + skin.name.slice(1)}
             </div>
             <div className="workerBuyPrice skin">
-              {skin.price}
+              {skin.sum}
               {!isOwned && (
                 <>
                   <div className="workerBuyPriceCoinContainer skin">

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./Main.css";
-import axios from "axios";
 import HeaderProfile from "../../components/HeaderProfile/HeaderProfile";
 import Footer from "../../components/Footer/Footer";
 import WorkerCard from "../../components/WorkerCard/WorkerCard";
@@ -22,6 +21,9 @@ import Skins from "../Skins/Skins";
 import { getSub } from "../../api/api";
 import Loader from "../../components/Loader/Loader";
 import useFetchSub from "../../Hooks/useFetchSub";
+import socketIOClient from "socket.io-client";
+
+// const ENDPOINT = "https://aylsetalinad.ru";
 
 function Main() {
   const [currentPage, setCurrentPage] = useState("main");
@@ -29,10 +31,8 @@ function Main() {
   const mainScrollRef = useRef(null);
   const [buyWorkerID, setBuyWorkerID] = useState([]);
   const [previousPage, setPreviousPage] = useState("main");
-  // const userId = 467597194;
-  // const userId = 123456789;
-  // const userId = 12345678;
   const userId = useTelegramUser();
+  // const userId = 467597194;
   const {
     balance,
     loading: balanceLoading,
@@ -48,15 +48,40 @@ function Main() {
   const [summWorkerPrice, setSummWorkerPrice] = useState(0);
   const { link, loading: linkLoading, error: linkError } = useFetchLink(userId);
   const [qrText, setQrText] = useState("");
-  const [showCopyMessage, setShowCopyMessage] = useState(false); // State to control copy message visibility
+  const [showCopyMessage, setShowCopyMessage] = useState(false);
   const [currentUserSkin, setCurrentUserSkin] = useState("");
   const [avatarNew, setAvatarNew] = useState(null);
   const [nameNew, setNameNew] = useState(null);
   const [handleSub, setHandleSub] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Состояние для отслеживания загрузки контента
+  const [isLoading, setIsLoading] = useState(true);
   const [sharedText, setSharedText] = useState("");
   const [modalClose, setModalClose] = useState(false);
-  const [shareUrl, setShareUrl] = useState("")
+  const [shareUrl, setShareUrl] = useState("");
+  const [lastVisiblePlayer, setLastVisiblePlayer] = useState(null);
+
+  // const [balanceWeb, setBalanceWeb] = useState(0);
+  // const socket = socketIOClient(ENDPOINT);
+  // useEffect(() => {
+  //   socket.on("balance_update", ({ balance }) => {
+  //     setBalanceWeb(balance.balance);
+  //     console.log(balance.balance);
+  //   });
+
+  //   socket.emit("start_balance_updates", userId);
+
+  //   socket.on("connect", () => {
+  //     console.log("Connected to Socket.IO server");
+  //   });
+
+  //   socket.on("disconnect", () => {
+  //     console.log("Disconnected from Socket.IO server");
+  //   });
+
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, [userId]);
+
   useEffect(() => {
     const textToCopy = `Hi, bro! ⭐️\n
     This is a secret invite to a private club where you can earn cryptocurrency. Just shhh… Don't share it with anyone!🤫\n
@@ -67,7 +92,7 @@ function Main() {
     setSharedText(url);
 
     setTimeout(() => {
-      setIsLoading(false); // Устанавливаем isLoading в false после 2 секунд
+      setIsLoading(false);
     }, 1000);
   }, []);
 
@@ -83,21 +108,16 @@ function Main() {
    Remember: YourClick. YourCommunity. YourGame. TvoyCoin — build your social empire today!`;
 
     try {
-      // Копируем текст в буфер обмена
       await navigator.clipboard.writeText(textToCopy);
 
-      // Устанавливаем текст для QR-кода
       setQrText(link);
 
-      // Показываем сообщение о копировании
       setShowCopyMessage(true);
       setTimeout(() => setShowCopyMessage(false), 1000);
 
-      // Формируем ссылку для передачи в Telegram
       const encodedText = encodeURIComponent(`${textToCopy} ${link}`);
       const telegramShareLink = `tg://msg?text=${encodedText}`;
 
-      // Открываем Telegram для отправки сообщения
       window.open(telegramShareLink, "_blank");
 
       console.log("Telegram link opened successfully");
@@ -125,7 +145,6 @@ function Main() {
         return sum;
       }, 0);
 
-      // Round the totalIncome to three decimal places
       const roundedIncome = parseFloat(totalIncome.toFixed(3));
       setSummWorkerPrice(roundedIncome);
     }
@@ -184,7 +203,7 @@ function Main() {
         if (window.pageYOffset === 0) {
           setCurrentPage(previousPage);
           BackButton.hide();
-          refetchUserData(); // Refetch user data when returning to the main page
+          refetchUserData();
         }
       });
     }
@@ -200,18 +219,16 @@ function Main() {
     setSharedText(url);
     // Call updateUserData when the currentPage is "main"
     if (currentPage === "main") {
-      // Выполняем функцию каждую минуту
-      updateUserData();
-      const intervalId = setInterval(() => {
-        refetchBalance(); // Обновляем баланс каждую минуту при возврате на страницу "main"
-      }, 15000); // Интервал в миллисекундах (60 секунд)
+      refetchBalance(); // Fetch the balance immediately when navigating to "main"
 
-      // Очищаем интервал при размонтировании компонента или изменении страницы
+      const intervalId = setInterval(() => {
+        refetchBalance(); // Update balance every 30 seconds
+      }, 5000);
+
       return () => clearInterval(intervalId);
     }
   }, [currentPage, updateUserData, refetchBalance]);
 
-  // State and function to control QR modal visibility
   const [showQRModal, setShowQRModal] = useState(false);
   const handleQr = () => {
     setQrText(link);
@@ -304,10 +321,15 @@ function Main() {
                     Your workers:
                     <div className="workerCount">{summWorker}</div>
                   </div>
-                  <div className="workerMin">{summWorkerPrice}/min</div>
+                  <div className="workerMin">
+                    {userData.sum_income
+                      ? parseFloat(userData.sum_income).toFixed(4)
+                      : "0.0000"}
+                    /min
+                  </div>
                 </div>
                 <WorkerCard
-                sharedText={sharedText}
+                  sharedText={sharedText}
                   userData={userWorker}
                   setCurrentPage={setCurrentPage}
                   setWorkerID={setWorkerID}
@@ -347,6 +369,8 @@ function Main() {
             setBuyWorkerID={setBuyWorkerID}
             setPreviousPage={setPreviousPage}
             handleUpdateBalance={handleUpdateBalance}
+            lastVisiblePlayer={lastVisiblePlayer}
+            setLastVisiblePlayer={setLastVisiblePlayer}
           />
         );
       case "buyWorker":

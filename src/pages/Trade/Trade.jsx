@@ -1,14 +1,14 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./Trade.css";
 import { fetchRefersOwner } from "../../api/api";
-import axios from 'axios';
+import axios from "axios";
 
 function Trade({ setCurrentPage, stars, userId, setPreviousPage }) {
   const buyScrollRef = useRef(null);
   const [data, setData] = useState({});
   const [tradeAmount, setTradeAmount] = useState(""); // State to store the trade amount
   const [curs, setCurs] = useState("");
-  const [tradeStars, setTradeStars] = useState(stars)
+  const [tradeStars, setTradeStars] = useState(stars);
 
   const adjustMainScrollHeight = () => {
     if (buyScrollRef.current) {
@@ -21,6 +21,7 @@ function Trade({ setCurrentPage, stars, userId, setPreviousPage }) {
 
   const handleRefers = async () => {
     try {
+      console.log("userIdTrade", userId);
       const response = await fetchRefersOwner(userId);
       setData(response);
     } catch (error) {
@@ -32,7 +33,7 @@ function Trade({ setCurrentPage, stars, userId, setPreviousPage }) {
     try {
       const tradeUrl = `https://aylsetalinad.ru/api/star_value`;
       const response = await axios.get(tradeUrl);
-      setCurs(response.data)
+      setCurs(response.data);
       // Update stars or other state based on the response if necessary
     } catch (error) {
       console.error("Error trading stars:", error);
@@ -40,7 +41,7 @@ function Trade({ setCurrentPage, stars, userId, setPreviousPage }) {
   };
 
   useEffect(() => {
-    getCurs()
+    getCurs();
     adjustMainScrollHeight();
     window.addEventListener("resize", adjustMainScrollHeight);
     handleRefers();
@@ -55,7 +56,7 @@ function Trade({ setCurrentPage, stars, userId, setPreviousPage }) {
       const response = await axios.get(tradeUrl);
       console.log(response.data);
       if (response.status === 200) {
-        setTradeStars(tradeStars - tradeAmount)
+        setTradeStars(tradeStars - tradeAmount);
       }
     } catch (error) {
       console.error("Error trading stars:", error);

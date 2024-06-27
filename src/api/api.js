@@ -129,7 +129,7 @@ export const fetchUserWorker = async (userId) => {
 
   export const buySlot = async (userId, count) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}api/buy_slot/${userId}/${count}`);
+      const response = await axios.get(`${API_BASE_URL}buy_slot/${userId}/${count}`);
       return response;
     } catch (error) {
       throw error;

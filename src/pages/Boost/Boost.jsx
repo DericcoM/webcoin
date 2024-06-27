@@ -11,6 +11,7 @@ function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
   const [value, setValue] = useState(1);
   const unitPrice = 0.5;
   const [modalOpen, setModalOpen] = useState(false);
+  const [userBoost, setUserBoost] = useState(boost);
   const [errorMessage, setErrorMessage] = useState("");
   const { getPaymentLink, loading, error } = usePayment();
   const { redirectToPaymentSlot, loadingSlot, errorSlot } = useBuySlot();
@@ -18,13 +19,14 @@ function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
 
   const handlePaymentClick = async (process, userId) => {
     console.log(boost);
-    if (!boost) {
+    if (userBoost === "no") {
       console.log("asd");
       const response = await getPaymentLink(process, userId);
       if (response === 403) {
         setErrorMessage("Not enough stars to buy");
         setModalOpen(true);
       } else {
+        setUserBoost("asd");
         setPreviousPage("main");
       }
     } else {

@@ -28,6 +28,7 @@ function WorkerPage({
 
   const handleRefers = async () => {
     try {
+      console.log("workerId", workerID);
       const response = await fetchRefers(workerID);
       setDataRefs(response);
     } catch (error) {
@@ -118,7 +119,7 @@ function WorkerPage({
         </div>
         <div className="dottedLine"></div>
         <div className={"workerUp"}>
-          <p className="workerUpTitle">Earns {userData.income}/мин</p>
+          <p className="workerUpTitle">Earns {userData.income}/min</p>
         </div>
 
         <div className="workerPlayers">
@@ -214,7 +215,7 @@ function WorkerPage({
                 : "workerUpTitle no"
             }
           >
-            for 8 hours
+            for 6 hours
           </p>
         </div>
       </div>

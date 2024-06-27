@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import "./WorkerBuy.css";
 import useFetchUserData from "../../Hooks/useFetchUserData";
+
 function WorkerBuy({
   id,
   name,
@@ -11,13 +12,15 @@ function WorkerBuy({
   price,
   setCurrentPage,
   setBuyWorkerID,
-  player,
   setPreviousPage,
+  setLastVisiblePlayer,
+  lastVisiblePlayer,
+  player,
 }) {
   const { userData, loading, error } = useFetchUserData(ownerID);
 
   if (loading) {
-    return;
+    return null;
   }
 
   if (error) {
@@ -44,23 +47,26 @@ function WorkerBuy({
 
   const formatPrice = (price) => {
     if (price >= 1000000) {
-      // Округляем до сотен тысяч и форматируем
+      // Round to hundreds of thousands and format
       return `${(price / 1000000).toFixed(1)} млн`;
     }
-    return price.toLocaleString("en-US"); // Используем русскую локаль для форматирования
+    return price.toLocaleString("en-US"); // Use US locale for formatting
   };
 
   const formattedPrice = formatPrice(price);
-  console.log(id);
+
+  const handleBackButtonClick = () => {
+    setBuyWorkerID(id);
+    setLastVisiblePlayer(id);
+    setPreviousPage("buy"); // Установка предыдущей страницы
+    setCurrentPage("buyWorker"); // Установка текущей страницы
+    // Другие действия при возврате
+  };
+
+  // Проверка наличия scrollRef и его прокрутка
+
   return (
-    <div
-      className="workerBuyCard"
-      onClick={() => {
-        setCurrentPage("buyWorker");
-        setPreviousPage("buy");
-        setBuyWorkerID(id);
-      }}
-    >
+    <div className="workerBuyCard" onClick={handleBackButtonClick}>
       <div className="workerBuyCardTitle">
         <div className="workerBuyCardImg">
           <img src={avatar} alt="" className="workerBuyAvatar" />
