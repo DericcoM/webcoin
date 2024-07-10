@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import "./Skins.css";
 import { fetchUserSkin, buySkin, getSkin } from "../../api/api";
 
-function Skins({ userID, currentUserSkin, setCurrentUserSkin }) {
+function Skins({
+  userID,
+  currentUserSkin,
+  setCurrentUserSkin,
+  updateUserData,
+}) {
   const [currentUserSkinValue, setCurrentUserSkinValue] =
     useState(currentUserSkin);
   const [userSkins, setUserSkins] = useState({});
@@ -63,10 +68,10 @@ function Skins({ userID, currentUserSkin, setCurrentUserSkin }) {
   const skinsData = {
     premium: [
       { name: "gold", price: 0, sum: "0" },
-      { name: "sapphire", price: 150000 , sum: "150 000" },
-      { name: "emerald", price: 1000000 , sum: "1 000 000" },
-      { name: "ruby", price: 15000000 , sum: "15 000 000" },
-      { name: "diamond", price: 100000000 , sum: "100 000 000" },
+      { name: "sapphire", price: 150000, sum: "150 000" },
+      { name: "emerald", price: 1000000, sum: "1 000 000" },
+      { name: "ruby", price: 15000000, sum: "15 000 000" },
+      { name: "diamond", price: 100000000, sum: "100 000 000" },
     ],
     base: [
       { name: "zebra", price: 15, sum: "15" },
@@ -76,11 +81,11 @@ function Skins({ userID, currentUserSkin, setCurrentUserSkin }) {
       { name: "vector", price: 15, sum: "15" },
       { name: "lava", price: 30, sum: "30" },
       { name: "cookie", price: 30, sum: "30" },
-      { name: "chip", price: 30, sum: "30" },
+      { name: "ship", price: 30, sum: "30" },
       { name: "leather", price: 30, sum: "30" },
       { name: "ball", price: 30, sum: "30" },
       { name: "candy", price: 45, sum: "45" },
-      { name: "carpet", price: 45, sum: "45"},
+      { name: "carpet", price: 45, sum: "45" },
       { name: "firm", price: 45, sum: "45" },
       { name: "glass", price: 45, sum: "45" },
       { name: "cow", price: 45, sum: "45" },
@@ -134,7 +139,7 @@ function Skins({ userID, currentUserSkin, setCurrentUserSkin }) {
             </div>
             <div className="workerBuyPrice skin">
               {skin.sum}
-              {!isOwned && (
+              {/* {!isOwned && ( */}
                 <>
                   <div className="workerBuyPriceCoinContainer skin">
                     <img
@@ -144,7 +149,7 @@ function Skins({ userID, currentUserSkin, setCurrentUserSkin }) {
                     />
                   </div>
                 </>
-              )}
+              {/* )} */}
             </div>
           </div>
         </div>

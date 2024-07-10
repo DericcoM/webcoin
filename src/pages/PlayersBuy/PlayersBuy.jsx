@@ -10,6 +10,7 @@ function PlayersBuy({
   setPreviousPage,
   lastVisiblePlayer,
   setLastVisiblePlayer,
+  lang,
 }) {
   const buyScrollRef = useRef(null);
   const [players, setPlayers] = useState([]);
@@ -77,7 +78,10 @@ function PlayersBuy({
         const scrollToElement = () => {
           const playerElement = buyScrollRef.current.children[playerIndex];
           if (playerElement) {
-            playerElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            playerElement.scrollIntoView({
+              behavior: "smooth",
+              block: "nearest",
+            });
             setLastVisiblePlayer(null); // Reset lastVisiblePlayer after scrolling
           }
         };
@@ -109,13 +113,20 @@ function PlayersBuy({
 
   return (
     <div className="playersBuyContainer">
-      <div className="playersBuyTitle">Worker's store</div>
+      <div className="playersBuyTitle">
+        {lang.lang === "ru" ? "Магазин игроков" : "Worker's store"}
+      </div>
       <div className="buyScrollContainer" ref={buyScrollRef}>
         {players.length === 0 && !isLoading && (
-          <div className="emptyStoreMessage">The store is empty!</div>
+          <div className="emptyStoreMessage">
+            {lang.lang === "ru"
+              ? "Магазин пуст, загляните позже!"
+              : "The store is empty!"}
+          </div>
         )}
         {players.map((player) => (
           <WorkerBuy
+            lang={lang}
             key={player.id} // Ensure player.id is unique
             id={player.user_id}
             name={player.username}
@@ -132,7 +143,11 @@ function PlayersBuy({
             lastVisiblePlayer={lastVisiblePlayer}
           />
         ))}
-        {isLoading && <div className="loading">Loading...</div>}
+        {isLoading && (
+          <div className="loading">
+            {lang.lang === "ru" ? "Загрузка..." : "Loading..."}
+          </div>
+        )}
       </div>
     </div>
   );

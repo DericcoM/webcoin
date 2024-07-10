@@ -3,7 +3,7 @@ import "./Trade.css";
 import { fetchRefersOwner } from "../../api/api";
 import axios from "axios";
 
-function Trade({ setCurrentPage, stars, userId, setPreviousPage }) {
+function Trade({ setCurrentPage, stars, userId, setPreviousPage, lang }) {
   const buyScrollRef = useRef(null);
   const [data, setData] = useState({});
   const [tradeAmount, setTradeAmount] = useState(""); // State to store the trade amount
@@ -67,7 +67,7 @@ function Trade({ setCurrentPage, stars, userId, setPreviousPage }) {
     <>
       <div className="trade">
         <div className="buyScrollContainer" ref={buyScrollRef}>
-          <div className="boostTitle">Balance</div>
+          <div className="boostTitle">{lang.lang === "ru" ? "Баланс" : "Balance"}</div>
 
           <div className="balanceValue">
             {tradeStars}
@@ -75,49 +75,49 @@ function Trade({ setCurrentPage, stars, userId, setPreviousPage }) {
               <img src="assets/star.png" alt="star" />
             </div>
           </div>
-          <div className="curs">1 stars = {curs} coins</div>
-          <div className="statistics">Stats:</div>
+          <div className="curs">{lang.lang === "ru" ? `1 звезда = ${curs} монет` : `1 stars = ${curs} coins`}</div>
+          <div className="statistics">{lang.lang === "ru" ? "Статистика:" : "Stats:"}</div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">B:</div>
-              <div className="workerPlayersUnitCount">{data.b_refs} refs.</div>
+              <div className="workerPlayersUnitCount">{data.b_refs} {lang.lang === "ru" ? "реф." : "refs."}</div>
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">C:</div>
-              <div className="workerPlayersUnitCount">{data.c_refs} refs.</div>
+              <div className="workerPlayersUnitCount">{data.c_refs} {lang.lang === "ru" ? "реф." : "refs."}</div>
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">D:</div>
-              <div className="workerPlayersUnitCount">{data.d_refs} refs.</div>
+              <div className="workerPlayersUnitCount">{data.d_refs} {lang.lang === "ru" ? "реф." : "refs."}</div>
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">E:</div>
-              <div className="workerPlayersUnitCount">{data.e_refs} refs.</div>
+              <div className="workerPlayersUnitCount">{data.e_refs} {lang.lang === "ru" ? "реф." : "refs."}</div>
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">F:</div>
-              <div className="workerPlayersUnitCount">{data.f_refs} refs.</div>
+              <div className="workerPlayersUnitCount">{data.f_refs} {lang.lang === "ru" ? "реф." : "refs."}</div>
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">G:</div>
-              <div className="workerPlayersUnitCount">{data.g_refs} refs.</div>
+              <div className="workerPlayersUnitCount">{data.g_refs} {lang.lang === "ru" ? "реф." : "refs."}</div>
             </div>
           </div>
           <div className="tradeForm">
             <div className="workerPlayersUnit trade">
               <input
                 className="input"
-                placeholder="Trade stars"
+                placeholder={lang.lang === "ru" ? "Обменять звезды" : "Trade stars"}
                 type="number"
                 max={tradeStars} // Specify the maximum value here
                 value={tradeAmount} // Bind input value to state
@@ -131,7 +131,7 @@ function Trade({ setCurrentPage, stars, userId, setPreviousPage }) {
               />
             </div>
             <div className="workerUp buy free" onClick={handleTrade}>
-              <p className="workerUpTitle free">Trade</p>
+              <p className="workerUpTitle free">{lang.lang === "ru" ? "Обменять" : "Trade"}</p>
             </div>
           </div>
         </div>

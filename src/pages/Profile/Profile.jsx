@@ -15,6 +15,7 @@ function Profile({
   updateUserData,
   setAvatarNew,
   setNameNew,
+  lang,
 }) {
   const [nickname, setNickname] = useState(defaultName);
   const [email, setEmail] = useState(defaultEmail);
@@ -118,22 +119,24 @@ function Profile({
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!nickname) {
-      setErrorMsg("Заполните все поля!");
+      setErrorMsg(
+        lang.lang === "ru" ? "Заполните все поля!" : "Fill in all the fields!"
+      );
       return;
     }
-  
+
     try {
       const formData = new FormData();
       formData.append("username", nickname);
       formData.append("user_id", userId);
-  
+
       // Check if the avatar is not changed
       if (avatar) {
         formData.append("img", avatar);
       } else {
         formData.append("img", "123");
       }
-  
+
       const updateResponse = await fetch(
         `https://aylsetalinad.ru/api/change_profile`,
         {
@@ -141,7 +144,7 @@ function Profile({
           body: formData,
         }
       );
-  
+
       const updateResponseText = await updateResponse.text();
       if (
         updateResponse.status === 200 &&
@@ -153,14 +156,21 @@ function Profile({
         }
         setNameNew(nickname);
       } else {
-        setErrorMsg("Error");
+        setErrorMsg(
+          lang.lang === "ru"
+            ? "Ошибка, попробуйте другую фотографию"
+            : "Error, try another photo"
+        );
       }
     } catch (error) {
       console.error("Error:", error);
-      setErrorMsg("Возникла ошибка, попробуйте позже!");
+      setErrorMsg(
+        lang.lang === "ru"
+          ? "Возникла ошибка, попробуйте позже!"
+          : "An error has occurred, try again later!"
+      );
     }
   };
-  
 
   const openInNewTab = (url) => {
     window.open(url, "_blank");
@@ -170,7 +180,9 @@ function Profile({
     <>
       <div className="reg profile">
         <div className="buyScrollContainer profile" ref={buyScrollRef}>
-          <div className="regTitle profile">Profile</div>
+          <div className="regTitle profile">
+            {lang.lang === "ru" ? "Профиль" : "Profile"}
+          </div>
           <div
             className="regAvatar"
             onClick={() =>
@@ -182,7 +194,7 @@ function Profile({
             </div>
           </div>
           <div className="regAvatarChange">
-            Change
+            {lang.lang === "ru" ? "Изменить" : "Change"}
             <div className="regAvatarChangeImg">
               <img src="assets/edit.png" alt="edit" />
               <input
@@ -200,7 +212,9 @@ function Profile({
               </div>
               <input
                 className="input"
-                placeholder="Change name"
+                placeholder={
+                  lang.lang === "ru" ? "Изменить имя" : "Change name"
+                }
                 type="text"
                 value={nickname}
                 onChange={handleNicknameChange}
@@ -238,11 +252,13 @@ function Profile({
             </div> */}
             {errorMsg && <div className="error">{errorMsg}</div>}
             <button type="submit" className="authButton regB">
-              Apply
+              {lang.lang === "ru" ? "Подтвердить" : "Apply"}
             </button>
           </form>
           <div className="authSubTitle">
-            Follow our updates on social media:
+            {lang.lang === "ru"
+              ? "Следите за нашими обновлениями в социальных сетях:"
+              : "Follow our updates on social media:"}
           </div>
           <div className="authSocials profile">
             <a
@@ -274,14 +290,18 @@ function Profile({
             onClick={() => openInNewTab("http://tvoycoin.com/policy")}
             className="authDoc"
           >
-            Privacy policy
+            {lang.lang === "ru"
+              ? "Политика конфиденциальности"
+              : "Privacy policy"}
           </a>
           <a
             href="#"
             onClick={() => openInNewTab("http://tvoycoin.com/user_agreement")}
             className="authDoc profile"
           >
-            User agreement
+            {lang.lang === "ru"
+              ? "Пользовательское соглашение"
+              : "User agreement"}
           </a>
         </div>
       </div>

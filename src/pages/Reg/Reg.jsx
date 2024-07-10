@@ -4,7 +4,7 @@ import useFetchUserData from "../../Hooks/useFetchUserData";
 import useTelegramUser from "../../Hooks/useTelegramUser";
 import useTelegramInfo from "../../Hooks/useTelegramInfo";
 
-function Reg({ setReg }) {
+function Reg({ setReg, lang }) {
   const [nickname, setNickname] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -126,7 +126,9 @@ function Reg({ setReg }) {
     <>
       <div className="auth overflow-scroll">
         <div className="reg">
-          <div className="regTitle">Registration</div>
+          <div className="regTitle">
+            {lang.lang === "ru" ? "Регистрация" : "Registration"}
+          </div>
           <div
             className="regAvatar"
             onClick={() =>
@@ -142,7 +144,7 @@ function Reg({ setReg }) {
             </div>
           </div>
           <div className="regAvatarChange">
-            Change
+            {lang.lang === "ru" ? "Изменить" : "Change"}
             <div className="regAvatarChangeImg">
               <img src="assets/edit.png" alt="edit" />
               <input
@@ -161,7 +163,7 @@ function Reg({ setReg }) {
 
               <input
                 className="input"
-                placeholder="Name"
+                placeholder={lang.lang === "ru" ? "Имя" : "Name"}
                 type="text"
                 value={nickname}
                 onChange={handleNicknameChange}
@@ -198,17 +200,21 @@ function Reg({ setReg }) {
             </div> */}
             {errorMsg && <div className="error">{errorMsg}</div>}
             <button type="submit" className="authButton regB">
-              Start
+              {lang.lang === "ru" ? "Начать" : "Start"}
             </button>
           </form>
           <a href="http://tvoycoin.com/policy" className="authDoc">
-            Privacy policy
+            {lang.lang === "ru"
+              ? "Политика конфиденциальности"
+              : "Privacy policy"}
           </a>
           <a
             href="http://tvoycoin.com/user_agreement"
             className="authDoc profile"
           >
-            User agreement
+            {lang.lang === "ru"
+              ? "Пользовательское соглашение"
+              : "User agreement"}
           </a>
           <div className="authSvg">
             <svg width="145" height="21" viewBox="0 0 145 21" fill="none">
@@ -257,12 +263,19 @@ function Reg({ setReg }) {
             </svg>
           </div>
           <div className="authDocConfirm">
-            By clicking "Start", you confirm that you have fully read the
+            {lang.lang === "ru"
+              ? `Нажимая "Начать", вы подтверждаете, что полностью ознакомились с
+лицензионным (пользовательским) соглашением, политикой конфиденциальности информации и
+обработки персональных данных и приложениями к ним. Положения
+вам полностью понятны, и вы не имеете возражений и согласны с
+условиями игры. Нажимая "Пуск", вы даете согласие на
+обработку персональных данных.`
+              : `By clicking "Start", you confirm that you have fully read the
             license (user) agreement, the privacy policy for information and
             personal data processing and their appendices. The provisions are
             completely clear to you, and you do not have objections and agree to
             the terms of the game. By clicking "Start", you give consent to the
-            processing of personal data.
+            processing of personal data.`}
           </div>
         </div>
       </div>

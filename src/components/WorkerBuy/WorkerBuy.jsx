@@ -16,6 +16,7 @@ function WorkerBuy({
   setLastVisiblePlayer,
   lastVisiblePlayer,
   player,
+  lang,
 }) {
   const { userData, loading, error } = useFetchUserData(ownerID);
 
@@ -72,9 +73,20 @@ function WorkerBuy({
           <img src={avatar} alt="" className="workerBuyAvatar" />
         </div>
         <div className="workerBuyCardInfo">
-          <div className="workerBuyName">{name}</div>
+          <div className="workerBuyName">
+            {name
+              ? name.length > 12
+                ? `${name.slice(0, 12)}...`
+                : name
+              : "username"}
+          </div>
           <div className="workerBuyStatusWorked">
-            Worked on {userData.username}
+            {lang.lang === "ru" ? "Работает на" : "Worked on"}{" "}
+            {userData.username
+              ? userData.username.length > 12
+                ? `${userData.username.slice(0, 12)}...`
+                : userData.username
+              : "username"}
           </div>
         </div>
       </div>

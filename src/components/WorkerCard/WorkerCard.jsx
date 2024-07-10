@@ -8,7 +8,8 @@ function WorkerCard({
   setPreviousPage,
   handleQr,
   handleCopy,
-  sharedText
+  sharedText,
+  lang,
 }) {
   const [players, setPlayers] = useState([]);
 
@@ -43,21 +44,27 @@ function WorkerCard({
             />
           </div>
           <div className="noWorkersText">
-            <div className="noWorkersTitle">You don't have any workres.</div>
+            <div className="noWorkersTitle">
+              {lang.lang === "ru"
+                ? "У вас нет работников."
+                : "You don't have any workres."}
+            </div>
             <div className="noWorkersButtons">
               <div className="noWorkerButton" onClick={handleQr}>
                 <div className="noWorkerButtonContainer">
                   <div className="mainRefQrSVG"></div>
                 </div>
               </div>
-              <a href={sharedText} className="noWorkerButton" >
+              <a href={sharedText} className="noWorkerButton">
                 <div className="noWorkerButtonContainer">
                   <div className="mainRefShareSVG"></div>
                 </div>
               </a>
             </div>
             <div className="noWorkersSubTittle">
-              Invite your friends via the referral link to start earning money.
+              {lang.lang === "ru"
+                ? "Пригласи друзей по реферальной ссылке, чтобы начать зарабатывать."
+                : "Invite your friends via the referral link to start earning money."}
             </div>
           </div>
         </div>
@@ -84,12 +91,17 @@ function WorkerCard({
                 <img className="workerAvatarIMG" src={worker.img} alt="" />
               </div>
               <div className="workerName">
-                {worker.username.length > 12
-                  ? `${worker.username.slice(0, 12)}...`
-                  : worker.username}
+                {worker.username
+                  ? worker.username.length > 12
+                    ? `${worker.username.slice(0, 12)}...`
+                    : worker.username
+                  : "username"}
               </div>
 
-              <div className="workerPrice">{worker.sum_ref_income}/min</div>
+              <div className="workerPrice">
+                {worker.sum_ref_income}
+                {lang.lang === "ru" ? "/мин" : "/min"}
+              </div>
             </div>
           ))}
         </div>

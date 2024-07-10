@@ -6,7 +6,7 @@ import useBuySlot from "../../Hooks/useBuySlot";
 import axios from "axios";
 import { buySlot, getSlot } from "../../api/api";
 
-function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
+function Boost({ setPreviousPage, setCurrentPage, userId, boost, lang }) {
   const buyScrollRef = useRef(null);
   const [value, setValue] = useState(1);
   const unitPrice = 0.5;
@@ -23,14 +23,22 @@ function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
       console.log("asd");
       const response = await getPaymentLink(process, userId);
       if (response === 403) {
-        setErrorMessage("Not enough stars to buy");
+        setErrorMessage(
+          lang.lang === "ru"
+            ? "Не хватает звезд для покупки"
+            : "Not enough stars to buy"
+        );
         setModalOpen(true);
       } else {
         setUserBoost("asd");
         setPreviousPage("main");
       }
     } else {
-      setErrorMessage("Booster already used");
+      setErrorMessage(
+        lang.lang === "ru"
+          ? "Улучшение уже использовано"
+          : "Booster already used"
+      );
       setModalOpen(true);
     }
   };
@@ -67,13 +75,16 @@ function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
   const handleBuyNo = () => {};
 
   const handleModalError = (error) => {
-    let errorMessageToShow = "An error has occurred";
+    let errorMessageToShow =
+      lang.lang === "ru" ? "Ошибка" : "An error has occurred";
     if (error.response && error.response.data && error.response.data.error) {
       if (error.response.status === 400) {
-        errorMessageToShow = "Insufficient funds";
+        errorMessageToShow =
+          lang.lang === "ru" ? "Недостаточно монет" : "Insufficient funds";
       }
       if (error.response.status === 403) {
-        errorMessageToShow = "Insufficient funds";
+        errorMessageToShow =
+          lang.lang === "ru" ? "Недостаточно монет" : "Insufficient funds";
       } else {
         errorMessageToShow = error.response.data.error;
       }
@@ -122,17 +133,42 @@ function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
   return (
     <div className="boost">
       <div className="buyScrollContainer" ref={buyScrollRef}>
-        <div className="boostTitle">Boost</div>
+        <div className="boostTitle">
+          {lang.lang === "ru" ? "Апгрейд" : "Boost"}
+        </div>
         <div className="boostTaskTitle">
-          Tasks for
+          {lang.lang === "ru" ? "Задания за" : "Tasks for"}
           <div className="boostTaskTitleImg">
-            <img src="assets/goldMiniCoin.png" alt="" />
+            <img src="assets/star.png" alt="" />
           </div>
         </div>
         <div className="socials">
           <div className="boostSocials">
             <div className="boostSocialsButton testr">
-              Something will be here soon
+              {lang.lang === "ru"
+                ? "Скоро здесь что-то будет"
+                : "Something will be here soon"}
+            </div>
+            {/* <div className="boostSocialsEarn">
+              <div className="boostTaskTitleImg soc">
+                <img src="assets/star.png" alt="" />
+              </div>
+              +100
+            </div> */}
+            {/* <div className="boostSocialsLink">
+              <img src="assets/skins/gold.png" alt="" />
+            </div> */}
+            <div className="bckggold">
+              <div className="boostSocialsLinkasd">
+                <img src="assets/skins/gold.png" alt="" />
+              </div>
+            </div>
+          </div>
+          <div className="boostSocials">
+            <div className="boostSocialsButton testr">
+              {lang.lang === "ru"
+                ? "Скоро здесь что-то будет"
+                : "Something will be here soon"}
             </div>
             {/* <div className="boostSocialsEarn">
               <div className="boostTaskTitleImg soc">
@@ -151,26 +187,9 @@ function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
           </div>
           <div className="boostSocials">
             <div className="boostSocialsButton testr">
-              Something will be here soon
-            </div>
-            {/* <div className="boostSocialsEarn">
-              <div className="boostTaskTitleImg soc">
-                <img src="assets/goldMiniCoin.png" alt="" />
-              </div>
-              +1,000
-            </div>
-            <div className="boostSocialsLink">
-              <img src="assets/skins/gold.png" alt="" />
-            </div> */}
-            <div className="bckggold">
-              <div className="boostSocialsLinkasd">
-                <img src="assets/skins/gold.png" alt="" />
-              </div>
-            </div>
-          </div>
-          <div className="boostSocials">
-            <div className="boostSocialsButton testr">
-              Something will be here soon
+              {lang.lang === "ru"
+                ? "Скоро здесь что-то будет"
+                : "Something will be here soon"}
             </div>
             {/* <div className="boostSocialsEarn">
               <div className="boostTaskTitleImg soc">
@@ -189,14 +208,32 @@ function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
           </div>
         </div>
         <div className="dottedLine soc"></div>
-        <div className="boostPremium">
+        {/* <div className="boostPremium">
           <div className="boostPremiumTitle">
-            You have{" "}
-            <span className="premium">{slotValue} invitation slots</span>
+            {lang.lang === "ru" ? (
+              <>
+                У вас <span className="premium">{slotValue} приглашений</span>
+              </>
+            ) : (
+              <>
+                You have{" "}
+                <span className="premium">{slotValue} invitation slots</span>
+              </>
+            )}
           </div>
+
           <div className="boostPremiumDesc">
-            Increase the number of slots to
-            <br /> it was possible to invite more friends
+            {lang.lang === "ru" ? (
+              <>
+                Увеличьте количество слотов, чтобы
+                <br /> можно было пригласить больше друзей
+              </>
+            ) : (
+              <>
+                Increase the number of slots to
+                <br /> invite more friends
+              </>
+            )}
           </div>
           <Slider
             defaultValue={1}
@@ -219,15 +256,19 @@ function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
             className="boostPremiumButton buy"
             onClick={() => getPaymentSlot(userId, value)}
           >
-            Buy for {calculatePrice(value)}{" "}
+            {lang.lang === "ru" ? "Купить за " : "Buy for "}
+            {calculatePrice(value)}{" "}
             <div className="boostTaskTitleImg">
               <img src="assets/goldMiniCoin.png" alt="" />
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="boostPremium">
           <div className="boostPremiumTitle fast">
-            Acceleration of earnings
+            {lang.lang === "ru"
+              ? "Ускорение заработка"
+              : "Acceleration of earnings"}
+
             <div className="boostPremiumTitleImg">
               <img src="assets/goldMiniCoin.png" alt="" />
             </div>
@@ -250,11 +291,11 @@ function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
                   setPreviousPage("main");
                 }}
               >
-                Boost for 30{" "}
+                {lang.lang === "ru" ? "Ускорить за " : "Boost for "} 30{" "}
                 <div className="balanceValueImg boost">
                   <img src="assets/star.png" alt="" />
                 </div>{" "}
-                / 1 hour
+                / 1 {lang.lang === "ru" ? "час" : "hour"}
               </div>
             </div>
             <div className="boostPremiumHour">
@@ -274,11 +315,11 @@ function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
                   setPreviousPage("main");
                 }}
               >
-                Boost for 50{" "}
+                {lang.lang === "ru" ? "Ускорить за " : "Boost for "} 50{" "}
                 <div className="balanceValueImg boost">
                   <img src="assets/star.png" alt="" />
                 </div>{" "}
-                / 1 hour
+                / 1 {lang.lang === "ru" ? "час" : "hour"}
               </div>
             </div>
             <div className="boostPremiumHour">
@@ -298,11 +339,11 @@ function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
                   setPreviousPage("main");
                 }}
               >
-                Boost for 90{" "}
+                {lang.lang === "ru" ? "Ускорить за " : "Boost for "} 90{" "}
                 <div className="balanceValueImg boost">
                   <img src="assets/star.png" alt="" />
                 </div>{" "}
-                / 1 hour
+                / 1 {lang.lang === "ru" ? "час" : "hour"}
               </div>
             </div>
           </div>
@@ -313,7 +354,9 @@ function Boost({ setPreviousPage, setCurrentPage, userId, boost }) {
           <div className="backdrop" onClick={handleModalClose}></div>
           <div className="error-message">
             {errorMessage}
-            <div className="error-msg">Try again later</div>
+            <div className="error-msg">
+              {lang.lang === "ru" ? "Попробуйте позже" : "Try again later"}
+            </div>
           </div>
         </div>
       )}

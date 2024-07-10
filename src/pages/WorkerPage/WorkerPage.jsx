@@ -16,6 +16,7 @@ function WorkerPage({
   setPreviousPage,
   balance,
   handleUpdateBalance,
+  lang,
 }) {
   const { userData, loading, error, refetchUserData } =
     useFetchUserData(workerID);
@@ -79,10 +80,12 @@ function WorkerPage({
   };
 
   const handleModalError = (error) => {
-    let errorMessageToShow = "An error has occurred";
+    let errorMessageToShow =
+      lang.lang === "ru" ? "Ошибка" : "An error has occurred";
     if (error.response && error.response.data && error.response.data.error) {
       if (error.response.status === 400) {
-        errorMessageToShow = "Insufficient funds.";
+        errorMessageToShow =
+          lang.lang === "ru" ? "Недостаточно монет" : "Insufficient funds.";
       } else {
         errorMessageToShow = error.response.data.error;
       }
@@ -107,19 +110,31 @@ function WorkerPage({
             <img className="workerPageAvatar" src={userData.img} alt="" />
           </div>
           <div className="workerPageName">{userData.username}</div>
-          <div className="workerPageStatus">Worked on you</div>
+          <div className="workerPageStatus">
+            {lang.lang === "ru" ? "Работает на вас" : "Worked on you"}
+          </div>
         </div>
         <div className="workerPageStatusBar">
           <div className="workerPageShield">
             {userData.is_safe === "yes"
-              ? `Protected ${userData.timer}`
+              ? lang.lang === "ru"
+                ? `Защищено ${userData.timer}`
+                : `Protected ${userData.timer}`
+              : lang.lang === "ru"
+              ? "Не защищено"
               : "Not protected"}
           </div>
-          <div className="workerPagePayment">{userData.sum_ref_income}/min</div>
+          <div className="workerPagePayment">
+            {userData.sum_ref_income}/{lang.lang === "ru" ? "мин" : "min"}
+          </div>
         </div>
         <div className="dottedLine"></div>
         <div className={"workerUp"}>
-          <p className="workerUpTitle">Earns {userData.income}/min</p>
+          <p className="workerUpTitle">
+            {lang.lang === "ru"
+              ? `Зарабатывает ${userData.income}/мин`
+              : `Earns ${userData.income}/min`}
+          </p>
         </div>
 
         <div className="workerPlayers">
@@ -127,55 +142,55 @@ function WorkerPage({
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">C:</div>
               <div className="workerPlayersUnitCount">
-                {dataRefs.c_refs} refs.
+                {dataRefs.c_refs} {lang.lang === "ru" ? "реф." : "refs."}
               </div>
             </div>
             <div className="workerPlayersUnit_Income">
-              +{dataRefs.c_income}/min
+              +{dataRefs.c_income}/{lang.lang === "ru" ? "мин" : "min"}
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">D:</div>
               <div className="workerPlayersUnitCount">
-                {dataRefs.d_refs} refs.
+                {dataRefs.d_refs} {lang.lang === "ru" ? "реф." : "refs."}
               </div>
             </div>
             <div className="workerPlayersUnit_Income">
-              +{dataRefs.d_income}/min
+              +{dataRefs.d_income}/{lang.lang === "ru" ? "мин" : "min"}
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">E:</div>
               <div className="workerPlayersUnitCount">
-                {dataRefs.e_refs} refs.
+                {dataRefs.e_refs} {lang.lang === "ru" ? "реф." : "refs."}
               </div>
             </div>
             <div className="workerPlayersUnit_Income">
-              +{dataRefs.e_income}/min
+              +{dataRefs.e_income}/{lang.lang === "ru" ? "мин" : "min"}
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">F:</div>
               <div className="workerPlayersUnitCount">
-                {dataRefs.f_refs} refs.
+                {dataRefs.f_refs} {lang.lang === "ru" ? "реф." : "refs."}
               </div>
             </div>
             <div className="workerPlayersUnit_Income">
-              +{dataRefs.f_income}/min
+              +{dataRefs.f_income}/{lang.lang === "ru" ? "мин" : "min"}
             </div>
           </div>
           <div className="workerPlayersUnit">
             <div className="workerPlayersUnitGroup">
               <div className="workerPlayersUnitPoint">G:</div>
               <div className="workerPlayersUnitCount">
-                {dataRefs.g_refs} refs.
+                {dataRefs.g_refs} {lang.lang === "ru" ? "реф." : "refs."}
               </div>
             </div>
             <div className="workerPlayersUnit_Income">
-              +{dataRefs.g_income}/min
+              +{dataRefs.g_income}/{lang.lang === "ru" ? "мин" : "min"}
             </div>
           </div>
         </div>
@@ -187,7 +202,7 @@ function WorkerPage({
           }
           onClick={handleUp}
         >
-          <p className="workerUpTitle">Upgrade for {userData.level_price}</p>
+          <p className="workerUpTitle">{lang.lang === "ru" ? "Улучшить за" : "Upgrade for"} {userData.level_price}</p>
           <div className="workerUpCoin">
             <img src="assets/goldMiniCoin.png" alt="" />
           </div>
@@ -203,7 +218,7 @@ function WorkerPage({
                 : "workerUpTitle no"
             }
           >
-            Protect for {userData.shield_price}
+            {lang.lang === "ru" ? "Защитить за" : "Protect for"} {userData.shield_price}
           </p>
           <div className="workerUpCoin">
             <img src="assets/goldMiniCoin.png" alt="" />
@@ -215,7 +230,7 @@ function WorkerPage({
                 : "workerUpTitle no"
             }
           >
-            for 6 hours
+            {lang.lang === "ru" ? "на 6 часов" : "for 6 hours"}
           </p>
         </div>
       </div>
@@ -225,7 +240,7 @@ function WorkerPage({
           <div className="backdrop" onClick={handleModalClose}></div>
           <div className="error-message">
             {errorMessage}
-            <div className="error-msg">Try again later</div>
+            <div className="error-msg">{lang.lang === "ru" ? "Попробуйте позже" : "Try again later"}</div>
           </div>
         </div>
       )}

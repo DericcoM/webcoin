@@ -1,46 +1,34 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { fetchUserData } from '../api/api';
 
 const useFetchUserData = (userId) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [dataLoaded, setDataLoaded] = useState(false); // Состояние для отслеживания загрузки данных
 
-  useEffect(() => {
-    if (!dataLoaded && userId) { // Проверяем, не загружены ли данные уже
-      const getUserData = async () => {
-        try {
-          setLoading(true);
-          const data = await fetchUserData(userId);
-          setUserData(Array.isArray(data) && data.length === 1 ? data[0] : data);
-          setDataLoaded(true); // После успешной загрузки данных устанавливаем флаг в true
-        } catch (err) {
-          setError(err);
-        } finally {
-          setLoading(false);
-        }
-      };
+  const getUserData = useCallback(async () => {
+    if (!userId) return; // Проверка наличия userId
 
-      getUserData();
-    }
-  }, [userId, dataLoaded]); // Зависимость от userId и dataLoaded
-
-  const refetchUserData = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const data = await fetchUserData(userId);
       setUserData(Array.isArray(data) && data.length === 1 ? data[0] : data);
-      setDataLoaded(true); // После успешной загрузки данных устанавливаем флаг в true
     } catch (err) {
       setError(err);
     } finally {
       setLoading(false);
     }
+  }, [userId]);
+
+  useEffect(() => {
+    getUserData();
+  }, [getUserData]);
+
+  const refetchUserData = async () => {
+    await getUserData();
   };
 
   return { userData, loading, error, refetchUserData };
 };
-
 
 export default useFetchUserData;

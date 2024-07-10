@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./Rating.css";
 
-function Rating({ setCurrentPage, mainID, mainData }) {
+function Rating({ setCurrentPage, mainID, mainData, lang, skin }) {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const scoreBoardListRef = useRef(null);
-
-  const amountPlayer = players.length;
+  const [amountPlayer, setAmountPlayer] = useState("");
 
   const playerCardHeight = 63; // Height of each player card in px
   const ownerPosHeight = 91; // Height of the owner position element in px
@@ -30,21 +29,43 @@ function Rating({ setCurrentPage, mainID, mainData }) {
 
   const remainDate = hoursUntilMidnightInMoscow();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("https://aylsetalinad.ru/api/get_rating");
-        const data = await response.json();
-        setPlayers(data);
-        console.log("rating", data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchData = async (retryDelay = 1000) => {
+    try {
+      const response = await fetch("https://aylsetalinad.ru/api/get_rating");
+      const data = await response.json();
 
+      // Sort the data by rating in ascending order
+      const sortedData = data.sort((a, b) => a.rating - b.rating);
+
+      setPlayers(sortedData);
+      setLoading(false);
+    } catch (error) {
+      console.error("Failed to fetch players, retrying in", retryDelay, "ms");
+      setTimeout(() => fetchData(retryDelay), retryDelay);
+    }
+  };
+
+  const fetchAllPlayers = async (retryDelay = 1000) => {
+    try {
+      const response = await fetch(
+        "https://aylsetalinad.ru/api/get_user_count"
+      );
+      const data = await response.json();
+      setAmountPlayer(data);
+      setLoading(false);
+    } catch (error) {
+      console.error(
+        "Failed to fetch player count, retrying in",
+        retryDelay,
+        "ms"
+      );
+      setTimeout(() => fetchAllPlayers(retryDelay), retryDelay);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
+    fetchAllPlayers();
   }, []);
 
   useEffect(() => {
@@ -84,10 +105,13 @@ function Rating({ setCurrentPage, mainID, mainData }) {
   }
 
   const userPosition = players.findIndex((player) => player.id === mainData.id);
+  const displayPosition = userPosition !== -1 ? `${userPosition + 1}` : `${mainData.rating}`;
 
   return (
     <div className="rating">
-      <div className="amountPlayer">{amountPlayer} Players</div>
+      <div className="amountPlayer">
+        {amountPlayer} {lang.lang === "ru" ? "Игроков" : "Players"}
+      </div>
       <div className="ratingBackground">
         <div className="rectangle"></div>
         <div className="ratingKubokContainer">
@@ -101,9 +125,9 @@ function Rating({ setCurrentPage, mainID, mainData }) {
                 <img src="assets/star.png" alt="" />
               </div>
             </div>
-            Day
+            {lang.lang === "ru" ? "День" : "Day"}
           </div>
-          <div className="remainDate">{remainDate} hours left</div>
+          <div className="remainDate">{remainDate} {lang.lang === "ru" ? "часов осталось" : "hours left"}</div>
           <div className="line"></div>
           <div className="scoreBoardList" ref={scoreBoardListRef}>
             {players.map((player, index) => (
@@ -112,7 +136,7 @@ function Rating({ setCurrentPage, mainID, mainData }) {
                   <div className="ratingPlayerCardIMG">
                     <img
                       src={`assets/${index + 1}.png`}
-                      alt={`Место ${index + 1}`}
+                      alt={`${index + 1}`}
                     />
                   </div>
                 ) : (
@@ -122,7 +146,13 @@ function Rating({ setCurrentPage, mainID, mainData }) {
                   <img src={player.img || "assets/worker.png"} alt="" />
                 </div>
                 <div className="ratingDesc">
-                  <div className="ratingWorkerName">{player.username}</div>
+                  <div className="ratingWorkerName">
+                    {player.username
+                      ? player.username.length > 12
+                        ? `${player.username.slice(0, 12)}...`
+                        : player.username
+                      : "username"}
+                  </div>
                   <div className="ratingWorkerBalance">
                     <div className="ratingWorkerBalanceIMG">
                       <img
@@ -138,7 +168,7 @@ function Rating({ setCurrentPage, mainID, mainData }) {
           </div>
           <div className="ownerPos">
             <div className="ownerPosLeft">
-              {userPosition < 3 ? (
+              {userPosition < 3 && userPosition !== -1 ? (
                 <div className="ratingPlayerCardIMG">
                   <img
                     src={`assets/${userPosition + 1}.png`}
@@ -146,17 +176,23 @@ function Rating({ setCurrentPage, mainID, mainData }) {
                   />
                 </div>
               ) : (
-                <div className="scorePosition">{userPosition + 1}</div>
+                <div className="scorePosition">{displayPosition}</div>
               )}
               <div className="ratingAvatar">
                 <img src={mainData.img} alt="" />
               </div>
               <div className="ratingDesc">
-                <div className="ratingWorkerName">{mainData.username}</div>
+                <div className="ratingWorkerName">
+                  {mainData.username
+                    ? mainData.username.length > 12
+                      ? `${mainData.username.slice(0, 12)}...`
+                      : mainData.username
+                    : "username"}
+                </div>
                 <div className="ratingWorkerBalance">
                   <div className="ratingWorkerBalanceIMG">
                     <img
-                      src={`assets/skins/${mainData.icon_coin}.png`}
+                      src={`assets/skins/${skin}.png`}
                       alt=""
                     />
                   </div>
@@ -164,7 +200,7 @@ function Rating({ setCurrentPage, mainID, mainData }) {
                 </div>
               </div>
             </div>
-            <div className="ownerPosYou">You</div>
+            <div className="ownerPosYou">{lang.lang === "ru" ? "Ты" : "You"}</div>
           </div>
         </div>
       </div>

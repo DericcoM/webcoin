@@ -157,9 +157,10 @@ body {
 }
 
 .workerCount {
+  padding: 0 5px;
   color: #000;
   background: #fff;
-  width: 24px;
+  width: fit-content;
   height: 24px;
   border-radius: 50%;
   display: flex;

@@ -3,7 +3,7 @@ import "./ModalSub.css";
 import usePayment from "../../Hooks/usePayment";
 import axios from "axios";
 
-function ModalSub({ show, onClose, userId, setSubStatus, handleSub, updateUserData }) {
+function ModalSub({ show, onClose, userId, setSubStatus, handleSub, updateUserData, lang }) {
   const { redirectToPayment, loading, error } = usePayment();
 
   // if (!show) {

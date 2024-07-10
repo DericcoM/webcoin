@@ -1,7 +1,13 @@
 import React from "react";
 import "./Footer.css";
 
-function Footer({ setCurrentPage, currentPage, setPreviousPage, userId }) {
+function Footer({
+  setCurrentPage,
+  currentPage,
+  setPreviousPage,
+  userId,
+  lang,
+}) {
   return (
     <div className={currentPage === "boost" ? "footer boosted" : "footer"}>
       <div
@@ -14,7 +20,7 @@ function Footer({ setCurrentPage, currentPage, setPreviousPage, userId }) {
         <div id="players" className="navButtonImg">
           <img src="assets/user.png" alt="" />
         </div>
-        <div className="navButtonText">Workers</div>
+        <div className="navButtonText">{lang.lang === "ru" ? "Игроки" : "Workers"}</div>
       </div>
       <div
         className="navButton"
@@ -26,7 +32,7 @@ function Footer({ setCurrentPage, currentPage, setPreviousPage, userId }) {
         <div id="boost" className="navButtonImg">
           <img src="assets/boost.png" alt="" />
         </div>
-        <div className="navButtonText">Boost</div>
+        <div className="navButtonText">{lang.lang === "ru" ? "Апгрейд" : "Boost"}</div>
       </div>
       <div
         className="navButton"
@@ -39,7 +45,7 @@ function Footer({ setCurrentPage, currentPage, setPreviousPage, userId }) {
         <div id="trade" className="navButtonImg">
           <img src="assets/trade.png" alt="" />
         </div>
-        <div className="navButtonText">Trade</div>
+        <div className="navButtonText">{lang.lang === "ru" ? "Обмен" : "Trade"}</div>
       </div>
     </div>
   );

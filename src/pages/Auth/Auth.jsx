@@ -1,10 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Auth.css";
 import Login from "../Login/Login";
 import Reg from "../Reg/Reg";
+import axios from "axios";
+import useTelegramUser from "../../Hooks/useTelegramUser";
 
 function Auth({}) {
   const [currentPageAuth, setCurrentPageAuth] = useState("auth");
+  const [lang, setLang] = useState("");
+  const userId = useTelegramUser();
+
+  const handleLang = async () => {
+    try {
+      const response = await axios.get(
+        `https://aylsetalinad.ru/api/get_lang/${userId}`
+      );
+      setLang(response.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (userId) {
+      handleLang();
+    }
+  }, []);
 
   const handleAuth = () => {
     setCurrentPageAuth("reg");
@@ -57,18 +78,63 @@ function Auth({}) {
                   </svg>
                 </div>
               </div>
-              <div className="authSubTitle">
-                The game is in{" "}
-                <span className="authSubTitleOrange">limited access.</span>{" "}
-                Participation in the game are only possible by{" "}
-                <span className="authSubTitleOrange">invitation.</span>
-              </div>
+              {lang && lang.lang && (
+                <div className="authSubTitle">
+                  {lang && lang.lang ? (
+                    lang.lang === "ru" ? (
+                      <>
+                        Игра находится в{" "}
+                        <span className="authSubTitleOrange">
+                          ограниченном доступе.
+                        </span>{" "}
+                        Участие в игре возможно только по{" "}
+                        <span className="authSubTitleOrange">приглашению.</span>
+                      </>
+                    ) : (
+                      <>
+                        The game is in{" "}
+                        <span className="authSubTitleOrange">
+                          limited access.
+                        </span>{" "}
+                        Participation in the game is only possible by{" "}
+                        <span className="authSubTitleOrange">invitation.</span>
+                      </>
+                    )
+                  ) : (
+                    <>
+                      Игра находится в{" "}
+                      <span className="authSubTitleOrange">
+                        ограниченном доступе.
+                      </span>{" "}
+                      Участие в игре возможно только по{" "}
+                      <span className="authSubTitleOrange">приглашению.</span>
+                    </>
+                  )}
+                </div>
+              )}
+
               {/* <div className="authButton" onClick={handleAuth}>
               Authorization
               </div> */}
               <div className="authSubTitle">
-                Follow our updates on social media to become a part of the
-                experiment:
+                {lang && lang.lang ? (
+                  lang.lang === "ru" ? (
+                    <>
+                      Следите за нашими обновлениями в социальных сетях, чтобы
+                      принять участие в эксперименте:
+                    </>
+                  ) : (
+                    <>
+                      Follow our updates on social media to become a part of the
+                      experiment:
+                    </>
+                  )
+                ) : (
+                  <>
+                    Следите за нашими обновлениями в социальных сетях, чтобы
+                    принять участие в эксперименте:
+                  </>
+                )}
               </div>
               <div className="authSocials">
                 <a href="https://t.me/tvoycommunity" className="authSocialsImg">

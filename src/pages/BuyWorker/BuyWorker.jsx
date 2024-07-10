@@ -10,6 +10,7 @@ function BuyWorker({
   ownerID,
   userID,
   handleUpdateBalance,
+  lang,
 }) {
   const { userData, loading, error, refetchUserData } =
     useFetchUserData(buyWorkerID);
@@ -46,10 +47,12 @@ function BuyWorker({
   const handleBuyNo = () => {};
 
   const handleModalError = (error) => {
-    let errorMessageToShow = "An error has occurred";
+    let errorMessageToShow =
+      lang.lang === "ru" ? "Ошибка" : "An error has occurred";
     if (error.response && error.response.data && error.response.data.error) {
       if (error.response.status === 400) {
-        errorMessageToShow = "Insufficient funds";
+        errorMessageToShow =
+          lang.lang === "ru" ? "Недостаточно монет" : "Insufficient funds";
       } else {
         errorMessageToShow = error.response.data.error;
       }
@@ -77,7 +80,9 @@ function BuyWorker({
             <img className="workerPageAvatar" src={userData.img} alt="" />
           </div>
           <div className="workerPageName">{userData.username}</div>
-          <div className="buyWorkerWorked">Busy at work</div>
+          <div className="buyWorkerWorked">
+            {lang.lang === "ru" ? "Занят на работе" : "Busy at work"}
+          </div>
           <div className="buyWorkerPageBalanceContainer">
             <div className="buyWorkerPageBalance">{userData.price}</div>
             <div className="buyWorkerPageBalanceSVG">
@@ -99,7 +104,7 @@ function BuyWorker({
                   : "workerUpTitle worked"
               }
             >
-              Buy
+              {lang.lang === "ru" ? "Купить" : "Buy"}
             </p>
           </div>
         </div>
@@ -107,9 +112,17 @@ function BuyWorker({
         <div className="buyWorkerPageProperty">
           <div className="buyWorkerPropertyCard">
             <div className="buyWorkerPropertyCardTitle">
-              <div className="buyWorkerPropertyCardName">Availability:</div>
+              <div className="buyWorkerPropertyCardName">
+                {lang.lang === "ru" ? "Доступность:" : "Availability:"}
+              </div>
               <div className="buyWorkerPropertyCardDesc">
-                {userData.is_safe === "no" ? "Free" : `Protected`}
+                {userData.is_safe === "no"
+                  ? lang.lang === "ru"
+                    ? "Свободно"
+                    : "Free"
+                  : lang.lang === "ru"
+                  ? "Защищено"
+                  : "Protected"}
               </div>
             </div>
             <div className="buyWorkerPropertyIMG">
@@ -120,7 +133,7 @@ function BuyWorker({
           </div>
           <div className="buyWorkerPropertyCard">
             <div className="buyWorkerPropertyCardTitle">
-              <div className="buyWorkerPropertyCardName">Earned stars:</div>
+              <div className="buyWorkerPropertyCardName">{lang.lang === "ru" ? "Заработано звезд" : "Earned stars:"}</div>
               <div className="buyWorkerPropertyCardDesc">{userData.stars}</div>
             </div>
             <div className="buyWorkerPropertyIMG">
@@ -131,9 +144,9 @@ function BuyWorker({
           </div>
           <div className="buyWorkerPropertyCard">
             <div className="buyWorkerPropertyCardTitle">
-              <div className="buyWorkerPropertyCardName">Earns:</div>
+              <div className="buyWorkerPropertyCardName">{lang.lang === "ru" ? "Зарабатывает" : "Earns:"}</div>
               <div className="buyWorkerPropertyCardDesc">
-                {userData.sum_income}/min
+                {userData.sum_income}/{lang.lang === "ru" ? "мин" : "min"}
               </div>
             </div>
             <div className="buyWorkerPropertyIMG">
@@ -149,7 +162,7 @@ function BuyWorker({
           <div className="backdrop" onClick={handleModalClose}></div>
           <div className="error-message">
             {errorMessage}
-            <div className="error-msg">Попробуйте позже</div>
+            <div className="error-msg">{lang.lang === "ru" ? "Попробуйте позже" : "Try again later"}</div>
           </div>
         </div>
       )}

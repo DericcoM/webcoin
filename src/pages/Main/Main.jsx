@@ -25,7 +25,7 @@ import socketIOClient from "socket.io-client";
 
 // const ENDPOINT = "https://aylsetalinad.ru";
 
-function Main() {
+function Main(lang) {
   const [currentPage, setCurrentPage] = useState("main");
   const [workerID, setWorkerID] = useState();
   const mainScrollRef = useRef(null);
@@ -49,7 +49,7 @@ function Main() {
   const { link, loading: linkLoading, error: linkError } = useFetchLink(userId);
   const [qrText, setQrText] = useState("");
   const [showCopyMessage, setShowCopyMessage] = useState(false);
-  const [currentUserSkin, setCurrentUserSkin] = useState("");
+  const [currentUserSkin, setCurrentUserSkin] = useState(null);
   const [avatarNew, setAvatarNew] = useState(null);
   const [nameNew, setNameNew] = useState(null);
   const [handleSub, setHandleSub] = useState(null);
@@ -58,7 +58,7 @@ function Main() {
   const [modalClose, setModalClose] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
   const [lastVisiblePlayer, setLastVisiblePlayer] = useState(null);
-
+  const [alreadyLoaded, setAlreadyLoaded] = useState(false);
   // const [balanceWeb, setBalanceWeb] = useState(0);
   // const socket = socketIOClient(ENDPOINT);
   // useEffect(() => {
@@ -83,9 +83,10 @@ function Main() {
   // }, [userId]);
 
   useEffect(() => {
-    const textToCopy = `Hi, bro! ⭐️\n
-    This is a secret invite to a private club where you can earn cryptocurrency. Just shhh… Don't share it with anyone!🤫\n
-    Remember: YourClick. YourCommunity. YourGame. TvoyCoin — build your social empire today!`;
+    const textToCopy =
+      lang.lang === "ru"
+        ? `Привет! Можешь, пожалуйста, зайти в игру? Это новая крипто игра с токеном $TVOYCOIN. Будет интересно! 😊`
+        : `Hey! Could you please join the game? It's a new crypto game with the $TVOYCOIN token. It'll be fun! 😊`;
     const encodedText = encodeURIComponent(textToCopy);
     const url = `https://t.me/share/url?url=${link}&text=${encodedText}`;
 
@@ -101,11 +102,10 @@ function Main() {
   }, [currentPage]);
 
   const handleCopy = async () => {
-    const textToCopy = `Hi, bro! ⭐️
-  ${link}
-  This is a secret invite to a private club where you can earn cryptocurrency. Just shhh… Don't share it with anyone!🤫
-      
-   Remember: YourClick. YourCommunity. YourGame. TvoyCoin — build your social empire today!`;
+    const textToCopy =
+      lang.lang === "ru"
+        ? `Привет! Можешь, пожалуйста, зайти в игру? Это новая крипто игра с токеном $TVOYCOIN. Будет интересно! 😊`
+        : `Hey! Could you please join the game? It's a new crypto game with the $TVOYCOIN token. It'll be fun! 😊`;
 
     try {
       await navigator.clipboard.writeText(textToCopy);
@@ -151,9 +151,10 @@ function Main() {
   };
 
   useEffect(() => {
-    const textToCopy = `Hi, bro! ⭐️\n
-    This is a secret invite to a private club where you can earn cryptocurrency. Just shhh… Don't share it with anyone!🤫\n
-    Remember: YourClick. YourCommunity. YourGame. TvoyCoin — build your social empire today!`;
+    const textToCopy =
+      lang.lang === "ru"
+        ? `Привет! Можешь, пожалуйста, зайти в игру? Это новая крипто игра с токеном $TVOYCOIN. Будет интересно! 😊`
+        : `Hey! Could you please join the game? It's a new crypto game with the $TVOYCOIN token. It'll be fun! 😊`;
     const encodedText = encodeURIComponent(textToCopy);
     const url = `https://t.me/share/url?url=${link}&text=${encodedText}`;
 
@@ -203,27 +204,30 @@ function Main() {
         if (window.pageYOffset === 0) {
           setCurrentPage(previousPage);
           BackButton.hide();
-          refetchUserData();
+          setAlreadyLoaded(false);
         }
       });
     }
   }, [currentPage, previousPage]);
 
   useEffect(() => {
-    const textToCopy = `Hi, bro! ⭐️\n
-    This is a secret invite to a private club where you can earn cryptocurrency. Just shhh… Don't share it with anyone!🤫\n
-    Remember: YourClick. YourCommunity. YourGame. TvoyCoin — build your social empire today!`;
+    const textToCopy =
+      lang.lang === "ru"
+        ? `Привет! Можешь, пожалуйста, зайти в игру? Это новая крипто игра с токеном $TVOYCOIN. Будет интересно! 😊`
+        : `Hey! Could you please join the game? It's a new crypto game with the $TVOYCOIN token. It'll be fun! 😊`;
     const encodedText = encodeURIComponent(textToCopy);
     const url = `https://t.me/share/url?url=${link}&text=${encodedText}`;
 
     setSharedText(url);
+
     // Call updateUserData when the currentPage is "main"
     if (currentPage === "main") {
       refetchBalance(); // Fetch the balance immediately when navigating to "main"
+      updateUserData();
 
       const intervalId = setInterval(() => {
         refetchBalance(); // Update balance every 30 seconds
-      }, 5000);
+      }, 60000);
 
       return () => clearInterval(intervalId);
     }
@@ -261,12 +265,14 @@ function Main() {
         return (
           <>
             <HeaderProfile
+              lang={lang}
               userData={userData}
               balanceuser={balance.toLocaleString("en-US")} // Passing balance to HeaderProfile
               setCurrentPage={setCurrentPage}
               setPreviousPage={setPreviousPage}
               avatarNew={avatarNew}
               nameNew={nameNew}
+              skin={currentUserSkin ? currentUserSkin : userData.icon_coin}
             />
             <div ref={mainScrollRef} className="mainScroll">
               <div className="bigBalanceContainer">
@@ -282,7 +288,9 @@ function Main() {
                 >
                   <div className="mainContainerCoinSVG">
                     <img
-                      src={`assets/skins/${userData.icon_coin}.png`}
+                      src={`assets/skins/${
+                        currentUserSkin ? currentUserSkin : userData.icon_coin
+                      }.png`}
                       alt=""
                     />
                   </div>
@@ -299,8 +307,9 @@ function Main() {
                   </div>
                 )}
                 <div className="mainRefTitle">
-                  If other players follow your link, they will become yours
-                  workers.
+                  {lang.lang === "ru"
+                    ? "Если другие игроки перейдут по вашей ссылке, они станут вашими работниками."
+                    : "If other players follow your link, they will become yours workers."}
                 </div>
                 <div className="refButtons">
                   <div className="mainRefButton" onClick={handleQr}>
@@ -318,8 +327,10 @@ function Main() {
               <div className="worker">
                 <div className="workerHeader">
                   <div className="workerTitle">
-                    Your workers:
+                    {lang.lang === "ru" ? "Мои работники:" : "Your workers:"}
+
                     <div className="workerCount">{summWorker}</div>
+                    {/* <div className="workerCount">7</div> */}
                   </div>
                   <div className="workerMin">
                     {userData.sum_income
@@ -329,6 +340,7 @@ function Main() {
                   </div>
                 </div>
                 <WorkerCard
+                  lang={lang}
                   sharedText={sharedText}
                   userData={userWorker}
                   setCurrentPage={setCurrentPage}
@@ -353,6 +365,7 @@ function Main() {
       case "worker":
         return (
           <WorkerPage
+            lang={lang}
             userID={userId}
             workerID={workerID}
             setCurrentPage={setCurrentPage}
@@ -364,6 +377,7 @@ function Main() {
       case "buy":
         return (
           <PlayersBuy
+            lang={lang}
             userID={userId}
             setCurrentPage={setCurrentPage}
             setBuyWorkerID={setBuyWorkerID}
@@ -376,6 +390,7 @@ function Main() {
       case "buyWorker":
         return (
           <BuyWorker
+            lang={lang}
             userID={userId}
             buyWorkerID={buyWorkerID}
             setCurrentPage={setCurrentPage}
@@ -386,16 +401,19 @@ function Main() {
       case "rating":
         return (
           <Rating
+            lang={lang}
             mainID={userId}
             mainData={userData}
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
             handleUpdateBalance={handleUpdateBalance}
+            skin={currentUserSkin ? currentUserSkin : userData.icon_coin}
           />
         );
       case "boost":
         return (
           <Boost
+            lang={lang}
             boost={userData.booster}
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
@@ -406,6 +424,7 @@ function Main() {
       case "trade":
         return (
           <Trade
+            lang={lang}
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
             stars={userData.stars}
@@ -416,6 +435,7 @@ function Main() {
       case "profile":
         return (
           <Profile
+            lang={lang}
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
             userID={userId}
@@ -431,12 +451,14 @@ function Main() {
       case "skins":
         return (
           <Skins
+            lang={lang}
             setCurrentPage={setCurrentPage}
             setPreviousPage={setPreviousPage}
             userID={userId}
-            currentUserSkin={userData.icon_coin}
+            currentUserSkin={currentUserSkin ? currentUserSkin : userData.icon_coin}
             setCurrentUserSkin={setCurrentUserSkin} // Передаем функцию setCurrentUserSkin
             handleUpdateBalance={handleUpdateBalance}
+            updateUserData={refetchUserData}
           />
         );
 
@@ -461,6 +483,7 @@ function Main() {
           currentPage !== "rating" &&
           currentPage !== "profile" && (
             <Footer
+              lang={lang}
               setCurrentPage={setCurrentPage}
               currentPage={currentPage}
               setPreviousPage={setPreviousPage}

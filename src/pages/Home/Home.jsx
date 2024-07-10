@@ -4,7 +4,7 @@ import useTelegramUser from "../../Hooks/useTelegramUser";
 import Main from "../Main/Main";
 import Reg from "../Reg/Reg";
 import Loader from "../../components/Loader/Loader";
-
+import axios from "axios";
 function Home() {
   // const userId = 467597194;
   // const userId = 123456789;
@@ -14,7 +14,7 @@ function Home() {
   const [reg, setReg] = useState(null); // Initial state should be null
   const [value, setValue] = useState("");
   const [loadingError, setLoadingError] = useState(false); // State to track loading error
-
+  const [lang, setLang] = useState("");
   const handleReg = async () => {
     try {
       const response = await fetch(
@@ -33,8 +33,20 @@ function Home() {
     }
   };
 
+  const handleLang = async () => {
+    try {
+      const response = await axios.get(
+        `https://aylsetalinad.ru/api/get_lang/${userId}`
+      );
+      setLang(response.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   useEffect(() => {
     if (userId) {
+      handleLang();
       handleReg();
     }
   }, [userId]); // Depend on userId to ensure it runs when userId is available
@@ -54,9 +66,9 @@ function Home() {
   }
 
   return reg === "main" ? (
-    <Main userId={userId} />
+    <Main lang={lang} userId={userId} />
   ) : (
-    <Reg userId={userId} setReg={setReg} />
+    <Reg lang={lang} userId={userId} setReg={setReg} />
   );
 }
 
